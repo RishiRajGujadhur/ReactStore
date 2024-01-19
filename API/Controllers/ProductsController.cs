@@ -14,15 +14,21 @@ namespace API.Controllers
         {
             this.Context = context;
         }
-        
+
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts(){
+        public async Task<ActionResult<List<Product>>> GetProducts()
+        {
             return await Context.Products.ToListAsync();
         }
 
-        [HttpGet("{id}")] // api/products/2
-        public async Task<ActionResult<Product>> GetProductById(int Id){
-             return await Context.Products.FindAsync(Id);
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Product>> GetProduct(int id)
+        {
+            var product = await Context.Products.FindAsync(id);
+
+            if (product == null) return NotFound();
+
+            return product;
         }
     }
 }
