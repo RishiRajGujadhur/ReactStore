@@ -30,6 +30,8 @@ namespace API.Data
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<OrderDiscount> OrderDiscounts { get; set; }
         public DbSet<AdditionalDeliveryInfo> AdditionalDeliveryInfos { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
