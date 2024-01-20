@@ -66,3 +66,11 @@ F:\GitHub\Store\api\bin\Debug\net7.0\runtimes\win-arm\native\e_sqlite3.dll
 F:\GitHub\Store\api\bin\Debug\net7.0\runtimes\win-arm64\native\e_sqlite3.dll
 F:\GitHub\Store\api\bin\Debug\net7.0\runtimes\win-x64\native\e_sqlite3.dll
 F:\GitHub\Store\api\bin\Debug\net7.0\runtimes\win-x86\native\e_sqlite3.dll
+F:\GitHub\Store\API\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+F:\GitHub\Store\API\bin\Debug\net7.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+F:\GitHub\Store\API\bin\Debug\net7.0\Microsoft.IdentityModel.JsonWebTokens.dll
+F:\GitHub\Store\API\bin\Debug\net7.0\Microsoft.IdentityModel.Logging.dll
+F:\GitHub\Store\API\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.dll
+F:\GitHub\Store\API\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+F:\GitHub\Store\API\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
+F:\GitHub\Store\API\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
