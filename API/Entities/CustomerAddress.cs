@@ -10,11 +10,7 @@ namespace API.Entities
         public string City { get; set; }
         public string State { get; set; }
         public string ZipCode { get; set; }
-
-        // Foreign key relationship with AddressType
-        public int AddressTypeID { get; set; }
-        public AddressType AddressType { get; set; }
-
+ 
         // Foreign key relationship with Customer
         public Customer Customer { get; set; }
     }

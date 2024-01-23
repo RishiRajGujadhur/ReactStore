@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
-    public class StoreContext : IdentityDbContext<User>
+    public class StoreContext : IdentityDbContext<User, Role, int>
     {
         public StoreContext(DbContextOptions options) : base(options)
         {
@@ -25,10 +25,8 @@ namespace API.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Logistics> Logistics { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
-        public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<CustomerAddress> CustomerAddresses { get; set; }
-        public DbSet<AddressType> AddressTypes { get; set; }
-        public DbSet<Payment> Payments { get; set; }
+         public DbSet<Payment> Payments { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<OrderDiscount> OrderDiscounts { get; set; }
         public DbSet<AdditionalDeliveryInfo> AdditionalDeliveryInfos { get; set; }
@@ -40,11 +38,23 @@ namespace API.Data
 
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<User>()
+           .HasOne(a => a.Address)
+           .WithOne()
+           .HasForeignKey<UserAddress>(a => a.Id)
+           .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<IdentityRole>()
                 .HasData(
                     new IdentityRole { Name = "Member", NormalizedName = "MEMBER" },
                     new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" }
                 );
+
+            modelBuilder.Entity<Role>()
+          .HasData(
+              new Role { Id = 1, Name = "Member", NormalizedName = "MEMBER" },
+              new Role { Id = 2, Name = "Admin", NormalizedName = "ADMIN" }
+          );
 
             // One-to-Many relationship between Customer and Order
             modelBuilder.Entity<Customer>()
@@ -86,24 +96,12 @@ namespace API.Data
                 .HasMany(o => o.ReturnRequests)
                 .WithOne(rr => rr.Order)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            // Supplier and Product relationship
-            modelBuilder.Entity<Supplier>()
-                .HasMany(s => s.Products)
-                .WithOne(p => p.Supplier)
-                .HasForeignKey(p => p.SupplierID);
-
+                
             // CustomerAddress and Customer relationship
             modelBuilder.Entity<CustomerAddress>()
                 .HasOne(ca => ca.Customer)
                 .WithMany(c => c.Addresses)
                 .HasForeignKey(ca => ca.CustomerID);
-
-            // CustomerAddress and AddressType relationship
-            modelBuilder.Entity<CustomerAddress>()
-                .HasOne(ca => ca.AddressType)
-                .WithMany()
-                .HasForeignKey(ca => ca.AddressTypeID);
 
             // Payment and Order relationship
             modelBuilder.Entity<Payment>()

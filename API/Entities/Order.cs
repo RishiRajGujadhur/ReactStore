@@ -7,7 +7,7 @@ namespace API.Entities
         [Key]
         public int OrderID { get; set; }
 
-        public DateTime OrderDate { get; set; }
+        public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
         public decimal TotalAmount { get; set; }
 
