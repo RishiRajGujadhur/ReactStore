@@ -1,5 +1,9 @@
 using API.Data;
+using API.DTOs;
 using API.Entities;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,13 +14,18 @@ namespace API.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly StoreContext _context;
+        public UserManager<User> _userManager { get; }
+        public IMapper _mapper { get; }
 
-        public CustomerController(StoreContext context)
+        public CustomerController(StoreContext context, UserManager<User> userManager, IMapper mapper)
         {
+            _mapper = mapper;
+            _userManager = userManager;
             _context = context;
         }
 
         // GET: api/customers
+        [Authorize(Roles = "Admin,Member")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
@@ -24,6 +33,7 @@ namespace API.Controllers
         }
 
         // GET: api/customers/{id}
+        [Authorize(Roles = "Admin,Member")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
@@ -39,15 +49,36 @@ namespace API.Controllers
 
         // POST: api/customers
         [HttpPost]
-        public async Task<ActionResult<Customer>> CreateCustomer(Customer customer)
+        public async Task<ActionResult<Customer>> CreateCustomer([FromBody] CreateCustomerDto customerDTO)
         {
+
+            // Validate the DTO
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = new User
+            {
+                UserName = customerDTO.Email,
+                Email = customerDTO.Email
+            };
+
+            await _userManager.CreateAsync(user, customerDTO.Password);
+            await _userManager.AddToRoleAsync(user, "Member");
+            var customer =  _mapper.Map<Customer>(customerDTO);
+
+            customer.User = user;
+
             _context.Customers.Add(customer);
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetCustomer), new { id = customer.CustomerID }, customer);
         }
 
         // PUT: api/customers/{id}
+        [Authorize(Roles = "Member")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCustomer(int id, Customer customer)
         {
@@ -78,6 +109,7 @@ namespace API.Controllers
         }
 
         // DELETE: api/customers/{id}
+        [Authorize(Roles = "Member")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {

@@ -24,9 +24,8 @@ namespace API.Data
         public DbSet<ReturnRequest> ReturnRequests { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Logistics> Logistics { get; set; }
-        public DbSet<Invoice> Invoices { get; set; }
-        public DbSet<CustomerAddress> CustomerAddresses { get; set; }
-         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Invoice> Invoices { get; set; } 
+        public DbSet<Payment> Payments { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<OrderDiscount> OrderDiscounts { get; set; }
         public DbSet<AdditionalDeliveryInfo> AdditionalDeliveryInfos { get; set; }
@@ -95,13 +94,7 @@ namespace API.Data
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.ReturnRequests)
                 .WithOne(rr => rr.Order)
-                .OnDelete(DeleteBehavior.Cascade);
-                
-            // CustomerAddress and Customer relationship
-            modelBuilder.Entity<CustomerAddress>()
-                .HasOne(ca => ca.Customer)
-                .WithMany(c => c.Addresses)
-                .HasForeignKey(ca => ca.CustomerID);
+                .OnDelete(DeleteBehavior.Cascade); 
 
             // Payment and Order relationship
             modelBuilder.Entity<Payment>()
@@ -126,6 +119,18 @@ namespace API.Data
                 .HasOne(adi => adi.Order)
                 .WithMany(o => o.AdditionalDeliveryInfos)
                 .HasForeignKey(adi => adi.OrderID);
+
+
+            // Configure one-to-one relationship between Customer and User
+            modelBuilder.Entity<Customer>()
+                .HasOne(c => c.User)
+                .WithOne(u => u.Customer)
+                .HasForeignKey<Customer>(c => c.CustomerID); // Assuming CustomerID is the primary key
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Customer)
+                .WithOne(c => c.User)
+                .HasForeignKey<User>(u => u.Id); // Assuming Id is the primary key of User (IdentityUser<int>)
 
         }
 
