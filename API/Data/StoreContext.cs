@@ -24,13 +24,15 @@ namespace API.Data
         public DbSet<ReturnRequest> ReturnRequests { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Logistics> Logistics { get; set; }
-        public DbSet<Invoice> Invoices { get; set; } 
+        public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Payment> Payments { get; set; }
-        public DbSet<Wishlist> Wishlists { get; set; }
+        public DbSet<CollectionList> CollectionLists { get; set; }
+        public DbSet<CollectionListItem> CollectionListItems { get; set; }
+
         public DbSet<OrderDiscount> OrderDiscounts { get; set; }
         public DbSet<AdditionalDeliveryInfo> AdditionalDeliveryInfos { get; set; }
         public DbSet<Basket> Baskets { get; set; }
-
+        public DbSet<Like> Likes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,7 +40,7 @@ namespace API.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>().HasKey(u => u.Id);
-            
+
             modelBuilder.Entity<User>()
            .HasOne(a => a.Address)
            .WithOne()
@@ -96,7 +98,7 @@ namespace API.Data
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.ReturnRequests)
                 .WithOne(rr => rr.Order)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Payment and Order relationship
             modelBuilder.Entity<Payment>()
@@ -104,11 +106,11 @@ namespace API.Data
                 .WithMany(o => o.Payments)
                 .HasForeignKey(p => p.OrderID);
 
-            // Wishlist and Product relationship
-            modelBuilder.Entity<Wishlist>()
+            // Collection and Product relationship
+            modelBuilder.Entity<CollectionList>()
                 .HasMany(w => w.Products)
-                .WithMany(p => p.Wishlists)
-                .UsingEntity(j => j.ToTable("WishlistProducts"));
+                .WithMany(p => p.CollectionLists)
+                .UsingEntity(j => j.ToTable("CollectionProducts"));
 
             // OrderDiscount and Order relationship
             modelBuilder.Entity<OrderDiscount>()
@@ -127,6 +129,21 @@ namespace API.Data
                 .HasOne(c => c.User)
                 .WithOne(u => u.Customer)
                 .HasForeignKey<Customer>(c => c.CustomerID); // Assuming CustomerID is the primary key
+
+            modelBuilder.Entity<Like>()
+             .HasKey(l => l.LikeId);
+
+            modelBuilder.Entity<Like>()
+                .HasOne(l => l.User)
+                .WithMany(u => u.Likes)
+                .HasForeignKey(l => l.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Like>()
+                .HasOne(l => l.Product)
+                .WithMany(p => p.Likes)
+                .HasForeignKey(l => l.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
