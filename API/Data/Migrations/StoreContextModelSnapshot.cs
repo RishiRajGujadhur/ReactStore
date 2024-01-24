@@ -91,13 +91,7 @@ namespace API.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CustomerID"));
-
                     b.Property<string>("Address")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
@@ -108,46 +102,12 @@ namespace API.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Phone")
                         .HasColumnType("text");
 
                     b.HasKey("CustomerID");
 
                     b.ToTable("Customers");
-                });
-
-            modelBuilder.Entity("API.Entities.CustomerAddress", b =>
-                {
-                    b.Property<int>("CustomerAddressID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CustomerAddressID"));
-
-                    b.Property<string>("City")
-                        .HasColumnType("text");
-
-                    b.Property<int>("CustomerID")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("State")
-                        .HasColumnType("text");
-
-                    b.Property<string>("StreetAddress")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ZipCode")
-                        .HasColumnType("text");
-
-                    b.HasKey("CustomerAddressID");
-
-                    b.HasIndex("CustomerID");
-
-                    b.ToTable("CustomerAddresses");
                 });
 
             modelBuilder.Entity("API.Entities.Inventory", b =>
@@ -750,13 +710,13 @@ namespace API.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "079cb960-a897-4118-8712-5749c5f8ad38",
+                            Id = "ba4d761d-05b5-47d5-bbad-0981f95889f4",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "6b76b214-9d29-4eb3-8e02-1dbfb334cf70",
+                            Id = "1f969eb6-fc54-40b1-bb6f-55db90199e51",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -910,15 +870,15 @@ namespace API.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("API.Entities.CustomerAddress", b =>
+            modelBuilder.Entity("API.Entities.Customer", b =>
                 {
-                    b.HasOne("API.Entities.Customer", "Customer")
-                        .WithMany("Addresses")
-                        .HasForeignKey("CustomerID")
+                    b.HasOne("API.Entities.User", "User")
+                        .WithOne("Customer")
+                        .HasForeignKey("API.Entities.Customer", "CustomerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("API.Entities.Inventory", b =>
@@ -1202,8 +1162,6 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Customer", b =>
                 {
-                    b.Navigation("Addresses");
-
                     b.Navigation("Orders");
 
                     b.Navigation("Reviews");
@@ -1232,6 +1190,8 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.User", b =>
                 {
                     b.Navigation("Address");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("API.Entities.Wishlist", b =>

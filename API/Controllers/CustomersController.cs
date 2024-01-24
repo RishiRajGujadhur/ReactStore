@@ -11,13 +11,13 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CustomerController : ControllerBase
+    public class CustomersController : ControllerBase
     {
         private readonly StoreContext _context;
         public UserManager<User> _userManager { get; }
         public IMapper _mapper { get; }
 
-        public CustomerController(StoreContext context, UserManager<User> userManager, IMapper mapper)
+        public CustomersController(StoreContext context, UserManager<User> userManager, IMapper mapper)
         {
             _mapper = mapper;
             _userManager = userManager;
@@ -48,26 +48,31 @@ namespace API.Controllers
         }
 
         // POST: api/customers
+        [Authorize(Roles = "Member")]
         [HttpPost]
         public async Task<ActionResult<Customer>> CreateCustomer([FromBody] CreateCustomerDto customerDTO)
         {
-
             // Validate the DTO
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = new User
+            // Check if a customer already exists for the current user
+            var existingCustomer = await _context.Customers
+                .Include(c => c.User)
+                .FirstOrDefaultAsync(c => c.User.UserName == User.Identity.Name);
+
+            if (existingCustomer != null)
             {
-                UserName = customerDTO.Email,
-                Email = customerDTO.Email
-            };
+                // If a customer already exists, return a conflict response
+                return Conflict("Customer already exists for the current user.");
+            }
 
-            await _userManager.CreateAsync(user, customerDTO.Password);
-            await _userManager.AddToRoleAsync(user, "Member");
-            var customer =  _mapper.Map<Customer>(customerDTO);
+            // If no customer exists, proceed with creating a new one
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
+            var customer = _mapper.Map<Customer>(customerDTO);
             customer.User = user;
 
             _context.Customers.Add(customer);

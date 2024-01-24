@@ -37,6 +37,8 @@ namespace API.Data
 
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<User>().HasKey(u => u.Id);
+            
             modelBuilder.Entity<User>()
            .HasOne(a => a.Address)
            .WithOne()
@@ -120,19 +122,11 @@ namespace API.Data
                 .WithMany(o => o.AdditionalDeliveryInfos)
                 .HasForeignKey(adi => adi.OrderID);
 
-
             // Configure one-to-one relationship between Customer and User
             modelBuilder.Entity<Customer>()
                 .HasOne(c => c.User)
                 .WithOne(u => u.Customer)
                 .HasForeignKey<Customer>(c => c.CustomerID); // Assuming CustomerID is the primary key
-
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Customer)
-                .WithOne(c => c.User)
-                .HasForeignKey<User>(u => u.Id); // Assuming Id is the primary key of User (IdentityUser<int>)
-
         }
-
     }
 }
