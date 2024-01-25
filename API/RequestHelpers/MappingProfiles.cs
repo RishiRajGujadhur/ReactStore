@@ -10,6 +10,6 @@ public class MappingProfiles : Profile
     {
         CreateMap<CreateProductDto, Product>();
         CreateMap<UpdateProductDto, Product>();
-        CreateMap<CreateCustomerDto, Customer>();
+        CreateMap<CreateCustomerDto, Customer>(); 
     }
 }

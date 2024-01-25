@@ -85,6 +85,47 @@ namespace API.Data.Migrations
                     b.ToTable("BasketItem");
                 });
 
+            modelBuilder.Entity("API.Entities.CollectionList", b =>
+                {
+                    b.Property<int>("CollectionListID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CollectionListID"));
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CollectionListID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("CollectionLists");
+                });
+
+            modelBuilder.Entity("API.Entities.CollectionListItem", b =>
+                {
+                    b.Property<int>("CollectionListItemID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CollectionListItemID"));
+
+                    b.Property<int>("CollectionListID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CollectionListItemID");
+
+                    b.HasIndex("CollectionListID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("CollectionListItems");
+                });
+
             modelBuilder.Entity("API.Entities.Customer", b =>
                 {
                     b.Property<int>("CustomerID")
@@ -161,6 +202,29 @@ namespace API.Data.Migrations
                     b.HasIndex("OrderID");
 
                     b.ToTable("Invoices");
+                });
+
+            modelBuilder.Entity("API.Entities.Like", b =>
+                {
+                    b.Property<int>("LikeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LikeId"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("LikeId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("API.Entities.Logistics", b =>
@@ -647,46 +711,19 @@ namespace API.Data.Migrations
                     b.ToTable("Warehouses");
                 });
 
-            modelBuilder.Entity("API.Entities.Wishlist", b =>
+            modelBuilder.Entity("CollectionListProduct", b =>
                 {
-                    b.Property<int>("WishlistID")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("CollectionListsCollectionListID")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("WishlistID"));
-
-                    b.Property<int>("CustomerID")
+                    b.Property<int>("ProductsId")
                         .HasColumnType("integer");
 
-                    b.HasKey("WishlistID");
+                    b.HasKey("CollectionListsCollectionListID", "ProductsId");
 
-                    b.HasIndex("CustomerID")
-                        .IsUnique();
+                    b.HasIndex("ProductsId");
 
-                    b.ToTable("Wishlists");
-                });
-
-            modelBuilder.Entity("API.Entities.WishlistItem", b =>
-                {
-                    b.Property<int>("WishlistItemID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("WishlistItemID"));
-
-                    b.Property<int>("ProductID")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("WishlistID")
-                        .HasColumnType("integer");
-
-                    b.HasKey("WishlistItemID");
-
-                    b.HasIndex("ProductID");
-
-                    b.HasIndex("WishlistID");
-
-                    b.ToTable("WishlistItem");
+                    b.ToTable("CollectionProducts", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -710,13 +747,13 @@ namespace API.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ba4d761d-05b5-47d5-bbad-0981f95889f4",
+                            Id = "8e4c41f2-dbbe-447e-b3b1-9312a5d503ae",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "1f969eb6-fc54-40b1-bb6f-55db90199e51",
+                            Id = "eb2b7fbf-a905-46f3-8c64-7a6fd1f83a40",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -825,21 +862,6 @@ namespace API.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ProductWishlist", b =>
-                {
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("WishlistsWishlistID")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ProductsId", "WishlistsWishlistID");
-
-                    b.HasIndex("WishlistsWishlistID");
-
-                    b.ToTable("WishlistProducts", (string)null);
-                });
-
             modelBuilder.Entity("API.Entities.AdditionalDeliveryInfo", b =>
                 {
                     b.HasOne("API.Entities.Order", "Order")
@@ -866,6 +888,36 @@ namespace API.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Basket");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("API.Entities.CollectionList", b =>
+                {
+                    b.HasOne("API.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("API.Entities.CollectionListItem", b =>
+                {
+                    b.HasOne("API.Entities.CollectionList", "CollectionList")
+                        .WithMany("CollectionListItems")
+                        .HasForeignKey("CollectionListID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CollectionList");
 
                     b.Navigation("Product");
                 });
@@ -909,6 +961,25 @@ namespace API.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("API.Entities.Like", b =>
+                {
+                    b.HasOne("API.Entities.Product", "Product")
+                        .WithMany("Likes")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.User", "User")
+                        .WithMany("Likes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("API.Entities.Logistics", b =>
@@ -1059,34 +1130,19 @@ namespace API.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("API.Entities.Wishlist", b =>
+            modelBuilder.Entity("CollectionListProduct", b =>
                 {
-                    b.HasOne("API.Entities.Customer", "Customer")
-                        .WithOne("Wishlist")
-                        .HasForeignKey("API.Entities.Wishlist", "CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("API.Entities.WishlistItem", b =>
-                {
-                    b.HasOne("API.Entities.Product", "Product")
+                    b.HasOne("API.Entities.CollectionList", null)
                         .WithMany()
-                        .HasForeignKey("ProductID")
+                        .HasForeignKey("CollectionListsCollectionListID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Entities.Wishlist", "Wishlist")
-                        .WithMany("WishlistItems")
-                        .HasForeignKey("WishlistID")
+                    b.HasOne("API.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Wishlist");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -1140,24 +1196,14 @@ namespace API.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProductWishlist", b =>
-                {
-                    b.HasOne("API.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("API.Entities.Wishlist", null)
-                        .WithMany()
-                        .HasForeignKey("WishlistsWishlistID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("API.Entities.Basket", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("API.Entities.CollectionList", b =>
+                {
+                    b.Navigation("CollectionListItems");
                 });
 
             modelBuilder.Entity("API.Entities.Customer", b =>
@@ -1165,8 +1211,6 @@ namespace API.Data.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Reviews");
-
-                    b.Navigation("Wishlist");
                 });
 
             modelBuilder.Entity("API.Entities.Order", b =>
@@ -1184,6 +1228,8 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Product", b =>
                 {
+                    b.Navigation("Likes");
+
                     b.Navigation("Reviews");
                 });
 
@@ -1192,11 +1238,8 @@ namespace API.Data.Migrations
                     b.Navigation("Address");
 
                     b.Navigation("Customer");
-                });
 
-            modelBuilder.Entity("API.Entities.Wishlist", b =>
-                {
-                    b.Navigation("WishlistItems");
+                    b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618
         }

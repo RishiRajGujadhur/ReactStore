@@ -24,9 +24,6 @@ namespace API.Entities
 
         public virtual ICollection<Review> Reviews { get; set; }
 
-        // Navigation property for wishlists
-        public Wishlist Wishlist { get; set; } // Assuming a one-to-one relationship
-
         // Navigation property for linking Customer to User (one-to-one)
         public virtual User User { get; set; }
 

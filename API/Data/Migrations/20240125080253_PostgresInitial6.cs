@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class PostgresInitial5 : Migration
+    public partial class PostgresInitial6 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -253,6 +253,25 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CollectionLists",
+                columns: table => new
+                {
+                    CollectionListID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserID = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CollectionLists", x => x.CollectionListID);
+                    table.ForeignKey(
+                        name: "FK_CollectionLists_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
                 {
@@ -325,6 +344,32 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Likes",
+                columns: table => new
+                {
+                    LikeId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    ProductId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Likes", x => x.LikeId);
+                    table.ForeignKey(
+                        name: "FK_Likes_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Likes_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Inventories",
                 columns: table => new
                 {
@@ -348,6 +393,56 @@ namespace API.Data.Migrations
                         column: x => x.WarehouseID,
                         principalTable: "Warehouses",
                         principalColumn: "WarehouseID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CollectionListItems",
+                columns: table => new
+                {
+                    CollectionListItemID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CollectionListID = table.Column<int>(type: "integer", nullable: false),
+                    ProductID = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CollectionListItems", x => x.CollectionListItemID);
+                    table.ForeignKey(
+                        name: "FK_CollectionListItems_CollectionLists_CollectionListID",
+                        column: x => x.CollectionListID,
+                        principalTable: "CollectionLists",
+                        principalColumn: "CollectionListID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CollectionListItems_Products_ProductID",
+                        column: x => x.ProductID,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CollectionProducts",
+                columns: table => new
+                {
+                    CollectionListsCollectionListID = table.Column<int>(type: "integer", nullable: false),
+                    ProductsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CollectionProducts", x => new { x.CollectionListsCollectionListID, x.ProductsId });
+                    table.ForeignKey(
+                        name: "FK_CollectionProducts_CollectionLists_CollectionListsCollectio~",
+                        column: x => x.CollectionListsCollectionListID,
+                        principalTable: "CollectionLists",
+                        principalColumn: "CollectionListID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CollectionProducts_Products_ProductsId",
+                        column: x => x.ProductsId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -419,25 +514,6 @@ namespace API.Data.Migrations
                         column: x => x.ProductID,
                         principalTable: "Products",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Wishlists",
-                columns: table => new
-                {
-                    WishlistID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CustomerID = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Wishlists", x => x.WishlistID);
-                    table.ForeignKey(
-                        name: "FK_Wishlists_Customers_CustomerID",
-                        column: x => x.CustomerID,
-                        principalTable: "Customers",
-                        principalColumn: "CustomerID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -634,56 +710,6 @@ namespace API.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "WishlistItem",
-                columns: table => new
-                {
-                    WishlistItemID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductID = table.Column<int>(type: "integer", nullable: false),
-                    WishlistID = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WishlistItem", x => x.WishlistItemID);
-                    table.ForeignKey(
-                        name: "FK_WishlistItem_Products_ProductID",
-                        column: x => x.ProductID,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WishlistItem_Wishlists_WishlistID",
-                        column: x => x.WishlistID,
-                        principalTable: "Wishlists",
-                        principalColumn: "WishlistID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WishlistProducts",
-                columns: table => new
-                {
-                    ProductsId = table.Column<int>(type: "integer", nullable: false),
-                    WishlistsWishlistID = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WishlistProducts", x => new { x.ProductsId, x.WishlistsWishlistID });
-                    table.ForeignKey(
-                        name: "FK_WishlistProducts_Products_ProductsId",
-                        column: x => x.ProductsId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WishlistProducts_Wishlists_WishlistsWishlistID",
-                        column: x => x.WishlistsWishlistID,
-                        principalTable: "Wishlists",
-                        principalColumn: "WishlistID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
@@ -698,8 +724,8 @@ namespace API.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1f969eb6-fc54-40b1-bb6f-55db90199e51", null, "Admin", "ADMIN" },
-                    { "ba4d761d-05b5-47d5-bbad-0981f95889f4", null, "Member", "MEMBER" }
+                    { "8e4c41f2-dbbe-447e-b3b1-9312a5d503ae", null, "Member", "MEMBER" },
+                    { "eb2b7fbf-a905-46f3-8c64-7a6fd1f83a40", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -755,6 +781,26 @@ namespace API.Data.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CollectionListItems_CollectionListID",
+                table: "CollectionListItems",
+                column: "CollectionListID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CollectionListItems_ProductID",
+                table: "CollectionListItems",
+                column: "ProductID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CollectionLists_UserID",
+                table: "CollectionLists",
+                column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CollectionProducts_ProductsId",
+                table: "CollectionProducts",
+                column: "ProductsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Inventories_ProductID",
                 table: "Inventories",
                 column: "ProductID");
@@ -768,6 +814,16 @@ namespace API.Data.Migrations
                 name: "IX_Invoices_OrderID",
                 table: "Invoices",
                 column: "OrderID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Likes_ProductId",
+                table: "Likes",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Likes_UserId",
+                table: "Likes",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Logistics_OrderID",
@@ -838,27 +894,6 @@ namespace API.Data.Migrations
                 name: "IX_Reviews_ProductID",
                 table: "Reviews",
                 column: "ProductID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WishlistItem_ProductID",
-                table: "WishlistItem",
-                column: "ProductID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WishlistItem_WishlistID",
-                table: "WishlistItem",
-                column: "WishlistID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WishlistProducts_WishlistsWishlistID",
-                table: "WishlistProducts",
-                column: "WishlistsWishlistID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Wishlists_CustomerID",
-                table: "Wishlists",
-                column: "CustomerID",
-                unique: true);
         }
 
         /// <inheritdoc />
@@ -886,6 +921,12 @@ namespace API.Data.Migrations
                 name: "BasketItem");
 
             migrationBuilder.DropTable(
+                name: "CollectionListItems");
+
+            migrationBuilder.DropTable(
+                name: "CollectionProducts");
+
+            migrationBuilder.DropTable(
                 name: "IdentityRole");
 
             migrationBuilder.DropTable(
@@ -893,6 +934,9 @@ namespace API.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Invoices");
+
+            migrationBuilder.DropTable(
+                name: "Likes");
 
             migrationBuilder.DropTable(
                 name: "Logistics");
@@ -925,16 +969,13 @@ namespace API.Data.Migrations
                 name: "UserAddress");
 
             migrationBuilder.DropTable(
-                name: "WishlistItem");
-
-            migrationBuilder.DropTable(
-                name: "WishlistProducts");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Baskets");
+
+            migrationBuilder.DropTable(
+                name: "CollectionLists");
 
             migrationBuilder.DropTable(
                 name: "Warehouses");
@@ -947,9 +988,6 @@ namespace API.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Products");
-
-            migrationBuilder.DropTable(
-                name: "Wishlists");
 
             migrationBuilder.DropTable(
                 name: "Customers");
