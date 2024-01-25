@@ -28,11 +28,11 @@ namespace API.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<CollectionList> CollectionLists { get; set; }
         public DbSet<CollectionListItem> CollectionListItems { get; set; }
-
         public DbSet<OrderDiscount> OrderDiscounts { get; set; }
         public DbSet<AdditionalDeliveryInfo> AdditionalDeliveryInfos { get; set; }
         public DbSet<Basket> Baskets { get; set; }
-        public DbSet<Like> Likes { get; set; }
+        public DbSet<Like> Likes { get; set; } 
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
