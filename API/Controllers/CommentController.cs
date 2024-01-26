@@ -1,5 +1,7 @@
 using API.Data;
 using API.Entities;
+using API.Extensions;
+using API.RequestHelpers;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -62,6 +64,23 @@ namespace API.Controllers
         }
 
 
+        // GET: api/comments/{id}
+        [HttpGet("list")]
+        public async Task<ActionResult<List<Comment>>> GetCommentsByProductPaged([FromQuery] CommentDto commentDto)
+        {
+            var comments =  _context.Comments
+                .Where(c => c.ProductId == commentDto.ProductId); 
+
+             var query = comments
+                .AsQueryable();
+
+            var commentPagedList =
+                await PagedList<Comment>.ToPagedList(query, commentDto.PageNumber, commentDto.PageSize);
+
+            Response.AddPaginationHeader(commentPagedList.MetaData);
+            return commentPagedList;
+        }
+
         // PUT: api/comments/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateComment(int id, [FromBody] CommentUpdateDto commentDto)
@@ -71,7 +90,7 @@ namespace API.Controllers
                 var userId = await GetUserId();
 
                 var comment = await _context.Comments
-                    .Where(c => c.CommentId == id && c.UserId == userId)
+                    .Where(c => c.Id == id && c.UserId == userId)
                     .FirstOrDefaultAsync();
 
                 if (comment == null)
@@ -101,7 +120,7 @@ namespace API.Controllers
                 var userId = await GetUserId();
 
                 var comment = await _context.Comments
-                    .Where(c => c.CommentId == id && c.UserId == userId)
+                    .Where(c => c.Id == id && c.UserId == userId)
                     .FirstOrDefaultAsync();
 
                 if (comment == null)

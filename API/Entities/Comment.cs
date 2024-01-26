@@ -5,7 +5,7 @@ namespace API.Entities
     public class Comment
     {
         [Key]
-        public int CommentId { get; set; }
+        public int Id { get; set; }
         public string Text { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
