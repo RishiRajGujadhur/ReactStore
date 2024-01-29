@@ -51,25 +51,12 @@ namespace API.Controllers
         }
 
         // GET: api/comments/{id}
-        [HttpGet("{productId}")]
-        public async Task<ActionResult<List<CommentDto>>> GetCommentsByProduct(int productId)
-        {
-            var comments = await _context.Comments
-                .Where(c => c.ProductId == productId)
-                .ToListAsync();
-
-            var commentDtos = _mapper.Map<List<CommentDto>>(comments);
-
-            return commentDtos;
-        }
-
-
-        // GET: api/comments/{id}
         [HttpGet("list")]
         public async Task<ActionResult<List<Comment>>> GetCommentsByProductPaged([FromQuery] CommentDto commentDto)
         {
             var comments =  _context.Comments
-                .Where(c => c.ProductId == commentDto.ProductId); 
+                .Where(c => c.ProductId == commentDto.ProductId)
+                .OrderByDescending(c=>c.ProductId);
 
              var query = comments
                 .AsQueryable();
