@@ -52,22 +52,26 @@ namespace API.Controllers
 
         // GET: api/comments/{id}
         [HttpGet("list")]
-        public async Task<ActionResult<List<Comment>>> GetCommentsByProductPaged([FromQuery] CommentDto commentDto)
+        public async Task<ActionResult<List<GetCommentDto>>> GetCommentsByProductPaged([FromQuery] CommentDto commentDto)
         {
-            var comments =  _context.Comments
-                .Where(c => c.ProductId == commentDto.ProductId)
-                .OrderByDescending(c=>c.ProductId);
+            var query = _context.Comments
+               .Include(c => c.User)
+               .Where(c => c.ProductId == commentDto.ProductId);
 
-             var query = comments
-                .AsQueryable();
-
-            var commentPagedList =
-                await PagedList<Comment>.ToPagedList(query, commentDto.PageNumber, commentDto.PageSize);
-
+            var commentPagedList = await PagedList<Comment>.ToPagedList(query, commentDto.PageNumber, commentDto.PageSize); 
+            var commentsWithUsername = commentPagedList.Select(c => new GetCommentDto
+            {
+                Id = c.Id,
+                Text = c.Text,
+                CreatedAt = c.CreatedAt,
+                ProductId = c.ProductId,
+                Username = c.User?.UserName
+            }).ToList();
+ 
             Response.AddPaginationHeader(commentPagedList.MetaData);
-            return commentPagedList;
-        }
-
+            return commentsWithUsername;
+        } 
+        
         // PUT: api/comments/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateComment(int id, [FromBody] CommentUpdateDto commentDto)

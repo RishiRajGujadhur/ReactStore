@@ -15,6 +15,6 @@ namespace API.Entities
 
         // Foreign key relationship with User (assuming you have a User model)
         public int UserId { get; set; }
-        public User User { get; set; }
+        public User User { get; set; } 
     }
 }
