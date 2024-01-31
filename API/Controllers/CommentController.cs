@@ -56,8 +56,10 @@ namespace API.Controllers
         {
             var query = _context.Comments
                .Include(c => c.User)
-               .Where(c => c.ProductId == commentDto.ProductId);
-
+               .Where(c => c.ProductId == commentDto.ProductId)
+               .OrderByDescending(c=>c.Id)
+               .AsQueryable();
+               
             var commentPagedList = await PagedList<Comment>.ToPagedList(query, commentDto.PageNumber, commentDto.PageSize); 
             var commentsWithUsername = commentPagedList.Select(c => new GetCommentDto
             {
