@@ -1,5 +1,7 @@
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,22 +11,35 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class InvoiceController : ControllerBase
     {
-        private readonly StoreContext _context;
+        private readonly StoreContext _context; 
+        private readonly UserManager<User> _userManager;
 
-        public InvoiceController(StoreContext context)
+        public InvoiceController(StoreContext context,UserManager<User> userManager)
         {
-            _context = context;
+            _context = context; 
+            _userManager = userManager;
         }
 
         // GET: api/invoices
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoices()
+        [Authorize(Roles = "Admin")]  
+        public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoices(int pageSize, int pageNumber)
         {
-            return await _context.Invoices.ToListAsync();
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var Invoices = await _context.Invoices
+                .Where(r => r.UserId == user.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return Invoices;
         }
 
         // GET: api/invoices/{id}
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Invoice>> GetInvoice(int id)
         {
             var invoice = await _context.Invoices.FindAsync(id);
@@ -44,14 +59,15 @@ namespace API.Controllers
             _context.Invoices.Add(invoice);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetInvoice), new { id = invoice.InvoiceID }, invoice);
+            return CreatedAtAction(nameof(GetInvoice), new { id = invoice.Id }, invoice);
         }
 
         // PUT: api/invoices/{id}
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateInvoice(int id, Invoice invoice)
         {
-            if (id != invoice.InvoiceID)
+            if (id != invoice.Id)
             {
                 return BadRequest();
             }
@@ -79,6 +95,7 @@ namespace API.Controllers
 
         // DELETE: api/invoices/{id}
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteInvoice(int id)
         {
             var invoice = await _context.Invoices.FindAsync(id);
@@ -95,7 +112,7 @@ namespace API.Controllers
 
         private bool InvoiceExists(int id)
         {
-            return _context.Invoices.Any(e => e.InvoiceID == id);
+            return _context.Invoices.Any(e => e.Id == id);
         }
     }
 }
