@@ -100,8 +100,7 @@ namespace API.Controllers
             //     TaxNotation = "vat", 
             // };
             User client = GetUserByEmail(clientEmail);
-            Receipt.UserId = client.Id;
-            Receipt.Customer = client.Customer;
+            Receipt.UserId = client.Id; 
 
             _context.Receipts.Add(Receipt);
             await _context.SaveChangesAsync();

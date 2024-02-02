@@ -22,12 +22,7 @@ namespace API.Entities
         public string Company { get; set; }
         public string Zip { get; set; }
         public string City { get; set; }
-        public string Country { get; set; }
-
-        // New Relationship
-        public virtual ICollection<Order> Orders { get; set; }
-
-        public virtual ICollection<Review> Reviews { get; set; }
+        public string Country { get; set; } 
 
         // Navigation property for linking Customer to User (one-to-one)
         public virtual User User { get; set; }

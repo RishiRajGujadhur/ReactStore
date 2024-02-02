@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class PostgresInitial9 : Migration
+    public partial class ColumnChange2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -625,21 +625,31 @@ namespace API.Data.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    OrderID = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    BuyerId = table.Column<string>(type: "text", nullable: true),
+                    ShippingAddressFullName = table.Column<string>(name: "ShippingAddress_FullName", type: "text", nullable: true),
+                    ShippingAddressAddress1 = table.Column<string>(name: "ShippingAddress_Address1", type: "text", nullable: true),
+                    ShippingAddressAddress2 = table.Column<string>(name: "ShippingAddress_Address2", type: "text", nullable: true),
+                    ShippingAddressCity = table.Column<string>(name: "ShippingAddress_City", type: "text", nullable: true),
+                    ShippingAddressState = table.Column<string>(name: "ShippingAddress_State", type: "text", nullable: true),
+                    ShippingAddressZip = table.Column<string>(name: "ShippingAddress_Zip", type: "text", nullable: true),
+                    ShippingAddressCountry = table.Column<string>(name: "ShippingAddress_Country", type: "text", nullable: true),
+                    Subtotal = table.Column<long>(type: "bigint", nullable: false),
+                    DeliveryFee = table.Column<long>(type: "bigint", nullable: false),
+                    OrderStatus = table.Column<int>(type: "integer", nullable: false),
+                    PaymentIntentId = table.Column<string>(type: "text", nullable: true),
                     OrderDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "numeric", nullable: false),
-                    CustomerID = table.Column<int>(type: "integer", nullable: false)
+                    CustomerID = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.OrderID);
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Orders_Customers_CustomerID",
                         column: x => x.CustomerID,
                         principalTable: "Customers",
-                        principalColumn: "CustomerID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "CustomerID");
                 });
 
             migrationBuilder.CreateTable(
@@ -732,7 +742,7 @@ namespace API.Data.Migrations
                         name: "FK_AdditionalDeliveryInfos_Orders_OrderID",
                         column: x => x.OrderID,
                         principalTable: "Orders",
-                        principalColumn: "OrderID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -752,7 +762,7 @@ namespace API.Data.Migrations
                         name: "FK_Logistics_Orders_OrderID",
                         column: x => x.OrderID,
                         principalTable: "Orders",
-                        principalColumn: "OrderID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -773,28 +783,7 @@ namespace API.Data.Migrations
                         name: "FK_OrderDiscounts_Orders_OrderID",
                         column: x => x.OrderID,
                         principalTable: "Orders",
-                        principalColumn: "OrderID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Payments",
-                columns: table => new
-                {
-                    PaymentID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    OrderID = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payments", x => x.PaymentID);
-                    table.ForeignKey(
-                        name: "FK_Payments_Orders_OrderID",
-                        column: x => x.OrderID,
-                        principalTable: "Orders",
-                        principalColumn: "OrderID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -821,7 +810,7 @@ namespace API.Data.Migrations
                         name: "FK_PromotionUsages_Orders_OrderID",
                         column: x => x.OrderID,
                         principalTable: "Orders",
-                        principalColumn: "OrderID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PromotionUsages_Promotions_PromotionID",
@@ -855,7 +844,7 @@ namespace API.Data.Migrations
                         name: "FK_ReturnRequests_Orders_OrderID",
                         column: x => x.OrderID,
                         principalTable: "Orders",
-                        principalColumn: "OrderID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -863,18 +852,20 @@ namespace API.Data.Migrations
                 name: "OrderItems",
                 columns: table => new
                 {
-                    OrderItemID = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Price = table.Column<long>(type: "bigint", nullable: false),
+                    ItemOrderedProductId = table.Column<int>(name: "ItemOrdered_ProductId", type: "integer", nullable: true),
+                    ItemOrderedName = table.Column<string>(name: "ItemOrdered_Name", type: "text", nullable: true),
+                    ItemOrderedPictureUrl = table.Column<string>(name: "ItemOrdered_PictureUrl", type: "text", nullable: true),
                     Quantity = table.Column<int>(type: "integer", nullable: false),
-                    Subtotal = table.Column<decimal>(type: "numeric", nullable: false),
-                    OrderID = table.Column<int>(type: "integer", nullable: false),
-                    ProductID = table.Column<int>(type: "integer", nullable: false),
                     InvoiceId = table.Column<int>(type: "integer", nullable: false),
-                    ReceiptId = table.Column<int>(type: "integer", nullable: false)
+                    ReceiptId = table.Column<int>(type: "integer", nullable: true),
+                    OrderId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderItems", x => x.OrderItemID);
+                    table.PrimaryKey("PK_OrderItems", x => x.Id);
                     table.ForeignKey(
                         name: "FK_OrderItems_Invoices_InvoiceId",
                         column: x => x.InvoiceId,
@@ -882,23 +873,15 @@ namespace API.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Orders_OrderID",
-                        column: x => x.OrderID,
+                        name: "FK_OrderItems_Orders_OrderId",
+                        column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "OrderID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderItems_Products_ProductID",
-                        column: x => x.ProductID,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_OrderItems_Receipts_ReceiptId",
                         column: x => x.ReceiptId,
                         principalTable: "Receipts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -915,8 +898,8 @@ namespace API.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3482747d-6dd2-482b-9146-241d742c80c8", null, "Admin", "ADMIN" },
-                    { "b22d13f5-390b-497f-a819-3ec168c810e4", null, "Member", "MEMBER" }
+                    { "7c67862f-abb1-4151-8b86-533f78b22f56", null, "Admin", "ADMIN" },
+                    { "98893e86-dbba-45a8-adcc-bc8da3672dde", null, "Member", "MEMBER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -1062,14 +1045,9 @@ namespace API.Data.Migrations
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_OrderID",
+                name: "IX_OrderItems_OrderId",
                 table: "OrderItems",
-                column: "OrderID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_ProductID",
-                table: "OrderItems",
-                column: "ProductID");
+                column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_ReceiptId",
@@ -1080,11 +1058,6 @@ namespace API.Data.Migrations
                 name: "IX_Orders_CustomerID",
                 table: "Orders",
                 column: "CustomerID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payments_OrderID",
-                table: "Payments",
-                column: "OrderID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PromotionUsages_CustomerID",
@@ -1195,9 +1168,6 @@ namespace API.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "OrderItems");
-
-            migrationBuilder.DropTable(
-                name: "Payments");
 
             migrationBuilder.DropTable(
                 name: "PromotionUsages");

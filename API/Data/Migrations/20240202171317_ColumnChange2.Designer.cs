@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20240202171317_ColumnChange2")]
+    partial class ColumnChange2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,6 +232,9 @@ namespace API.Data.Migrations
                     b.Property<string>("BottomNotice")
                         .HasColumnType("text");
 
+                    b.Property<int?>("CustomerID")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -252,6 +258,8 @@ namespace API.Data.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerID");
 
                     b.HasIndex("SenderId");
 
@@ -417,6 +425,9 @@ namespace API.Data.Migrations
                     b.Property<string>("BuyerId")
                         .HasColumnType("text");
 
+                    b.Property<int?>("CustomerID")
+                        .HasColumnType("integer");
+
                     b.Property<long>("DeliveryFee")
                         .HasColumnType("bigint");
 
@@ -433,6 +444,8 @@ namespace API.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerID");
 
                     b.ToTable("Orders");
                 });
@@ -597,6 +610,12 @@ namespace API.Data.Migrations
                     b.Property<string>("BottomNotice")
                         .HasColumnType("text");
 
+                    b.Property<int?>("CustomerID")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Date")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -625,6 +644,8 @@ namespace API.Data.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerID");
 
                     b.HasIndex("SenderId");
 
@@ -990,13 +1011,13 @@ namespace API.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3734103b-5fa2-4358-8892-16ef8b23ccbd",
+                            Id = "98893e86-dbba-45a8-adcc-bc8da3672dde",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "4600aabb-64c1-4247-9b05-8a368558b39d",
+                            Id = "7c67862f-abb1-4151-8b86-533f78b22f56",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -1216,6 +1237,10 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Invoice", b =>
                 {
+                    b.HasOne("API.Entities.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerID");
+
                     b.HasOne("API.Entities.InvoiceSender", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId");
@@ -1229,6 +1254,8 @@ namespace API.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Customer");
 
                     b.Navigation("Sender");
 
@@ -1280,6 +1307,10 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Order", b =>
                 {
+                    b.HasOne("API.Entities.Customer", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerID");
+
                     b.OwnsOne("API.Entities.OrderAggregate.ShippingAddress", "ShippingAddress", b1 =>
                         {
                             b1.Property<int>("OrderId")
@@ -1402,6 +1433,10 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Receipt", b =>
                 {
+                    b.HasOne("API.Entities.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerID");
+
                     b.HasOne("API.Entities.ReceiptSender", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId");
@@ -1415,6 +1450,8 @@ namespace API.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Customer");
 
                     b.Navigation("Sender");
 
@@ -1445,7 +1482,7 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.Review", b =>
                 {
                     b.HasOne("API.Entities.Customer", "Customer")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1544,6 +1581,13 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.CollectionList", b =>
                 {
                     b.Navigation("CollectionListItems");
+                });
+
+            modelBuilder.Entity("API.Entities.Customer", b =>
+                {
+                    b.Navigation("Orders");
+
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("API.Entities.Invoice", b =>

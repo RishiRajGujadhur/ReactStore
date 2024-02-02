@@ -93,21 +93,20 @@ namespace API.Controllers
             // TODO: get  from order
 
             // TODO: get from settings
-            // invoice.Settings = new InvoiceSettings(){
-            //     Currency = "MUR",
-            //     Format = "A4",
-            //     Height = "210mm",
-            //     Width = "297mm",
-            //     Locale = "en-US",
-            //     MarginBottom = 10,
-            //     MarginLeft = 10,
-            //     MarginRight = 10,
-            //     MarginTop = 10,
-            //     TaxNotation = "vat", 
-            // };
+            invoice.Settings = new InvoiceSettings(){
+                Currency = "MUR",
+                Format = "A4",
+                Height = "210mm",
+                Width = "297mm",
+                Locale = "en-US",
+                MarginBottom = 10,
+                MarginLeft = 10,
+                MarginRight = 10,
+                MarginTop = 10,
+                TaxNotation = "vat", 
+            };
             User client = GetUserByEmail(clientEmail);
-            invoice.UserId = client.Id;
-            invoice.Customer = client.Customer;
+            invoice.UserId = client.Id; 
 
             _context.Invoices.Add(invoice);
             await _context.SaveChangesAsync();

@@ -15,19 +15,16 @@ namespace API.Entities
         [Required]
         public DateTime DueDate { get; set; } 
 
-        public string Logo { get; set; }
+        public string Logo { get; set; } = "https://via.placeholder.com/150";
 
-        public string Number { get; set; }
-        public string Date { get; set; }
+        public string Number { get; set; } 
 
-        public string BottomNotice { get; set; }
-        // Foreign Key
-
+        public string BottomNotice { get; set; } = "Thank you for your business.";
+        // Foreign Key 
         public int UserId { get; set; }
         public User User { get; set; } 
         public List<OrderItem> OrderItems { get; set; }
-        public ReceiptSettings Settings { get; set; }
-        public Customer Customer { get; set; }
+        public ReceiptSettings Settings { get; set; } = new ReceiptSettings();
         public ReceiptSender Sender { get; set; }
     }
 
@@ -46,16 +43,16 @@ namespace API.Entities
     {
         [Key]
         public int Id { get; set; }
-        public string Currency { get; set; }
-        public string Locale { get; set; }
-        public string TaxNotation { get; set; }
-        public double? MarginTop { get; set; }
-        public double? MarginRight { get; set; }
-        public double? MarginLeft { get; set; }
-        public double? MarginBottom { get; set; }
-        public string Format { get; set; }
-        public string Height { get; set; }
-        public string Width { get; set; }
-        public string Orientation { get; set; }
+        public string Currency { get; set; } = "MUR";
+        public string Locale { get; set; } = "en-US";
+        public string TaxNotation { get; set; } = "vat";
+        public double? MarginTop { get; set; } = 10;
+        public double? MarginRight { get; set; } = 10;
+        public double? MarginLeft { get; set; } = 10;
+        public double? MarginBottom { get; set; } = 10;
+        public string Format { get; set; } = "A4";
+        public string Height { get; set; } = "210mm";
+        public string Width { get; set; } = "297mm";
+        public string Orientation { get; set; } = "portrait";
     }
 }

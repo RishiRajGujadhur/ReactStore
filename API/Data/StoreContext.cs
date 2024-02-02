@@ -70,14 +70,8 @@ namespace API.Data
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.Reviews)
                 .WithOne(r => r.Product)
-                .HasForeignKey(r => r.ProductID);
-
-            // One-to-Many relationship between Customer and Review
-            modelBuilder.Entity<Customer>()
-                .HasMany(c => c.Reviews)
-                .WithOne(r => r.Customer)
-                .HasForeignKey(r => r.CustomerID); 
-
+                .HasForeignKey(r => r.ProductID); 
+                
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.ReturnRequests)
                 .WithOne(rr => rr.Order)

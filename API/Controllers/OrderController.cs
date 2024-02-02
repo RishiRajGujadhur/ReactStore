@@ -4,6 +4,7 @@ using API.Entities;
 using API.Entities.OrderAggregate;
 using API.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +16,14 @@ public class OrdersController : ControllerBase
 {
     private readonly StoreContext _context;
 
-    public OrdersController(StoreContext context)
+    private readonly UserManager<User> _userManager;
+
+
+    public OrdersController(StoreContext context, UserManager<User> userManager)
     {
         _context = context;
+
+        _userManager = userManager;
     }
 
     [HttpGet]
@@ -64,7 +70,7 @@ public class OrdersController : ControllerBase
             {
                 ItemOrdered = itemOrdered,
                 Price = productItem.Price,
-                Quantity = item.Quantity
+                Quantity = item.Quantity,
             };
             items.Add(orderItem);
             productItem.QuantityInStock -= item.Quantity;
@@ -72,7 +78,7 @@ public class OrdersController : ControllerBase
 
         var subtotal = items.Sum(item => item.Price * item.Quantity);
         var deliveryFee = subtotal > 10000 ? 0 : 500;
-
+        await CreateInvoice(items);
         var order = new Order
         {
             OrderItems = items,
@@ -111,4 +117,48 @@ public class OrdersController : ControllerBase
 
         return BadRequest("Problem creating order");
     }
+
+    public async Task<int> CreateInvoice(List<OrderItem> orderItems)
+    {
+        Invoice invoice = new();
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        // Todo: Get details from future settings table
+        invoice.Sender = new InvoiceSender()
+        {
+            Address = "1234 Main St",
+            City = "New York",
+            Company = "Company Name",
+            Zip = "123456",
+            Country = "USA",
+        };
+        invoice.BottomNotice = "Thank you for your business. Please make sure all payments are made within 2 weeks.";
+        invoice.DueDate = DateTime.UtcNow.AddDays(14);
+        invoice.IssueDate = DateTime.UtcNow;
+        invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id;
+        invoice.Logo = "https://via.placeholder.com/150";
+        invoice.OrderItems = orderItems;
+        // create invoice on order completion
+        // create order 
+        // create order items with invoice id
+        // get invoice with order items
+        // TODO: get  from order
+
+        // TODO: get from settings
+        // invoice.Settings = new InvoiceSettings(){
+        //     Currency = "MUR",
+        //     Format = "A4",
+        //     Height = "210mm",
+        //     Width = "297mm",
+        //     Locale = "en-US",
+        //     MarginBottom = 10,
+        //     MarginLeft = 10,
+        //     MarginRight = 10,
+        //     MarginTop = 10,
+        //     TaxNotation = "vat", 
+        // };
+        User client = user;
+        invoice.UserId = client.Id; 
+        _context.Invoices.Add(invoice);  
+        return invoice.Id;
+    } 
 }

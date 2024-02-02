@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20240202121755_PostgresInitial9")]
-    partial class PostgresInitial9
+    [Migration("20240202173533_ColumnChange3")]
+    partial class ColumnChange3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -232,9 +232,6 @@ namespace API.Data.Migrations
                     b.Property<string>("BottomNotice")
                         .HasColumnType("text");
 
-                    b.Property<int?>("CustomerID")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -258,8 +255,6 @@ namespace API.Data.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerID");
 
                     b.HasIndex("SenderId");
 
@@ -416,22 +411,34 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Order", b =>
                 {
-                    b.Property<int>("OrderID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CustomerID")
+                    b.Property<string>("BuyerId")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("CustomerID")
                         .HasColumnType("integer");
+
+                    b.Property<long>("DeliveryFee")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("numeric");
+                    b.Property<int>("OrderStatus")
+                        .HasColumnType("integer");
 
-                    b.HasKey("OrderID");
+                    b.Property<string>("PaymentIntentId")
+                        .HasColumnType("text");
+
+                    b.Property<long>("Subtotal")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CustomerID");
 
@@ -464,65 +471,36 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.OrderItem", b =>
                 {
-                    b.Property<int>("OrderItemID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderItemID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("InvoiceId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("OrderID")
+                    b.Property<int?>("OrderId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ProductID")
-                        .HasColumnType("integer");
+                    b.Property<long>("Price")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ReceiptId")
+                    b.Property<int?>("ReceiptId")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("Subtotal")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("OrderItemID");
+                    b.HasKey("Id");
 
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("OrderID");
-
-                    b.HasIndex("ProductID");
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("ReceiptId");
 
                     b.ToTable("OrderItems");
-                });
-
-            modelBuilder.Entity("API.Entities.Payment", b =>
-                {
-                    b.Property<int>("PaymentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PaymentID"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
-
-                    b.Property<int>("OrderID")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("PaymentID");
-
-                    b.HasIndex("OrderID");
-
-                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("API.Entities.Product", b =>
@@ -627,9 +605,6 @@ namespace API.Data.Migrations
                     b.Property<string>("BottomNotice")
                         .HasColumnType("text");
 
-                    b.Property<int?>("CustomerID")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Date")
                         .HasColumnType("text");
 
@@ -661,8 +636,6 @@ namespace API.Data.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerID");
 
                     b.HasIndex("SenderId");
 
@@ -1028,13 +1001,13 @@ namespace API.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b22d13f5-390b-497f-a819-3ec168c810e4",
+                            Id = "1be9509d-cd7b-4239-9a87-0c8c35a73973",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "3482747d-6dd2-482b-9146-241d742c80c8",
+                            Id = "82fa586e-7d40-488b-a4e6-c0514221461e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -1254,10 +1227,6 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Invoice", b =>
                 {
-                    b.HasOne("API.Entities.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerID");
-
                     b.HasOne("API.Entities.InvoiceSender", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId");
@@ -1271,8 +1240,6 @@ namespace API.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Customer");
 
                     b.Navigation("Sender");
 
@@ -1324,13 +1291,45 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Order", b =>
                 {
-                    b.HasOne("API.Entities.Customer", "Customer")
+                    b.HasOne("API.Entities.Customer", null)
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CustomerID");
 
-                    b.Navigation("Customer");
+                    b.OwnsOne("API.Entities.OrderAggregate.ShippingAddress", "ShippingAddress", b1 =>
+                        {
+                            b1.Property<int>("OrderId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Address1")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Address2")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("City")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Country")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("FullName")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("State")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Zip")
+                                .HasColumnType("text");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Orders");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
+                    b.Navigation("ShippingAddress");
                 });
 
             modelBuilder.Entity("API.Entities.OrderDiscount", b =>
@@ -1352,42 +1351,41 @@ namespace API.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Entities.Order", "Order")
+                    b.HasOne("API.Entities.Order", null)
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("API.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderId");
 
                     b.HasOne("API.Entities.Receipt", "Receipt")
                         .WithMany("OrderItems")
-                        .HasForeignKey("ReceiptId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReceiptId");
+
+                    b.OwnsOne("API.Entities.OrderAggregate.ProductItemOrdered", "ItemOrdered", b1 =>
+                        {
+                            b1.Property<int>("OrderItemId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Name")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("PictureUrl")
+                                .HasColumnType("text");
+
+                            b1.Property<int>("ProductId")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("OrderItemId");
+
+                            b1.ToTable("OrderItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderItemId");
+                        });
 
                     b.Navigation("Invoice");
 
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
+                    b.Navigation("ItemOrdered");
 
                     b.Navigation("Receipt");
-                });
-
-            modelBuilder.Entity("API.Entities.Payment", b =>
-                {
-                    b.HasOne("API.Entities.Order", "Order")
-                        .WithMany("Payments")
-                        .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("API.Entities.PromotionUsage", b =>
@@ -1419,10 +1417,6 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Receipt", b =>
                 {
-                    b.HasOne("API.Entities.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerID");
-
                     b.HasOne("API.Entities.ReceiptSender", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId");
@@ -1436,8 +1430,6 @@ namespace API.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Customer");
 
                     b.Navigation("Sender");
 
@@ -1588,8 +1580,6 @@ namespace API.Data.Migrations
                     b.Navigation("Discounts");
 
                     b.Navigation("OrderItems");
-
-                    b.Navigation("Payments");
 
                     b.Navigation("ReturnRequests");
                 });
