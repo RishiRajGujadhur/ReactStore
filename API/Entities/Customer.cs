@@ -19,6 +19,11 @@ namespace API.Entities
 
         public string Phone { get; set; }
 
+        public string Company { get; set; }
+        public string Zip { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
+
         // New Relationship
         public virtual ICollection<Order> Orders { get; set; }
 

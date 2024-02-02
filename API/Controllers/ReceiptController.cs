@@ -31,7 +31,7 @@ namespace API.Controllers
             return receipts;
         }
 
-        [HttpGet]
+        [HttpGet("getMyReceipts")]
         public async Task<ActionResult<IEnumerable<Receipt>>> GetMyReceipts(int pageSize, int pageNumber)
         {
 

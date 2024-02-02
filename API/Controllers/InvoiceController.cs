@@ -52,15 +52,70 @@ namespace API.Controllers
             return invoice;
         }
 
+        [HttpGet("getMyInvoices")]
+        public async Task<ActionResult<IEnumerable<Invoice>>> GetMyInvoices(int pageSize, int pageNumber)
+        {
+
+           var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var Invoices = await _context.Invoices
+                .Where(r => r.UserId == user.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return Invoices;
+        }
+
         // POST: api/invoices
         [HttpPost]
-        public async Task<ActionResult<Invoice>> CreateInvoice(Invoice invoice)
+        public async Task<ActionResult<Invoice>> CreateInvoice(Invoice invoice, string clientEmail)
         {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name); 
+            // Todo: Get details from future settings table
+            invoice.Sender = new InvoiceSender(){
+                Address = "1234 Main St",
+                City = "New York",
+                Company = "Company Name",
+                Zip = "123456",
+                Country = "USA", 
+            };
+            invoice.BottomNotice = "Thank you for your business. Please make sure all payments are made within 2 weeks.";
+            invoice.DueDate = DateTime.UtcNow.AddDays(14);
+            invoice.IssueDate = DateTime.UtcNow;
+            invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id; 
+            invoice.Logo = "https://via.placeholder.com/150";
+            
+            // create invoice on order completion
+            // create order 
+            // create order items with invoice id
+            // get invoice with order items
+            // TODO: get  from order
+
+            // TODO: get from settings
+            // invoice.Settings = new InvoiceSettings(){
+            //     Currency = "MUR",
+            //     Format = "A4",
+            //     Height = "210mm",
+            //     Width = "297mm",
+            //     Locale = "en-US",
+            //     MarginBottom = 10,
+            //     MarginLeft = 10,
+            //     MarginRight = 10,
+            //     MarginTop = 10,
+            //     TaxNotation = "vat", 
+            // };
+            User client = GetUserByEmail(clientEmail);
+            invoice.UserId = client.Id;
+            invoice.Customer = client.Customer;
+
             _context.Invoices.Add(invoice);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetInvoice), new { id = invoice.Id }, invoice);
         }
+
+      
 
         // PUT: api/invoices/{id}
         [HttpPut("{id}")]
@@ -110,9 +165,15 @@ namespace API.Controllers
             return NoContent();
         }
 
+        #region Helper Methods
         private bool InvoiceExists(int id)
         {
             return _context.Invoices.Any(e => e.Id == id);
         }
+
+        private User GetUserByEmail(string email){
+            return _context.Users.Where(u => u.Email == email).FirstOrDefault();
+        }
+        #endregion
     }
 }

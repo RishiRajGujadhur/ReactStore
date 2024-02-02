@@ -18,5 +18,13 @@ namespace API.Entities
 
         public int ProductID { get; set; }
         public virtual Product Product { get; set; }
+
+        public int InvoiceId { get; set; }
+        
+        public virtual Invoice Invoice { get; set; }
+
+        public int ReceiptId { get; set; } 
+        public virtual Receipt Receipt { get; set; }
+
     }
 }

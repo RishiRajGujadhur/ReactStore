@@ -6,19 +6,14 @@ namespace API.Entities
     {
         [Key]
         public int Id { get; set; }
-
-        [Required]
-        public DateTime IssueDate { get; set; }
+        public DateTime IssueDate { get; set; } = DateTime.UtcNow;
 
         [Required]
         public DateTime PaymentDate { get; set; }
         public string PaymentMethod { get; set; }
 
         [Required]
-        public DateTime DueDate { get; set; }
-
-        [Required]
-        public decimal Amount { get; set; }
+        public DateTime DueDate { get; set; } 
 
         public string Logo { get; set; }
 
@@ -29,17 +24,16 @@ namespace API.Entities
         // Foreign Key
 
         public int UserId { get; set; }
-        public User User { get; set; }
-        public int OrderID { get; set; }
-        public virtual Order Order { get; set; }
-        public List<Product> Products { get; set; }
+        public User User { get; set; } 
+        public List<OrderItem> OrderItems { get; set; }
         public ReceiptSettings Settings { get; set; }
-        public Customer Client { get; set; }
+        public Customer Customer { get; set; }
         public ReceiptSender Sender { get; set; }
     }
 
     public class ReceiptSender
     {
+        [Key]
         public int Id { get; set; }
         public string Company { get; set; }
         public string Address { get; set; }
@@ -50,6 +44,7 @@ namespace API.Entities
 
     public class ReceiptSettings
     {
+        [Key]
         public int Id { get; set; }
         public string Currency { get; set; }
         public string Locale { get; set; }

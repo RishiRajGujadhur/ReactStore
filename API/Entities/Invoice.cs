@@ -5,31 +5,27 @@ namespace API.Entities
     public class Invoice
     {
         [Key]
-        public int Id { get; set; } 
-        [Required]
-        public DateTime IssueDate { get; set; }
+        public int Id { get; set; }
+        public DateTime IssueDate { get; set; } = DateTime.UtcNow;
 
         [Required]
-        public DateTime DueDate { get; set; } 
+        public DateTime DueDate { get; set; }
         [Required]
-        public decimal Amount { get; set; } 
-        public string Logo { get; set; }       
-        public string Number { get; set; }
-        public string Date { get; set; }
+        public string Logo { get; set; }
+        public string Number { get; set; } 
         public string BottomNotice { get; set; }
         // Foreign Key
         public int UserId { get; set; }
-        public User User { get; set; } 
-        public int OrderID { get; set; }
-        public virtual Order Order { get; set; }
-        public List<Product> Products { get; set; }
+        public User User { get; set; }
+        public List<OrderItem> OrderItems { get; set; }
         public InvoiceSettings Settings { get; set; }
-        public Customer Client { get; set; }
-        public InvoiceSender Sender { get; set; } 
+        public Customer Customer { get; set; }
+        public InvoiceSender Sender { get; set; }
     }
 
     public class InvoiceSender
     {
+        [Key]
         public int Id { get; set; }
         public string Company { get; set; }
         public string Address { get; set; }
@@ -37,9 +33,10 @@ namespace API.Entities
         public string City { get; set; }
         public string Country { get; set; }
     }
- 
+
     public class InvoiceSettings
     {
+        [Key]
         public int Id { get; set; }
         public string Currency { get; set; }
         public string Locale { get; set; }
