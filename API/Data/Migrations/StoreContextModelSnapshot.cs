@@ -164,6 +164,15 @@ namespace API.Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("text");
 
+                    b.Property<string>("City")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Company")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("text");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -173,6 +182,9 @@ namespace API.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Phone")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Zip")
                         .HasColumnType("text");
 
                     b.HasKey("CustomerID");
@@ -214,17 +226,11 @@ namespace API.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
-
                     b.Property<string>("BottomNotice")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ClientCustomerID")
+                    b.Property<int?>("CustomerID")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("text");
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
@@ -233,13 +239,11 @@ namespace API.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Logo")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Number")
                         .HasColumnType("text");
-
-                    b.Property<int>("OrderID")
-                        .HasColumnType("integer");
 
                     b.Property<int?>("SenderId")
                         .HasColumnType("integer");
@@ -252,9 +256,7 @@ namespace API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientCustomerID");
-
-                    b.HasIndex("OrderID");
+                    b.HasIndex("CustomerID");
 
                     b.HasIndex("SenderId");
 
@@ -465,6 +467,9 @@ namespace API.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderItemID"));
 
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("OrderID")
                         .HasColumnType("integer");
 
@@ -474,14 +479,21 @@ namespace API.Data.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
+                    b.Property<int>("ReceiptId")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("Subtotal")
                         .HasColumnType("numeric");
 
                     b.HasKey("OrderItemID");
 
+                    b.HasIndex("InvoiceId");
+
                     b.HasIndex("OrderID");
 
                     b.HasIndex("ProductID");
+
+                    b.HasIndex("ReceiptId");
 
                     b.ToTable("OrderItems");
                 });
@@ -524,9 +536,6 @@ namespace API.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<int?>("InvoiceId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -542,17 +551,10 @@ namespace API.Data.Migrations
                     b.Property<int>("QuantityInStock")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ReceiptId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Type")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.HasIndex("ReceiptId");
 
                     b.ToTable("Products");
                 });
@@ -619,13 +621,10 @@ namespace API.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
-
                     b.Property<string>("BottomNotice")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ClientCustomerID")
+                    b.Property<int?>("CustomerID")
                         .HasColumnType("integer");
 
                     b.Property<string>("Date")
@@ -642,9 +641,6 @@ namespace API.Data.Migrations
 
                     b.Property<string>("Number")
                         .HasColumnType("text");
-
-                    b.Property<int>("OrderID")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("timestamp with time zone");
@@ -663,9 +659,7 @@ namespace API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientCustomerID");
-
-                    b.HasIndex("OrderID");
+                    b.HasIndex("CustomerID");
 
                     b.HasIndex("SenderId");
 
@@ -1031,13 +1025,13 @@ namespace API.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "47b44acf-2b8a-4712-9153-1253f923eb34",
+                            Id = "b22d13f5-390b-497f-a819-3ec168c810e4",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "126308fd-1196-4885-b84b-5889f70f600b",
+                            Id = "3482747d-6dd2-482b-9146-241d742c80c8",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -1257,15 +1251,9 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Invoice", b =>
                 {
-                    b.HasOne("API.Entities.Customer", "Client")
+                    b.HasOne("API.Entities.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("ClientCustomerID");
-
-                    b.HasOne("API.Entities.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CustomerID");
 
                     b.HasOne("API.Entities.InvoiceSender", "Sender")
                         .WithMany()
@@ -1281,9 +1269,7 @@ namespace API.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Client");
-
-                    b.Navigation("Order");
+                    b.Navigation("Customer");
 
                     b.Navigation("Sender");
 
@@ -1357,6 +1343,12 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.OrderItem", b =>
                 {
+                    b.HasOne("API.Entities.Invoice", "Invoice")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("API.Entities.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderID")
@@ -1369,9 +1361,19 @@ namespace API.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("API.Entities.Receipt", "Receipt")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("ReceiptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Invoice");
+
                     b.Navigation("Order");
 
                     b.Navigation("Product");
+
+                    b.Navigation("Receipt");
                 });
 
             modelBuilder.Entity("API.Entities.Payment", b =>
@@ -1383,17 +1385,6 @@ namespace API.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("API.Entities.Product", b =>
-                {
-                    b.HasOne("API.Entities.Invoice", null)
-                        .WithMany("Products")
-                        .HasForeignKey("InvoiceId");
-
-                    b.HasOne("API.Entities.Receipt", null)
-                        .WithMany("Products")
-                        .HasForeignKey("ReceiptId");
                 });
 
             modelBuilder.Entity("API.Entities.PromotionUsage", b =>
@@ -1425,15 +1416,9 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Receipt", b =>
                 {
-                    b.HasOne("API.Entities.Customer", "Client")
+                    b.HasOne("API.Entities.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("ClientCustomerID");
-
-                    b.HasOne("API.Entities.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CustomerID");
 
                     b.HasOne("API.Entities.ReceiptSender", "Sender")
                         .WithMany()
@@ -1449,9 +1434,7 @@ namespace API.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Client");
-
-                    b.Navigation("Order");
+                    b.Navigation("Customer");
 
                     b.Navigation("Sender");
 
@@ -1592,7 +1575,7 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Invoice", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("API.Entities.Order", b =>
@@ -1617,7 +1600,7 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Receipt", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("API.Entities.User", b =>

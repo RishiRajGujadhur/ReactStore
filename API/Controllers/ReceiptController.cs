@@ -10,12 +10,12 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class ReceiptController : ControllerBase
     {
-        private readonly StoreContext _context; 
+        private readonly StoreContext _context;
         private readonly UserManager<User> _userManager;
 
-        public ReceiptController(StoreContext context,UserManager<User> userManager)
+        public ReceiptController(StoreContext context, UserManager<User> userManager)
         {
-            _context = context; 
+            _context = context;
             _userManager = userManager;
         }
 
@@ -35,7 +35,7 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<Receipt>>> GetMyReceipts(int pageSize, int pageNumber)
         {
 
-           var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
             var receipts = await _context.Receipts
                 .Where(r => r.UserId == user.Id)
@@ -60,10 +60,49 @@ namespace API.Controllers
             return Receipt;
         }
 
-        // POST: api/Receipts
+        // POST: api/Receipts 
         [HttpPost]
-        public async Task<ActionResult<Receipt>> CreateReceipt(Receipt Receipt)
+        public async Task<ActionResult<Receipt>> CreateReceipt(Receipt Receipt, string clientEmail)
         {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            // Todo: Get details from future settings table
+            Receipt.Sender = new ReceiptSender()
+            {
+                Address = "1234 Main St",
+                City = "New York",
+                Company = "Company Name",
+                Zip = "123456",
+                Country = "USA",
+            };
+            Receipt.BottomNotice = "Thank you for your business. Please make sure all payments are made within 2 weeks.";
+            Receipt.DueDate = DateTime.UtcNow.AddDays(14);
+            Receipt.IssueDate = DateTime.UtcNow;
+            Receipt.Number = "INV-000" + Receipt.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + Receipt.Id;
+            Receipt.Logo = "https://via.placeholder.com/150";
+
+            // create Receipt on order completion or when admin clicks on "payment is made" on order dashboard
+            // create order 
+            // create order items with Receipt id
+            // get Receipt with order items
+            // TODO: get from order
+
+            // TODO: get from settings
+            // Receipt.Settings = new ReceiptSettings(){
+            //     Currency = "MUR",
+            //     Format = "A4",
+            //     Height = "210mm",
+            //     Width = "297mm",
+            //     Locale = "en-US",
+            //     MarginBottom = 10,
+            //     MarginLeft = 10,
+            //     MarginRight = 10,
+            //     MarginTop = 10,
+            //     TaxNotation = "vat", 
+            // };
+            User client = GetUserByEmail(clientEmail);
+            Receipt.UserId = client.Id;
+            Receipt.Customer = client.Customer;
+
             _context.Receipts.Add(Receipt);
             await _context.SaveChangesAsync();
 
@@ -116,9 +155,16 @@ namespace API.Controllers
             return NoContent();
         }
 
+        #region Helper Methods
         private bool ReceiptExists(int id)
         {
             return _context.Receipts.Any(e => e.Id == id);
         }
+
+        private User GetUserByEmail(string email)
+        {
+            return _context.Users.Where(u => u.Email == email).FirstOrDefault();
+        }
+        #endregion
     }
 }

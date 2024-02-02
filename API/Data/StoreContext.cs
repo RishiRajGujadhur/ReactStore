@@ -26,8 +26,7 @@ namespace API.Data
         public DbSet<Logistics> Logistics { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         
-        public DbSet<Receipt> Receipts { get; set; }
-        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Receipt> Receipts { get; set; } 
         public DbSet<CollectionList> CollectionLists { get; set; }
         public DbSet<CollectionListItem> CollectionListItems { get; set; }
         public DbSet<OrderDiscount> OrderDiscounts { get; set; }
@@ -60,19 +59,7 @@ namespace API.Data
               new Role { Id = 1, Name = "Member", NormalizedName = "MEMBER" },
               new Role { Id = 2, Name = "Admin", NormalizedName = "ADMIN" }
           );
-
-            // One-to-Many relationship between Customer and Order
-            modelBuilder.Entity<Customer>()
-                .HasMany(c => c.Orders)
-                .WithOne(o => o.Customer)
-                .HasForeignKey(o => o.CustomerID);
-
-            // One-to-Many relationship between Order and OrderItem
-            modelBuilder.Entity<Order>()
-                .HasMany(o => o.OrderItems)
-                .WithOne(oi => oi.Order)
-                .HasForeignKey(oi => oi.OrderID);
-
+   
             // One-to-Many relationship between Order and ReturnRequest
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.ReturnRequests)
@@ -89,24 +76,12 @@ namespace API.Data
             modelBuilder.Entity<Customer>()
                 .HasMany(c => c.Reviews)
                 .WithOne(r => r.Customer)
-                .HasForeignKey(r => r.CustomerID);
-
-            // Configure cascading delete behavior if needed
-            modelBuilder.Entity<Order>()
-                .HasMany(o => o.OrderItems)
-                .WithOne(oi => oi.Order)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(r => r.CustomerID); 
 
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.ReturnRequests)
                 .WithOne(rr => rr.Order)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Payment and Order relationship
-            modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Order)
-                .WithMany(o => o.Payments)
-                .HasForeignKey(p => p.OrderID);
+                .OnDelete(DeleteBehavior.Cascade); 
 
             // Collection and Product relationship
             modelBuilder.Entity<CollectionList>()
