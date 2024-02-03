@@ -1,5 +1,7 @@
 using API.Data;
+using API.DTOs;
 using API.Entities;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,27 +16,27 @@ namespace API.Controllers
         private readonly StoreContext _context; 
         private readonly UserManager<User> _userManager;
 
-        public InvoiceController(StoreContext context,UserManager<User> userManager)
+        private readonly IMapper _mapper;
+        public InvoiceController(StoreContext context,UserManager<User> userManager,  IMapper mapper)
         {
             _context = context; 
             _userManager = userManager;
-        }
+            _mapper = mapper;
+        } 
 
         // GET: api/invoices
-        [HttpGet]
+        [HttpGet("getAllInvoiceList")]
         [Authorize(Roles = "Admin")]  
-        public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoices(int pageSize, int pageNumber)
-        {
-
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-
-            var Invoices = await _context.Invoices
-                .Where(r => r.UserId == user.Id)
+        public async Task<ActionResult<IEnumerable<InvoiceDto>>> GetAllInvoiceList(int pageSize, int pageNumber)
+        { 
+            var invoices = await _context.Invoices 
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToListAsync(); 
+ 
+            var invoicesDto =  _mapper.Map<List<InvoiceDto>>(invoices);
 
-            return Invoices;
+            return invoicesDto;
         }
 
         // GET: api/invoices/{id}
@@ -42,7 +44,11 @@ namespace API.Controllers
         [Authorize]
         public async Task<ActionResult<Invoice>> GetInvoice(int id)
         {
-            var invoice = await _context.Invoices.FindAsync(id);
+            var invoice = await _context.Invoices
+                .Include(s => s.Sender)
+                .Include(s => s.Settings)
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(i => i.Id == id); 
 
             if (invoice == null)
             {
@@ -52,19 +58,22 @@ namespace API.Controllers
             return invoice;
         }
 
-        [HttpGet("getMyInvoices")]
-        public async Task<ActionResult<IEnumerable<Invoice>>> GetMyInvoices(int pageSize, int pageNumber)
+        [HttpGet("getMyInvoiceList")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<InvoiceDto>>> GetMyInvoiceList(int pageSize, int pageNumber)
         {
 
            var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            var Invoices = await _context.Invoices
-                .Where(r => r.UserId == user.Id)
+            var invoices = await _context.Invoices
+                .Where(r => r.UserId == user.Id)  
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+ 
+            var invoicesDto =  _mapper.Map<List<InvoiceDto>>(invoices);
 
-            return Invoices;
+            return invoicesDto;
         }
 
         // POST: api/invoices
@@ -111,7 +120,7 @@ namespace API.Controllers
             _context.Invoices.Add(invoice);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetInvoice), new { id = invoice.Id }, invoice);
+            return NoContent();;
         }
         
         // PUT: api/invoices/{id}

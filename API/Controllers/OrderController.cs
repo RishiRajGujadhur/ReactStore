@@ -118,7 +118,7 @@ public class OrdersController : ControllerBase
         return BadRequest("Problem creating order");
     }
 
-    public async Task<int> CreateInvoice(List<OrderItem> orderItems)
+    private async Task<int> CreateInvoice(List<OrderItem> orderItems)
     {
         Invoice invoice = new();
         var user = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -136,12 +136,7 @@ public class OrdersController : ControllerBase
         invoice.IssueDate = DateTime.UtcNow;
         invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id;
         invoice.Logo = "https://via.placeholder.com/150";
-        invoice.OrderItems = orderItems;
-        // create invoice on order completion
-        // create order 
-        // create order items with invoice id
-        // get invoice with order items
-        // TODO: get  from order
+        invoice.OrderItems = orderItems; 
 
         // TODO: get from settings
         // invoice.Settings = new InvoiceSettings(){

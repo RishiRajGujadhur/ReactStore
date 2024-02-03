@@ -1,5 +1,6 @@
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,14 +32,15 @@ namespace API.Controllers
             return receipts;
         }
 
-        [HttpGet("getMyReceipts")]
-        public async Task<ActionResult<IEnumerable<Receipt>>> GetMyReceipts(int pageSize, int pageNumber)
-        {
-
+        [HttpGet("getMyReceiptList")]
+        public async Task<ActionResult<IEnumerable<Receipt>>> GetMyReceiptList(int pageSize, int pageNumber)
+        { 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
             var receipts = await _context.Receipts
-                .Where(r => r.UserId == user.Id)
+                .Where(r => r.UserId == user.Id) 
+                .Include(s => s.Sender) 
+                .Include(o => o.OrderItems)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -48,20 +50,29 @@ namespace API.Controllers
 
         // GET: api/Receipts/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Receipt>> GetReceipt(int id)
+        [Authorize]
+        public async Task<ActionResult<Receipt>> GetMyReceipt(int id)
         {
-            var Receipt = await _context.Receipts.FindAsync(id);
+            int userId = _userManager.FindByNameAsync(User.Identity.Name).Result.Id;
+            var receipt = await _context.Receipts
+                .Include(u => u.User.Address)
+                .Include(s => s.Sender)
+                .Include(s => s.Settings)
+                .Include(o => o.OrderItems)
+                .Where(r => r.UserId == userId && r.Id == id)
+                .FirstOrDefaultAsync();
 
-            if (Receipt == null)
+            if (receipt == null)
             {
                 return NotFound();
             }
 
-            return Receipt;
+            return receipt;
         }
 
         // POST: api/Receipts 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Receipt>> CreateReceipt(Receipt Receipt, string clientEmail)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -74,8 +85,7 @@ namespace API.Controllers
                 Zip = "123456",
                 Country = "USA",
             };
-            Receipt.BottomNotice = "Thank you for your business. Please make sure all payments are made within 2 weeks.";
-            Receipt.DueDate = DateTime.UtcNow.AddDays(14);
+            Receipt.BottomNotice = "Thank you for your business. Please make sure all payments are made within 2 weeks."; 
             Receipt.IssueDate = DateTime.UtcNow;
             Receipt.Number = "INV-000" + Receipt.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + Receipt.Id;
             Receipt.Logo = "https://via.placeholder.com/150";
@@ -100,12 +110,12 @@ namespace API.Controllers
             //     TaxNotation = "vat", 
             // };
             User client = GetUserByEmail(clientEmail);
-            Receipt.UserId = client.Id; 
+            Receipt.UserId = client.Id;
 
             _context.Receipts.Add(Receipt);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetReceipt), new { id = Receipt.Id }, Receipt);
+            return NoContent();
         }
 
         // PUT: api/Receipts/{id}

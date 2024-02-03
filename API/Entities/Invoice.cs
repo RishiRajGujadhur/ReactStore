@@ -9,7 +9,8 @@ namespace API.Entities
         public DateTime IssueDate { get; set; } = DateTime.UtcNow;
 
         [Required]
-        public DateTime DueDate { get; set; }
+        public DateTime DueDate { get; set; } = DateTime.UtcNow.AddDays(14);
+        
         [Required]
         public string Logo { get; set; } = "https://via.placeholder.com/150";
         public string Number { get; set; } 
