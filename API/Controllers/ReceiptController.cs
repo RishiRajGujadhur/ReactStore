@@ -41,17 +41,17 @@ namespace API.Controllers
         }
 
         [HttpGet("getMyReceiptList")]
-        [Authorize]
+        [Authorize(Roles = "Member")]
         public async Task<ActionResult<IEnumerable<ReceiptDto>>> GetMyReceiptList(int pageSize, int pageNumber)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
             var receipts = await _context.Receipts
-                .Where(r => r.UserId == user.Id) 
+                .Where(r => r.UserId == user.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
-                
+
             var receiptsDto = _mapper.Map<List<ReceiptDto>>(receipts);
 
             return Ok(receiptsDto);
@@ -59,7 +59,7 @@ namespace API.Controllers
 
         // GET: api/Receipts/{id}
         [HttpGet("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Member")]
         public async Task<ActionResult<Receipt>> GetMyReceipt(int id)
         {
             int userId = _userManager.FindByNameAsync(User.Identity.Name).Result.Id;

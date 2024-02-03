@@ -6,49 +6,48 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+ 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class InvoiceController : ControllerBase
     {
-        private readonly StoreContext _context; 
-        private readonly UserManager<User> _userManager;
-
+        private readonly StoreContext _context;
+        private readonly UserManager<User> _userManager; 
         private readonly IMapper _mapper;
-        public InvoiceController(StoreContext context,UserManager<User> userManager,  IMapper mapper)
+        public InvoiceController(StoreContext context, UserManager<User> userManager, IMapper mapper)
         {
-            _context = context; 
+            _context = context;
             _userManager = userManager;
             _mapper = mapper;
-        } 
+        }
 
         // GET: api/invoices
         [HttpGet("getAllInvoiceList")]
-        [Authorize(Roles = "Admin")]  
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<InvoiceDto>>> GetAllInvoiceList(int pageSize, int pageNumber)
-        { 
-            var invoices = await _context.Invoices 
+        {
+            var invoices = await _context.Invoices
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync(); 
- 
-            var invoicesDto =  _mapper.Map<List<InvoiceDto>>(invoices);
+                .ToListAsync();
+
+            var invoicesDto = _mapper.Map<List<InvoiceDto>>(invoices);
 
             return invoicesDto;
         }
 
         // GET: api/invoices/{id}
         [HttpGet("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Member")]
         public async Task<ActionResult<Invoice>> GetInvoice(int id)
         {
             var invoice = await _context.Invoices
                 .Include(s => s.Sender)
                 .Include(s => s.Settings)
                 .Include(o => o.OrderItems)
-                .FirstOrDefaultAsync(i => i.Id == id); 
+                .FirstOrDefaultAsync(i => i.Id == id);
 
             if (invoice == null)
             {
@@ -58,20 +57,17 @@ namespace API.Controllers
             return invoice;
         }
 
-        [HttpGet("getMyInvoiceList")]
-        [Authorize]
-        public async Task<ActionResult<IEnumerable<InvoiceDto>>> GetMyInvoiceList(int pageSize, int pageNumber)
-        {
-
-           var user = await _userManager.FindByNameAsync(User.Identity.Name);
-
+        [HttpGet("getMyInvoiceList")] 
+        public async Task<IEnumerable<InvoiceDto>> GetMyInvoiceList(int pageSize, int pageNumber)
+        {    
+            User user = await _userManager.FindByNameAsync(User.Identity.Name);
             var invoices = await _context.Invoices
-                .Where(r => r.UserId == user.Id)  
+                .Where(r => r.User.Id == user.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
- 
-            var invoicesDto =  _mapper.Map<List<InvoiceDto>>(invoices);
+
+            var invoicesDto = _mapper.Map<List<InvoiceDto>>(invoices);
 
             return invoicesDto;
         }
@@ -80,19 +76,19 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Invoice>> CreateInvoice(Invoice invoice, string clientEmail)
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name); 
             // Todo: Get details from future settings table
-            invoice.Sender = new InvoiceSender(){
+            invoice.Sender = new InvoiceSender()
+            {
                 Address = "1234 Main St",
                 City = "New York",
                 Company = "Company Name",
                 Zip = "123456",
-                Country = "USA", 
+                Country = "USA",
             };
             invoice.BottomNotice = "Thank you for your business. Please make sure all payments are made within 2 weeks.";
             invoice.DueDate = DateTime.UtcNow.AddDays(14);
             invoice.IssueDate = DateTime.UtcNow;
-            invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id; 
+            invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id;
             invoice.Logo = "https://via.placeholder.com/150";
 
             // create invoice on order completion
@@ -102,7 +98,8 @@ namespace API.Controllers
             // TODO: get  from order
 
             // TODO: get from settings
-            invoice.Settings = new InvoiceSettings(){
+            invoice.Settings = new InvoiceSettings()
+            {
                 Currency = "MUR",
                 Format = "A4",
                 Height = "210mm",
@@ -112,17 +109,17 @@ namespace API.Controllers
                 MarginLeft = 10,
                 MarginRight = 10,
                 MarginTop = 10,
-                TaxNotation = "vat", 
+                TaxNotation = "vat",
             };
             User client = GetUserByEmail(clientEmail);
-            invoice.UserId = client.Id; 
+            invoice.UserId = client.Id;
 
             _context.Invoices.Add(invoice);
             await _context.SaveChangesAsync();
 
-            return NoContent();;
+            return NoContent(); ;
         }
-        
+
         // PUT: api/invoices/{id}
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
@@ -177,9 +174,17 @@ namespace API.Controllers
             return _context.Invoices.Any(e => e.Id == id);
         }
 
-        private User GetUserByEmail(string email){
+        private User GetUserByEmail(string email)
+        {
             return _context.Users.Where(u => u.Email == email).FirstOrDefault();
         }
+
+        private async Task<int> GetUserId()
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            return user.Id;
+        }
+ 
         #endregion
     }
 }
