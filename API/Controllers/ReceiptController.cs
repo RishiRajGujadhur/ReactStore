@@ -1,5 +1,7 @@
 using API.Data;
+using API.DTOs;
 using API.Entities;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,33 +15,39 @@ namespace API.Controllers
     {
         private readonly StoreContext _context;
         private readonly UserManager<User> _userManager;
+        private readonly IMapper _mapper;
 
-        public ReceiptController(StoreContext context, UserManager<User> userManager)
+        public ReceiptController(StoreContext context, UserManager<User> userManager, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
+
+            _mapper = mapper;
         }
 
         // GET: api/Receipts
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Receipt>>> GetReceipts(int pageSize, int pageNumber)
+        [HttpGet("getAllReceiptList")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<ReceiptDto>>> GetAllReceiptList(int pageSize, int pageNumber)
         {
             var receipts = await _context.Receipts
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            return receipts;
+            var receiptsDto = _mapper.Map<List<ReceiptDto>>(receipts);
+
+            return Ok(receiptsDto);
         }
 
         [HttpGet("getMyReceiptList")]
         public async Task<ActionResult<IEnumerable<Receipt>>> GetMyReceiptList(int pageSize, int pageNumber)
-        { 
+        {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
             var receipts = await _context.Receipts
-                .Where(r => r.UserId == user.Id) 
-                .Include(s => s.Sender) 
+                .Where(r => r.UserId == user.Id)
+                .Include(s => s.Sender)
                 .Include(o => o.OrderItems)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -85,7 +93,7 @@ namespace API.Controllers
                 Zip = "123456",
                 Country = "USA",
             };
-            Receipt.BottomNotice = "Thank you for your business. Please make sure all payments are made within 2 weeks."; 
+            Receipt.BottomNotice = "Thank you for your business. Please make sure all payments are made within 2 weeks.";
             Receipt.IssueDate = DateTime.UtcNow;
             Receipt.Number = "INV-000" + Receipt.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + Receipt.Id;
             Receipt.Logo = "https://via.placeholder.com/150";
