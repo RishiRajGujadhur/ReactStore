@@ -41,19 +41,20 @@ namespace API.Controllers
         }
 
         [HttpGet("getMyReceiptList")]
-        public async Task<ActionResult<IEnumerable<Receipt>>> GetMyReceiptList(int pageSize, int pageNumber)
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<ReceiptDto>>> GetMyReceiptList(int pageSize, int pageNumber)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
             var receipts = await _context.Receipts
-                .Where(r => r.UserId == user.Id)
-                .Include(s => s.Sender)
-                .Include(o => o.OrderItems)
+                .Where(r => r.UserId == user.Id) 
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+                
+            var receiptsDto = _mapper.Map<List<ReceiptDto>>(receipts);
 
-            return receipts;
+            return Ok(receiptsDto);
         }
 
         // GET: api/Receipts/{id}
