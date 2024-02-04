@@ -181,12 +181,6 @@ namespace API.Controllers
             return _context.Users.Where(u => u.Email == email).FirstOrDefault();
         }
 
-        private async Task<int> GetUserId()
-        {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            return user.Id;
-        }
-
         private async Task AddPaginationMetadata(int pageSize, int pageNumber, User user)
         {
             var allMyInvoices = await _context.Invoices
