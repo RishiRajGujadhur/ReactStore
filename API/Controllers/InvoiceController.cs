@@ -1,12 +1,14 @@
 using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
+using API.RequestHelpers;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
- 
+
 namespace API.Controllers
 {
     [ApiController]
@@ -14,7 +16,7 @@ namespace API.Controllers
     public class InvoiceController : ControllerBase
     {
         private readonly StoreContext _context;
-        private readonly UserManager<User> _userManager; 
+        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
         public InvoiceController(StoreContext context, UserManager<User> userManager, IMapper mapper)
         {
@@ -57,9 +59,9 @@ namespace API.Controllers
             return invoice;
         }
 
-        [HttpGet("getMyInvoiceList")] 
+        [HttpGet("getMyInvoiceList")]
         public async Task<IEnumerable<InvoiceDto>> GetMyInvoiceList(int pageSize, int pageNumber)
-        {    
+        {
             User user = await _userManager.FindByNameAsync(User.Identity.Name);
             var invoices = await _context.Invoices
                 .Where(r => r.User.Id == user.Id)
@@ -68,7 +70,7 @@ namespace API.Controllers
                 .ToListAsync();
 
             var invoicesDto = _mapper.Map<List<InvoiceDto>>(invoices);
-
+            await AddPaginationMetadata(pageSize, pageNumber, user);
             return invoicesDto;
         }
 
@@ -184,7 +186,24 @@ namespace API.Controllers
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             return user.Id;
         }
- 
+
+        private async Task AddPaginationMetadata(int pageSize, int pageNumber, User user)
+        {
+            var allMyInvoices = await _context.Invoices
+                    .Where(r => r.User.Id == user.Id)
+                    .Select(x => x.Id)
+                    .ToListAsync();
+            var totalNumberOfRows = allMyInvoices.Count;
+            MetaData metaData = new MetaData()
+            {
+                CurrentPage = pageNumber,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling(totalNumberOfRows / (double)pageSize),
+                TotalCount = totalNumberOfRows
+            };
+            Response.AddPaginationHeader(metaData);
+        }
+
         #endregion
     }
 }
