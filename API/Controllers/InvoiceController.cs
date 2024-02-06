@@ -1,5 +1,6 @@
 using API.Data;
 using API.DTOs;
+using API.DTOs.Invoice;
 using API.Entities;
 using API.Extensions;
 using API.RequestHelpers;
@@ -41,12 +42,13 @@ namespace API.Controllers
         }
 
         // GET: api/invoices/{id}
-        [HttpGet("{id}")]
-        [Authorize(Roles = "Member")]
-        public async Task<ActionResult<Invoice>> GetInvoice(int id)
+        [HttpGet("{id}")] 
+        public async Task<ActionResult<InvoiceDetailsDto>> GetInvoice(int id)
         {
             var invoice = await _context.Invoices
                 .Include(s => s.Sender)
+                .Include(u => u.User)
+                .Include(s => s.Settings)
                 .Include(s => s.Settings)
                 .Include(o => o.OrderItems)
                 .FirstOrDefaultAsync(i => i.Id == id);
@@ -55,13 +57,33 @@ namespace API.Controllers
             {
                 return NotFound();
             }
+            var invoiceDetailsDto = _mapper.Map<InvoiceDetailsDto>(invoice);
 
-            return invoice;
+            invoiceDetailsDto.Customer = new CustomerDto
+            {
+                Name = invoice.User.Email,
+                Address = invoice.User.Address?.Address1,
+                City = invoice.User.Address?.City,
+                Company = invoice.User.Customer?.Company,
+                Country = invoice.User.Address?.Country,
+                Zip = invoice.User.Address?.Zip
+            };  
+
+            invoiceDetailsDto.Products = invoice.OrderItems.Select(item => new ProductItemsDto
+            {
+                Description = item.ItemOrdered.Name,
+                Price = item.Price,
+                Quantity = item.Quantity,
+                TaxRate = 15
+            }).ToList(); 
+
+            return invoiceDetailsDto;
         }
 
         [HttpGet("getMyInvoiceList")]
         public async Task<IEnumerable<InvoiceDto>> GetMyInvoiceList(int pageSize, int pageNumber)
         {
+            // pageNumber = pageNumber == 0 ? 1 : pageNumber;  
             User user = await _userManager.FindByNameAsync(User.Identity.Name);
             var invoices = await _context.Invoices
                 .Where(r => r.User.Id == user.Id)

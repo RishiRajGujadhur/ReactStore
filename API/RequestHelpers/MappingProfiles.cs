@@ -1,4 +1,5 @@
 using API.DTOs;
+using API.DTOs.Invoice;
 using API.Entities;
 using AutoMapper;
 
@@ -15,6 +16,7 @@ public class MappingProfiles : Profile
         CreateMap<CommentUpdateDto, Comment>();  
         CreateMap<Comment, CommentDto>();  
         CreateMap<Invoice, InvoiceDto>();  
+        CreateMap<Invoice, InvoiceDetailsDto>(); 
         CreateMap<Receipt, ReceiptDto>();  
     }
 }
