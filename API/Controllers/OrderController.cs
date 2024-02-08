@@ -32,6 +32,7 @@ public class OrdersController : ControllerBase
         var orders = await _context.Orders
             .ProjectOrderToOrderDto()
             .Where(x => x.BuyerId == User.Identity.Name)
+            .OrderByDescending(x => x.OrderDate)
             .ToListAsync();
 
         return orders;

@@ -19,7 +19,7 @@ public static class OrderExtensions
                     DeliveryFee = order.DeliveryFee,
                     Subtotal = order.Subtotal,
                     OrderStatus = order.OrderStatus.ToString(),
-                    Total = order.GetTotal(),
+                    Total = order.GetTotal(), 
                     OrderItems = order.OrderItems.Select(item => new OrderItemDto
                     {
                         ProductId = item.ItemOrdered.ProductId,
