@@ -85,8 +85,7 @@ public class OrdersController : ControllerBase
             BuyerId = User.Identity.Name,
             ShippingAddress = orderDto.ShippingAddress,
             Subtotal = subtotal,
-            DeliveryFee = deliveryFee,
-            //PaymentIntentId = basket.PaymentIntentId
+            DeliveryFee = deliveryFee, 
         };
 
         _context.Orders.Add(order);

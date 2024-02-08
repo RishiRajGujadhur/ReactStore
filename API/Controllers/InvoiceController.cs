@@ -32,6 +32,7 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<InvoiceDto>>> GetAllInvoiceList(int pageSize, int pageNumber)
         {
             var invoices = await _context.Invoices
+                .OrderByDescending(i=>i.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -48,7 +49,7 @@ namespace API.Controllers
             var invoice = await _context.Invoices
                 .Include(s => s.Sender)
                 .Include(u => u.User)
-                .Include(s => s.Settings)
+                .Include(u => u.User.Address)
                 .Include(s => s.Settings)
                 .Include(o => o.OrderItems)
                 .FirstOrDefaultAsync(i => i.Id == id);
@@ -57,14 +58,12 @@ namespace API.Controllers
             {
                 return NotFound();
             }
-            var invoiceDetailsDto = _mapper.Map<InvoiceDetailsDto>(invoice);
-
+            var invoiceDetailsDto = _mapper.Map<InvoiceDetailsDto>(invoice); 
             invoiceDetailsDto.Customer = new CustomerDto
             {
-                Name = invoice.User.Email,
+                Name = invoice.User.Address?.FullName, 
                 Address = invoice.User.Address?.Address1,
-                City = invoice.User.Address?.City,
-                Company = invoice.User.Customer?.Company,
+                City = invoice.User.Address?.City, 
                 Country = invoice.User.Address?.Country,
                 Zip = invoice.User.Address?.Zip
             };  
@@ -87,6 +86,7 @@ namespace API.Controllers
             User user = await _userManager.FindByNameAsync(User.Identity.Name);
             var invoices = await _context.Invoices
                 .Where(r => r.User.Id == user.Id)
+                .OrderByDescending(i=>i.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
