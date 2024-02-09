@@ -144,6 +144,24 @@ namespace API.Controllers
             return NoContent();
         }
 
+        // PUT: api/invoices/updateInvoiceSettings
+        [HttpPut("updateInvoiceSettings")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateInvoiceSettings(InvoiceSettingsDto invoiceSettingsDto)
+        {
+            var invoiceSettings = await _context.InvoiceSettings.FirstOrDefaultAsync();
+            if (invoiceSettings == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(invoiceSettingsDto, invoiceSettings);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+        
+
         // GET: api/invoices/getFirstInvoiceSettings
         [HttpGet("getFirstInvoiceSettings")]
         [Authorize(Roles = "Admin")]
