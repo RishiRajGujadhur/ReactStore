@@ -137,20 +137,7 @@ public class OrdersController : ControllerBase
         invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id;
         invoice.Logo = "https://via.placeholder.com/150";
         invoice.OrderItems = orderItems; 
-
-        // TODO: get from settings
-        // invoice.Settings = new InvoiceSettings(){
-        //     Currency = "MUR",
-        //     Format = "A4",
-        //     Height = "210mm",
-        //     Width = "297mm",
-        //     Locale = "en-US",
-        //     MarginBottom = 10,
-        //     MarginLeft = 10,
-        //     MarginRight = 10,
-        //     MarginTop = 10,
-        //     TaxNotation = "vat", 
-        // };
+        invoice.Settings = _context.InvoiceSettings.OrderBy(i=>i.Id).FirstOrDefault(); 
         User client = user;
         invoice.UserId = client.Id; 
         _context.Invoices.Add(invoice);  
