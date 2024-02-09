@@ -32,7 +32,7 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<InvoiceDto>>> GetAllInvoiceList(int pageSize, int pageNumber)
         {
             var invoices = await _context.Invoices
-                .OrderByDescending(i=>i.Id)
+                .OrderByDescending(i => i.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -43,7 +43,7 @@ namespace API.Controllers
         }
 
         // GET: api/invoices/{id}
-        [HttpGet("{id}")] 
+        [HttpGet("{id}")]
         public async Task<ActionResult<InvoiceDetailsDto>> GetInvoice(int id)
         {
             var invoice = await _context.Invoices
@@ -58,15 +58,15 @@ namespace API.Controllers
             {
                 return NotFound();
             }
-            var invoiceDetailsDto = _mapper.Map<InvoiceDetailsDto>(invoice); 
+            var invoiceDetailsDto = _mapper.Map<InvoiceDetailsDto>(invoice);
             invoiceDetailsDto.Customer = new CustomerDto
             {
-                Name = invoice.User.Address?.FullName, 
+                Name = invoice.User.Address?.FullName,
                 Address = invoice.User.Address?.Address1,
-                City = invoice.User.Address?.City, 
+                City = invoice.User.Address?.City,
                 Country = invoice.User.Address?.Country,
                 Zip = invoice.User.Address?.Zip
-            };  
+            };
 
             invoiceDetailsDto.Products = invoice.OrderItems.Select(item => new ProductItemsDto
             {
@@ -74,7 +74,7 @@ namespace API.Controllers
                 Price = item.Price,
                 Quantity = item.Quantity,
                 TaxRate = 15
-            }).ToList(); 
+            }).ToList();
 
             return invoiceDetailsDto;
         }
@@ -86,7 +86,7 @@ namespace API.Controllers
             User user = await _userManager.FindByNameAsync(User.Identity.Name);
             var invoices = await _context.Invoices
                 .Where(r => r.User.Id == user.Id)
-                .OrderByDescending(i=>i.Id)
+                .OrderByDescending(i => i.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -121,20 +121,8 @@ namespace API.Controllers
             // get invoice with order items
             // TODO: get  from order
 
-            // TODO: get from settings
-            invoice.Settings = new InvoiceSettings()
-            {
-                Currency = "MUR",
-                Format = "A4",
-                Height = "210mm",
-                Width = "297mm",
-                Locale = "en-US",
-                MarginBottom = 10,
-                MarginLeft = 10,
-                MarginRight = 10,
-                MarginTop = 10,
-                TaxNotation = "vat",
-            };
+            invoice.Settings = _context.InvoiceSettings.FirstOrDefault();
+
             User client = GetUserByEmail(clientEmail);
             invoice.UserId = client.Id;
 
@@ -143,6 +131,33 @@ namespace API.Controllers
 
             return NoContent(); ;
         }
+
+        // POST: api/invoices/saveInvoiceSettings
+        [HttpPost("saveInvoiceSettings")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> SaveInvoiceSettings(InvoiceSettingsDto invoiceSettingsDto)
+        {
+            var invoiceSettings = _mapper.Map<InvoiceSettings>(invoiceSettingsDto);
+            _context.InvoiceSettings.Add(invoiceSettings);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // GET: api/invoices/getFirstInvoiceSettings
+        [HttpGet("getFirstInvoiceSettings")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<InvoiceSettings>> GetFirstInvoiceSettings()
+        {
+            var firstInvoiceSettings = await _context.InvoiceSettings.FirstOrDefaultAsync();
+            if (firstInvoiceSettings == null)
+            {
+                return NotFound();
+            }
+
+            return firstInvoiceSettings;
+        }
+
 
         // PUT: api/invoices/{id}
         [HttpPut("{id}")]
@@ -222,4 +237,5 @@ namespace API.Controllers
 
         #endregion
     }
+
 }

@@ -14,6 +14,7 @@ namespace API.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<InvoiceSettings> InvoiceSettings { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
@@ -25,14 +26,14 @@ namespace API.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Logistics> Logistics { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
-        
-        public DbSet<Receipt> Receipts { get; set; } 
+
+        public DbSet<Receipt> Receipts { get; set; }
         public DbSet<CollectionList> CollectionLists { get; set; }
         public DbSet<CollectionListItem> CollectionListItems { get; set; }
         public DbSet<OrderDiscount> OrderDiscounts { get; set; }
         public DbSet<AdditionalDeliveryInfo> AdditionalDeliveryInfos { get; set; }
         public DbSet<Basket> Baskets { get; set; }
-        public DbSet<Like> Likes { get; set; } 
+        public DbSet<Like> Likes { get; set; }
         public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -59,7 +60,7 @@ namespace API.Data
               new Role { Id = 1, Name = "Member", NormalizedName = "MEMBER" },
               new Role { Id = 2, Name = "Admin", NormalizedName = "ADMIN" }
           );
-   
+
             // One-to-Many relationship between Order and ReturnRequest
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.ReturnRequests)
@@ -70,12 +71,12 @@ namespace API.Data
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.Reviews)
                 .WithOne(r => r.Product)
-                .HasForeignKey(r => r.ProductID); 
-                
+                .HasForeignKey(r => r.ProductID);
+
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.ReturnRequests)
                 .WithOne(rr => rr.Order)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Collection and Product relationship
             modelBuilder.Entity<CollectionList>()
