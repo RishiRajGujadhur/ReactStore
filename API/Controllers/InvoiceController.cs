@@ -17,13 +17,15 @@ namespace API.Controllers
     public class InvoiceController : ControllerBase
     {
         private readonly StoreContext _context;
+        private readonly ILogger<InvoiceController> _logger; 
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
-        public InvoiceController(StoreContext context, UserManager<User> userManager, IMapper mapper)
+        public InvoiceController(StoreContext context, UserManager<User> userManager, IMapper mapper, ILogger<InvoiceController> logger)
         {
             _context = context;
             _userManager = userManager;
             _mapper = mapper;
+            _logger = logger;
         }
 
         // GET: api/invoices
@@ -146,28 +148,35 @@ namespace API.Controllers
 
         // PUT: api/invoices/updateInvoiceSettings
         [HttpPut("updateInvoiceSettings")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateInvoiceSettings(InvoiceSettingsDto invoiceSettingsDto)
         {
-            var invoiceSettings = await _context.InvoiceSettings.FirstOrDefaultAsync();
-            if (invoiceSettings == null)
+            try
             {
-                return NotFound();
+                var invoiceSettings = await _context.InvoiceSettings.OrderBy(i=>i.Id).FirstOrDefaultAsync();
+                if (invoiceSettings == null)
+                {
+                    return NotFound();
+                }
+                _mapper.Map(invoiceSettingsDto, invoiceSettings);
+                _context.Entry(invoiceSettings).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
             }
-
-            _mapper.Map(invoiceSettingsDto, invoiceSettings);
-            await _context.SaveChangesAsync();
-
+            catch (Exception ex)
+            {
+                // Log the exception
+                _logger.LogError(ex, AddErrorDetails(ex, "An error occurred while updating invoice settings."));
+                // Return a 500 Internal Server Error status code
+                return StatusCode(500, "Internal server error"); 
+            }
             return NoContent();
-        }
-        
+        } 
 
         // GET: api/invoices/getFirstInvoiceSettings
         [HttpGet("getFirstInvoiceSettings")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<InvoiceSettings>> GetFirstInvoiceSettings()
         {
-            var firstInvoiceSettings = await _context.InvoiceSettings.FirstOrDefaultAsync();
+            var firstInvoiceSettings = await _context.InvoiceSettings.OrderBy(i=>i.Id).FirstOrDefaultAsync();
             if (firstInvoiceSettings == null)
             {
                 return NotFound();
@@ -251,6 +260,11 @@ namespace API.Controllers
                 TotalCount = totalNumberOfRows
             };
             Response.AddPaginationHeader(metaData);
+        }
+
+        private string AddErrorDetails(Exception ex, string message = "")
+        {
+            return message + " " + User.Identity.Name + " : " + DateTime.UtcNow.ToString() + " " + ex.Message + " " + ex.InnerException.Message + " " + ex.InnerException.InnerException.Message;
         }
 
         #endregion
