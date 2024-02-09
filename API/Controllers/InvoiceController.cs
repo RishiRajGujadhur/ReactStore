@@ -116,7 +116,7 @@ namespace API.Controllers
             invoice.IssueDate = DateTime.UtcNow;
             invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id;
             invoice.Logo = "https://via.placeholder.com/150";
-            invoice.Settings = _context.InvoiceSettings.FirstOrDefault();
+            invoice.Settings = _context.InvoiceSettings.OrderBy(i=>i.Id).FirstOrDefault();
 
             User client = GetUserByEmail(clientEmail);
             invoice.UserId = client.Id;
