@@ -15,7 +15,7 @@ namespace API.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly StoreContext _context;
-
+    private readonly ILogger<InvoiceController> _logger;
     private readonly UserManager<User> _userManager;
 
 
@@ -37,6 +37,47 @@ public class OrdersController : ControllerBase
 
         return orders;
     }
+
+    [HttpGet("listAllOrders")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<List<OrderDto>>> GetAllOrders()
+    {
+        var orders = await _context.Orders
+            .ProjectOrderToOrderDto()
+            .OrderByDescending(x => x.OrderDate)
+            .ToListAsync();
+
+        return orders;
+    }
+
+    // PUT: api/invoices/updateInvoiceSettings
+    [HttpPut("setOrderAsFufilled")]
+    public async Task<IActionResult> SetOrderAsFufilled(int id)
+    {
+        try
+        {
+            var order = await _context.Orders
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync();
+                
+            if (order == null)
+            {
+                return NotFound();
+            }
+            _context.Entry(order).State = EntityState.Modified;
+            order.OrderStatus = OrderStatus.PaymentReceived;
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            _logger.LogError(ex, AddErrorDetails(ex, "An error occurred while updating invoice settings."));
+            // Return a 500 Internal Server Error status code
+            return StatusCode(500, "Internal server error");
+        }
+        return NoContent();
+    }
+
 
     [HttpGet("{id}", Name = "GetOrder")]
     public async Task<ActionResult<OrderDto>> GetOrder(int id)
@@ -86,7 +127,7 @@ public class OrdersController : ControllerBase
             BuyerId = User.Identity.Name,
             ShippingAddress = orderDto.ShippingAddress,
             Subtotal = subtotal,
-            DeliveryFee = deliveryFee, 
+            DeliveryFee = deliveryFee,
         };
 
         _context.Orders.Add(order);
@@ -136,11 +177,16 @@ public class OrdersController : ControllerBase
         invoice.IssueDate = DateTime.UtcNow;
         invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id;
         invoice.Logo = "https://via.placeholder.com/150";
-        invoice.OrderItems = orderItems; 
-        invoice.Settings = _context.InvoiceSettings.OrderBy(i=>i.Id).FirstOrDefault(); 
+        invoice.OrderItems = orderItems;
+        invoice.Settings = _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefault();
         User client = user;
-        invoice.UserId = client.Id; 
-        _context.Invoices.Add(invoice);  
+        invoice.UserId = client.Id;
+        _context.Invoices.Add(invoice);
         return invoice.Id;
-    } 
+    }
+
+    private string AddErrorDetails(Exception ex, string message = "")
+    {
+        return message + " " + User.Identity.Name + " : " + DateTime.UtcNow.ToString() + " " + ex.Message + " " + ex.InnerException.Message + " " + ex.InnerException.InnerException.Message;
+    }
 }
