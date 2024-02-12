@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Member")]
+// [Authorize(Roles = "Member")]
 public class OrdersController : ControllerBase
 {
     private readonly StoreContext _context;
@@ -50,14 +50,13 @@ public class OrdersController : ControllerBase
         return orders;
     }
 
-    // PUT: api/invoices/updateInvoiceSettings
-    [HttpPut("{id}", Name ="setOrderAsFufilled")]
-    public async Task<IActionResult> SetOrderAsFufilled(int id, string orderStatus)
+    [HttpPut]
+    public async Task<IActionResult> SetOrderStatus(OrderStatusDto orderStatusDto)
     {
         try
         {
             var order = await _context.Orders
-            .Where(x => x.Id == id)
+            .Where(x => x.Id == orderStatusDto.Id)
             .FirstOrDefaultAsync();
                 
             if (order == null)
@@ -65,7 +64,7 @@ public class OrdersController : ControllerBase
                 return NotFound();
             }
             
-             order.OrderStatus = orderStatus switch
+             order.OrderStatus = orderStatusDto.OrderStatus switch
             {
                 "PaymentReceived" => OrderStatus.PaymentReceived,
                 "PaymentFailed" => OrderStatus.PaymentFailed, 
