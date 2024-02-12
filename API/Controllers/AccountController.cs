@@ -60,6 +60,15 @@ namespace API.Controllers
                 .FirstOrDefaultAsync();
         }
 
+        [Authorize]
+        [HttpGet("getAllUsers")]
+        public async Task<ActionResult<List<User>>> GetAllUsers()
+        {
+            return await _userManager.Users.Include
+                (x => x.Address)
+                .ToListAsync();
+        }
+
         [HttpPost("register")]
         public async Task<ActionResult> RegisterUser(RegisterDto registerDto)
         {

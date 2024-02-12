@@ -50,6 +50,19 @@ public class OrdersController : ControllerBase
         return orders;
     }
 
+    [HttpGet("listOrdersByUser")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<List<OrderDto>>> GetOrdersByUser(int userId)
+    {
+        var orders = await _context.Orders
+            .Where(x=>x.BuyerId == userId.ToString())
+            .ProjectOrderToOrderDto()
+            .OrderByDescending(x => x.OrderDate)
+            .ToListAsync();
+
+        return orders;
+    }
+
     [HttpPut]
     public async Task<IActionResult> SetOrderStatus(OrderStatusDto orderStatusDto)
     {
