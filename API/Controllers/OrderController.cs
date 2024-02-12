@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
-// [Authorize(Roles = "Member")]
+[Authorize(Roles = "Member")]
 public class OrdersController : ControllerBase
 {
     private readonly StoreContext _context;
