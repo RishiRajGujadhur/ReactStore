@@ -19,7 +19,7 @@ public class OrdersController : ControllerBase
     private readonly UserManager<User> _userManager;
 
 
-    public OrdersController(StoreContext context, UserManager<User> userManager,ILogger<OrdersController> logger)
+    public OrdersController(StoreContext context, UserManager<User> userManager, ILogger<OrdersController> logger)
     {
         _context = context;
         _logger = logger;
@@ -50,12 +50,12 @@ public class OrdersController : ControllerBase
         return orders;
     }
 
-    [HttpGet("listOrdersByUser")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<List<OrderDto>>> GetOrdersByUser(int userId)
+    [HttpGet("listOrdersByUser")]
+    public async Task<ActionResult<List<OrderDto>>> GetOrdersByUser(int id)
     {
         var orders = await _context.Orders
-            .Where(x=>x.BuyerId == userId.ToString())
+            .Where(x => x.BuyerId == id.ToString())
             .ProjectOrderToOrderDto()
             .OrderByDescending(x => x.OrderDate)
             .ToListAsync();
@@ -71,22 +71,22 @@ public class OrdersController : ControllerBase
             var order = await _context.Orders
             .Where(x => x.Id == orderStatusDto.Id)
             .FirstOrDefaultAsync();
-                
+
             if (order == null)
             {
                 return NotFound();
             }
-            
-             order.OrderStatus = orderStatusDto.OrderStatus switch
+
+            order.OrderStatus = orderStatusDto.OrderStatus switch
             {
                 "PaymentReceived" => OrderStatus.PaymentReceived,
-                "PaymentFailed" => OrderStatus.PaymentFailed, 
+                "PaymentFailed" => OrderStatus.PaymentFailed,
                 "Pending" => OrderStatus.Pending,
                 "Delivered" => OrderStatus.Delivered,
                 _ => order.OrderStatus // Default case, keep the existing order status
             };
 
-            _context.Entry(order).State = EntityState.Modified; 
+            _context.Entry(order).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
         catch (Exception ex)
