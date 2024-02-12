@@ -51,8 +51,8 @@ public class OrdersController : ControllerBase
     }
 
     // PUT: api/invoices/updateInvoiceSettings
-    [HttpPut("setOrderAsFufilled")]
-    public async Task<IActionResult> SetOrderAsFufilled(int id)
+    [HttpPut("{id}", Name ="setOrderAsFufilled")]
+    public async Task<IActionResult> SetOrderAsFufilled(int id, string orderStatus)
     {
         try
         {
@@ -65,7 +65,21 @@ public class OrdersController : ControllerBase
                 return NotFound();
             }
             _context.Entry(order).State = EntityState.Modified;
+
+            order.OrderStatus = orderStatus switch
+            {
+                "PaymentReceived" => OrderStatus.PaymentReceived,
+                "PaymentFailed" => OrderStatus.PaymentFailed, 
+                "Pending" => OrderStatus.Pending,
+                "Delivered" => OrderStatus.Delivered,
+                _ => order.OrderStatus // Default case, keep the existing order status
+            };
+
+            await _context.SaveChangesAsync();
+
             order.OrderStatus = OrderStatus.PaymentReceived;
+
+
             await _context.SaveChangesAsync();
         }
         catch (Exception ex)
