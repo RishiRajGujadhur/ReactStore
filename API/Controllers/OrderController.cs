@@ -15,14 +15,14 @@ namespace API.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly StoreContext _context;
-    private readonly ILogger<InvoiceController> _logger;
+    private readonly ILogger<OrdersController> _logger;
     private readonly UserManager<User> _userManager;
 
 
-    public OrdersController(StoreContext context, UserManager<User> userManager)
+    public OrdersController(StoreContext context, UserManager<User> userManager,ILogger<OrdersController> logger)
     {
         _context = context;
-
+        _logger = logger;
         _userManager = userManager;
     }
 
