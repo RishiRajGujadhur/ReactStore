@@ -54,7 +54,7 @@ public class OrdersController : ControllerBase
     public async Task<ActionResult<List<OrderDto>>> GetOrdersByUser(UserDto userDto)
     {
         var orders = await _context.Orders
-            .Where(x => x.BuyerId == userDto.Id.ToString())
+            .Where(x => x.BuyerId == userDto.UserName)
             .ProjectOrderToOrderDto()
             .OrderByDescending(x => x.OrderDate)
             .ToListAsync();
