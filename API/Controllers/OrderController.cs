@@ -64,9 +64,8 @@ public class OrdersController : ControllerBase
             {
                 return NotFound();
             }
-            _context.Entry(order).State = EntityState.Modified;
-
-            order.OrderStatus = orderStatus switch
+            
+             order.OrderStatus = orderStatus switch
             {
                 "PaymentReceived" => OrderStatus.PaymentReceived,
                 "PaymentFailed" => OrderStatus.PaymentFailed, 
@@ -75,11 +74,7 @@ public class OrdersController : ControllerBase
                 _ => order.OrderStatus // Default case, keep the existing order status
             };
 
-            await _context.SaveChangesAsync();
-
-            order.OrderStatus = OrderStatus.PaymentReceived;
-
-
+            _context.Entry(order).State = EntityState.Modified; 
             await _context.SaveChangesAsync();
         }
         catch (Exception ex)
