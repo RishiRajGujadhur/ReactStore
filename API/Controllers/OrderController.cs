@@ -10,8 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 [ApiController]
-[Route("api/[controller]")]
-[Authorize(Roles = "Member")]
+[Route("api/[controller]")] 
 public class OrdersController : ControllerBase
 {
     private readonly StoreContext _context;
@@ -51,11 +50,11 @@ public class OrdersController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpGet("listOrdersByUser")]
-    public async Task<ActionResult<List<OrderDto>>> GetOrdersByUser(int id)
+    [HttpPost("GetOrdersByUser")]
+    public async Task<ActionResult<List<OrderDto>>> GetOrdersByUser(UserDto userDto)
     {
         var orders = await _context.Orders
-            .Where(x => x.BuyerId == id.ToString())
+            .Where(x => x.BuyerId == userDto.Id.ToString())
             .ProjectOrderToOrderDto()
             .OrderByDescending(x => x.OrderDate)
             .ToListAsync();
