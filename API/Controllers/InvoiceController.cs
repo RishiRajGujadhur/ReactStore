@@ -123,7 +123,10 @@ namespace API.Controllers
         public async Task<ActionResult<InvoiceSender>> GetInvoiceSender()
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            var invoiceSender = await _context.InvoiceSenders.FirstOrDefaultAsync(i => i.UserId == userId);
+            var invoiceSender = await _context.InvoiceSenders
+            .Where(i => i.UserId == userId)
+            .FirstOrDefaultAsync();
+            
             if (invoiceSender == null)
             {
                 return NotFound();
