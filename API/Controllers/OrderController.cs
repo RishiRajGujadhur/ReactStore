@@ -182,17 +182,8 @@ public class OrdersController : ControllerBase
     private async Task<int> CreateInvoice(List<OrderItem> orderItems)
     {
         Invoice invoice = new();
-        var user = await _userManager.FindByNameAsync(User.Identity.Name);
-        // Todo: Get details from future settings table
-        invoice.Sender = new InvoiceSender()
-        {
-            Address = "1234 Main St",
-            City = "New York",
-            Company = "Company Name",
-            Zip = "123456",
-            Country = "USA",
-        };
-        
+        var user = await _userManager.FindByNameAsync(User.Identity.Name); 
+        invoice.Sender = _context.InvoiceSenders.Where(i => i.UserId == user.Id).FirstOrDefault(); 
         var invoiceSettings = _context.InvoiceSettings.OrderBy(i=>i.Id).FirstOrDefault();            
         invoice.BottomNotice = invoiceSettings.BottomNotice;
         invoice.DueDate = DateTime.UtcNow.AddDays(14);

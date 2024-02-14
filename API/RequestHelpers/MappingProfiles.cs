@@ -17,8 +17,7 @@ public class MappingProfiles : Profile
         CreateMap<Comment, CommentDto>();  
         CreateMap<Invoice, InvoiceDto>();  
         CreateMap<Invoice, InvoiceDetailsDto>(); 
-        CreateMap<InvoiceSettingsDto, InvoiceSettings>(); 
-        CreateMap<UpdateInvoiceSenderDto, InvoiceSender>(); 
+        CreateMap<InvoiceSettingsDto, InvoiceSettings>();  
         CreateMap<Receipt, ReceiptDto>();  
     }
 }

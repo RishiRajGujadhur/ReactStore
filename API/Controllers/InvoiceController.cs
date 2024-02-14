@@ -103,10 +103,10 @@ namespace API.Controllers
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
             invoiceSender.UserId = userId;
-            var existingInvoiceSenderRecord = await _context.InvoiceSenders.FirstOrDefaultAsync(i => i.UserId == userId && i.Id == invoiceSender.Id);
+            var existingInvoiceSenderRecord = await _context.InvoiceSenders.OrderByDescending(i => i.Id).FirstOrDefaultAsync(i => i.UserId == userId);
             if (existingInvoiceSenderRecord != null)
             {
-                await UpdateInvoiceSender(invoiceSender, userId);
+                await UpdateInvoiceSender(invoiceSender);
             }
             else
             {
@@ -115,8 +115,7 @@ namespace API.Controllers
             }
 
             return invoiceSender;
-        }
-
+        } 
 
         // GET: api/invoices/getInvoiceSender/{userId}
         [HttpGet("getInvoiceSender")]
@@ -125,6 +124,7 @@ namespace API.Controllers
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
             var invoiceSender = await _context.InvoiceSenders
             .Where(i => i.UserId == userId)
+            .OrderByDescending(i => i.Id)
             .FirstOrDefaultAsync();
             
             if (invoiceSender == null)
@@ -139,15 +139,8 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Invoice>> CreateInvoice(Invoice invoice, string clientEmail)
         {
-            // Todo: Get details from future settings table
-            invoice.Sender = new InvoiceSender()
-            {
-                Address = "1234 Main St",
-                City = "New York",
-                Company = "Company Name",
-                Zip = "123456",
-                Country = "USA",
-            };
+            var user = await _userManager.FindByNameAsync(User.Identity.Name); 
+            invoice.Sender = _context.InvoiceSenders.Where(i => i.UserId == user.Id).FirstOrDefault();
             var invoiceSettings = _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefault();
             invoice.BottomNotice = invoiceSettings.BottomNotice;
             invoice.DueDate = DateTime.UtcNow.AddDays(14);
@@ -162,7 +155,7 @@ namespace API.Controllers
             _context.Invoices.Add(invoice);
             await _context.SaveChangesAsync();
 
-            return NoContent(); ;
+            return NoContent();
         }
 
         // POST: api/invoices/saveInvoiceSettings
@@ -298,14 +291,24 @@ namespace API.Controllers
             return message + " " + User.Identity.Name + " : " + DateTime.UtcNow.ToString() + " " + ex.Message + " " + ex.InnerException.Message + " " + ex.InnerException.InnerException.Message;
         }
 
-        private async Task<ActionResult<InvoiceSender>> UpdateInvoiceSender(InvoiceSender updatedInvoiceSender, int userId)
+        private async Task<ActionResult<InvoiceSender>> UpdateInvoiceSender(InvoiceSender updatedInvoiceSender)
         {
-            var invoiceSender = await _context.InvoiceSenders.FirstOrDefaultAsync(i => i.UserId == userId && i.Id == updatedInvoiceSender.Id);
+            var invoiceSender = await _context.InvoiceSenders
+             .OrderByDescending(i => i.Id)
+            .FirstOrDefaultAsync(i => i.UserId == updatedInvoiceSender.UserId 
+            && i.Id == updatedInvoiceSender.Id);
             if (invoiceSender == null)
             {
                 return NotFound();
             }
-            _mapper.Map(updatedInvoiceSender, invoiceSender);
+
+            invoiceSender.City = updatedInvoiceSender.City;
+            invoiceSender.Zip = updatedInvoiceSender.Zip;
+            invoiceSender.Country = updatedInvoiceSender.Country;   
+            invoiceSender.Address = updatedInvoiceSender.Address;
+            invoiceSender.Company = updatedInvoiceSender.Company; 
+
+            _context.Entry(invoiceSender).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return invoiceSender;
