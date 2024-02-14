@@ -98,30 +98,25 @@ namespace API.Controllers
             return invoicesDto;
         }
 
-        [HttpPost("createInvoiceSender")]
-        public async Task<ActionResult<InvoiceSender>> CreateInvoiceSender(InvoiceSender invoiceSender)
-        {
-            invoiceSender.UserId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            _context.InvoiceSenders.Add(invoiceSender);
-            await _context.SaveChangesAsync();
-            return invoiceSender;
-        }
-
-        // PUT: api/invoices/updateInvoiceSender
-        [HttpPut("updateInvoiceSender")]
-        public async Task<ActionResult<InvoiceSender>> UpdateInvoiceSender(UpdateInvoiceSenderDto updatedInvoiceSender)
+        [HttpPost("createOrUpdateInvoiceSender")]
+        public async Task<ActionResult<InvoiceSender>> CreateOrUpdateInvoiceSender(InvoiceSender invoiceSender)
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            var invoiceSender = await _context.InvoiceSenders.FirstOrDefaultAsync(i => i.UserId == userId && i.Id == updatedInvoiceSender.Id);
-            if (invoiceSender == null)
+            invoiceSender.UserId = userId;
+            var existingInvoiceSenderRecord = await _context.InvoiceSenders.FirstOrDefaultAsync(i => i.UserId == userId && i.Id == invoiceSender.Id);
+            if (existingInvoiceSenderRecord != null)
             {
-                return NotFound();
+                await UpdateInvoiceSender(invoiceSender, userId);
             }
-            _mapper.Map(updatedInvoiceSender, invoiceSender);
-            await _context.SaveChangesAsync();
+            else
+            {
+                _context.InvoiceSenders.Add(invoiceSender);
+                await _context.SaveChangesAsync();
+            }
 
             return invoiceSender;
         }
+
 
         // GET: api/invoices/getInvoiceSender/{userId}
         [HttpGet("getInvoiceSender")]
@@ -300,6 +295,18 @@ namespace API.Controllers
             return message + " " + User.Identity.Name + " : " + DateTime.UtcNow.ToString() + " " + ex.Message + " " + ex.InnerException.Message + " " + ex.InnerException.InnerException.Message;
         }
 
+        private async Task<ActionResult<InvoiceSender>> UpdateInvoiceSender(InvoiceSender updatedInvoiceSender, int userId)
+        {
+            var invoiceSender = await _context.InvoiceSenders.FirstOrDefaultAsync(i => i.UserId == userId && i.Id == updatedInvoiceSender.Id);
+            if (invoiceSender == null)
+            {
+                return NotFound();
+            }
+            _mapper.Map(updatedInvoiceSender, invoiceSender);
+            await _context.SaveChangesAsync();
+
+            return invoiceSender;
+        }
         #endregion
     }
 
