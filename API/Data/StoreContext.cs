@@ -15,6 +15,7 @@ namespace API.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<InvoiceSettings> InvoiceSettings { get; set; }
+        public DbSet<InvoiceSender> InvoiceSenders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Promotion> Promotions { get; set; }

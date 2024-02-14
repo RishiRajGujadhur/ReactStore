@@ -17,7 +17,7 @@ namespace API.Controllers
     public class InvoiceController : ControllerBase
     {
         private readonly StoreContext _context;
-        private readonly ILogger<InvoiceController> _logger; 
+        private readonly ILogger<InvoiceController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
         public InvoiceController(StoreContext context, UserManager<User> userManager, IMapper mapper, ILogger<InvoiceController> logger)
@@ -98,6 +98,45 @@ namespace API.Controllers
             return invoicesDto;
         }
 
+        [HttpPost("createInvoiceSender")]
+        public async Task<ActionResult<InvoiceSender>> CreateInvoiceSender(InvoiceSender invoiceSender)
+        {
+            invoiceSender.UserId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
+            _context.InvoiceSenders.Add(invoiceSender);
+            await _context.SaveChangesAsync();
+            return invoiceSender;
+        }
+
+        // PUT: api/invoices/updateInvoiceSender
+        [HttpPut("updateInvoiceSender")]
+        public async Task<ActionResult<InvoiceSender>> UpdateInvoiceSender(UpdateInvoiceSenderDto updatedInvoiceSender)
+        {
+            var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
+            var invoiceSender = await _context.InvoiceSenders.FirstOrDefaultAsync(i => i.UserId == userId && i.Id == updatedInvoiceSender.Id);
+            if (invoiceSender == null)
+            {
+                return NotFound();
+            }
+            _mapper.Map(updatedInvoiceSender, invoiceSender);
+            await _context.SaveChangesAsync();
+
+            return invoiceSender;
+        }
+
+        // GET: api/invoices/getInvoiceSender/{userId}
+        [HttpGet("getInvoiceSender")]
+        public async Task<ActionResult<InvoiceSender>> GetInvoiceSender()
+        {
+            var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
+            var invoiceSender = await _context.InvoiceSenders.FirstOrDefaultAsync(i => i.UserId == userId);
+            if (invoiceSender == null)
+            {
+                return NotFound();
+            }
+            return invoiceSender;
+        }
+
+
         // POST: api/invoices
         [HttpPost]
         public async Task<ActionResult<Invoice>> CreateInvoice(Invoice invoice, string clientEmail)
@@ -111,12 +150,13 @@ namespace API.Controllers
                 Zip = "123456",
                 Country = "USA",
             };
-            invoice.BottomNotice = "Thank you for your business. Please make sure all payments are made within 2 weeks.";
+            var invoiceSettings = _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefault();
+            invoice.BottomNotice = invoiceSettings.BottomNotice;
             invoice.DueDate = DateTime.UtcNow.AddDays(14);
             invoice.IssueDate = DateTime.UtcNow;
             invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id;
             invoice.Logo = "https://via.placeholder.com/150";
-            invoice.Settings = _context.InvoiceSettings.OrderBy(i=>i.Id).FirstOrDefault();
+            invoice.Settings = invoiceSettings;
 
             User client = GetUserByEmail(clientEmail);
             invoice.UserId = client.Id;
@@ -145,7 +185,7 @@ namespace API.Controllers
         {
             try
             {
-                var invoiceSettings = await _context.InvoiceSettings.OrderBy(i=>i.Id).FirstOrDefaultAsync();
+                var invoiceSettings = await _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefaultAsync();
                 if (invoiceSettings == null)
                 {
                     return NotFound();
@@ -159,17 +199,17 @@ namespace API.Controllers
                 // Log the exception
                 _logger.LogError(ex, AddErrorDetails(ex, "An error occurred while updating invoice settings."));
                 // Return a 500 Internal Server Error status code
-                return StatusCode(500, "Internal server error"); 
+                return StatusCode(500, "Internal server error");
             }
             return NoContent();
-        } 
+        }
 
         // GET: api/invoices/getFirstInvoiceSettings
         [HttpGet("getFirstInvoiceSettings")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<InvoiceSettings>> GetFirstInvoiceSettings()
         {
-            var firstInvoiceSettings = await _context.InvoiceSettings.OrderBy(i=>i.Id).FirstOrDefaultAsync();
+            var firstInvoiceSettings = await _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefaultAsync();
             if (firstInvoiceSettings == null)
             {
                 return NotFound();

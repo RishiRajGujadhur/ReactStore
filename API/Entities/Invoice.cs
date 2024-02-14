@@ -10,10 +10,10 @@ namespace API.Entities
 
         [Required]
         public DateTime DueDate { get; set; } = DateTime.UtcNow.AddDays(14);
-        
+
         [Required]
         public string Logo { get; set; } = "https://via.placeholder.com/150";
-        public string Number { get; set; } 
+        public string Number { get; set; }
         public string BottomNotice { get; set; } = "Thank you for your business.";
         // Foreign Key
         public int UserId { get; set; }
@@ -27,18 +27,20 @@ namespace API.Entities
     {
         [Key]
         public int Id { get; set; }
-        public string Company { get; set; } 
+        public string Company { get; set; }
         public string Address { get; set; }
         public string Zip { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
+        public int UserId { get; set; }
     }
 
     public class InvoiceSettings
     {
         [Key]
         public int Id { get; set; }
-         public string Currency { get; set; } = "MUR";
+        public string Currency { get; set; } = "MUR";
+        public string BottomNotice { get; set; } = "Bottom Notice";
         public string Locale { get; set; } = "en-US";
         public string TaxNotation { get; set; } = "vat";
         public double? MarginTop { get; set; } = 10;

@@ -192,13 +192,15 @@ public class OrdersController : ControllerBase
             Zip = "123456",
             Country = "USA",
         };
-        invoice.BottomNotice = "Thank you for your business. Please make sure all payments are made within 2 weeks.";
+        
+        var invoiceSettings = _context.InvoiceSettings.OrderBy(i=>i.Id).FirstOrDefault();            
+        invoice.BottomNotice = invoiceSettings.BottomNotice;
         invoice.DueDate = DateTime.UtcNow.AddDays(14);
         invoice.IssueDate = DateTime.UtcNow;
         invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id;
         invoice.Logo = "https://via.placeholder.com/150";
         invoice.OrderItems = orderItems;
-        invoice.Settings = _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefault();
+        invoice.Settings = invoiceSettings;
         User client = user;
         invoice.UserId = client.Id;
         _context.Invoices.Add(invoice);
