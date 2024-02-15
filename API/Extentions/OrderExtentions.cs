@@ -20,6 +20,7 @@ public static class OrderExtensions
                     Subtotal = order.Subtotal,
                     OrderStatus = order.OrderStatus.ToString(),
                     Total = order.GetTotal(), 
+                    PaymentMethod = order.PaymentMethod,
                     OrderItems = order.OrderItems.Select(item => new OrderItemDto
                     {
                         ProductId = item.ItemOrdered.ProductId,

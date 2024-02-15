@@ -14,6 +14,7 @@ namespace API.Entities
         public long DeliveryFee { get; set; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
         public string PaymentIntentId { get; set; } 
+        public string PaymentMethod { get; set; } = "Cash on Delivery";
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
         // New Relationship

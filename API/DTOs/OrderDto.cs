@@ -12,5 +12,6 @@ public class OrderDto
     public long Subtotal { get; set; }
     public long DeliveryFee { get; set; }
     public string OrderStatus { get; set; }
+    public string PaymentMethod { get; set; } = "Cash on Delivery";
     public long Total { get; set; }
 }

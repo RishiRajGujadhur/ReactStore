@@ -113,8 +113,8 @@ public class OrdersController : ControllerBase
     {
         var basket = await _context.Baskets
             .RetrieveBasketWithItems(User.Identity.Name)
-            .FirstOrDefaultAsync();
-
+            .FirstOrDefaultAsync(); 
+            
         if (basket == null) return BadRequest(new ProblemDetails { Title = "Could not locate basket" });
 
         var items = new List<OrderItem>();
@@ -148,6 +148,7 @@ public class OrdersController : ControllerBase
             ShippingAddress = orderDto.ShippingAddress,
             Subtotal = subtotal,
             DeliveryFee = deliveryFee,
+            PaymentMethod = orderDto.PaymentMethod,
         };
 
         _context.Orders.Add(order);
