@@ -27,7 +27,7 @@ namespace API.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Logistics> Logistics { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
-
+        public DbSet<GeneralSettings> GeneralSettings { get; set; }
         public DbSet<Receipt> Receipts { get; set; }
         public DbSet<CollectionList> CollectionLists { get; set; }
         public DbSet<CollectionListItem> CollectionListItems { get; set; }
