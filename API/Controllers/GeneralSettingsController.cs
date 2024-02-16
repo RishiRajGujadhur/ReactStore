@@ -1,5 +1,8 @@
 using API.Data;
 using API.Entities;
+using API.Services;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc; 
 using Microsoft.EntityFrameworkCore; 
 
@@ -10,9 +13,13 @@ namespace API.Controllers
     public class GeneralSettingsController : ControllerBase
     {
         private readonly StoreContext _context;
+           private readonly IMapper _mapper;
+        private readonly ImageService _imageService;
 
-        public GeneralSettingsController(StoreContext context)
+        public GeneralSettingsController(StoreContext context, IMapper mapper, ImageService imageService)
         {
+                 _imageService = imageService;
+            _mapper = mapper;
             _context = context;
         }
 
@@ -45,14 +52,31 @@ namespace API.Controllers
             return generalSettings;
         }
 
-        // POST: api/GeneralSettings
+        // POST: api/GeneralSettings 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult<GeneralSettings>> PostGeneralSettings(GeneralSettings generalSettings)
-        {
-            _context.GeneralSettings.Add(generalSettings);
-            await _context.SaveChangesAsync();
+        public async Task<ActionResult<GeneralSettings>> PostGeneralSettings([FromForm] GeneralSettings generalSettings)
+        { 
+            if (generalSettings.File != null)
+            {
+                var imageResult = await _imageService.AddImageAsync(generalSettings.File);
 
-            return CreatedAtAction(nameof(GetGeneralSettings), new { id = generalSettings.Id }, generalSettings);
+                if (imageResult.Error != null) return BadRequest(new ProblemDetails
+                {
+                    Title = imageResult.Error.Message
+                });
+
+                generalSettings.Logo = imageResult.SecureUrl.ToString();
+                generalSettings.PublicId = imageResult.PublicId;
+            }
+
+            _context.GeneralSettings.Add(generalSettings);
+
+            var result = await _context.SaveChangesAsync() > 0;
+
+            if (result) return CreatedAtAction(nameof(GetGeneralSettings), new { id = generalSettings.Id }, generalSettings);
+
+            return BadRequest(new ProblemDetails { Title = "Problem creating new product" });
         }
 
         // PUT: api/GeneralSettings/5

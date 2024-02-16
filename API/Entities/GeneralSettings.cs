@@ -11,6 +11,8 @@ namespace API.Entities
         public string AppName { get; set; } = "My App";
         public string CompanyName { get; set; } = "My Company";
         public string DefaultCurrency { get; set; } = "USD";
-        public string DefaultLanguage { get; set; } = "en";
+        public string DefaultLanguage { get; set; } = "en"; 
+        public IFormFile File { get; set; }
+        public string PublicId { get; internal set; }
     }
 }

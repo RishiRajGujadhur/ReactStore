@@ -9,6 +9,7 @@ namespace API.Entities
         public bool IsFeatureEnabled { get; set; } = false;
         public string FeatureName { get; set; }
         public string FeatureDescription { get; set; }
+        public int DisplayOrder { get; set; }
         public string FeatureIcon { get; set; }
         public string FeatureRoute { get; set; }
         public string FeatureType { get; set; }
