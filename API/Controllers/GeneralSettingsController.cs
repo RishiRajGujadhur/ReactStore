@@ -24,6 +24,13 @@ namespace API.Controllers
             return generalSettings;
         }
 
+        [HttpGet("getAppName")]
+        public async Task<ActionResult<string>> GetAppName()
+        {
+            var generalSettings = await _context.GeneralSettings.FirstOrDefaultAsync();
+            return generalSettings.AppName;
+        }
+
         // GET: api/GeneralSettings/5
         [HttpGet("{id}")]
         public async Task<ActionResult<GeneralSettings>> GetGeneralSettings(int id)
