@@ -183,6 +183,7 @@ public class OrdersController : ControllerBase
     private async Task<int> CreateInvoice(List<OrderItem> orderItems)
     {
         Invoice invoice = new();
+        GeneralSettings generalSettings = await _context.GeneralSettings.FirstOrDefaultAsync();
         var user = await _userManager.FindByNameAsync(User.Identity.Name); 
         invoice.Sender = _context.InvoiceSenders.Where(i => i.UserId == user.Id).FirstOrDefault(); 
         var invoiceSettings = _context.InvoiceSettings.OrderBy(i=>i.Id).FirstOrDefault();            
@@ -190,7 +191,7 @@ public class OrdersController : ControllerBase
         invoice.DueDate = DateTime.UtcNow.AddDays(14);
         invoice.IssueDate = DateTime.UtcNow;
         invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id;
-        invoice.Logo = "https://via.placeholder.com/150";
+        invoice.Logo = generalSettings?.Logo;
         invoice.OrderItems = orderItems;
         invoice.Settings = invoiceSettings;
         User client = user;
