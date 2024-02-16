@@ -185,7 +185,10 @@ public class OrdersController : ControllerBase
         Invoice invoice = new();
         GeneralSettings generalSettings = await _context.GeneralSettings.FirstOrDefaultAsync();
         var user = await _userManager.FindByNameAsync(User.Identity.Name); 
-        invoice.Sender = _context.InvoiceSenders.Where(i => i.UserId == user.Id).FirstOrDefault(); 
+        // INVOICE sender cannot be the same as the user who purchases the product thus I have changed the sender to the last sender in the database
+        // This is a temporary solution until I have a proper way to handle this in the future when there are multiple sellers 
+        // For multi vendors, I will associate the vendorId to the product at the time of creating the product in the inventory, each vendor will have their own inventory.
+        invoice.Sender = _context.InvoiceSenders.OrderByDescending(x=>x.Id).FirstOrDefault(); 
         var invoiceSettings = _context.InvoiceSettings.OrderBy(i=>i.Id).FirstOrDefault();            
         invoice.BottomNotice = invoiceSettings.BottomNotice;
         invoice.DueDate = DateTime.UtcNow.AddDays(14);
