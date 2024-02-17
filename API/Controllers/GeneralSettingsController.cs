@@ -83,13 +83,27 @@ namespace API.Controllers
 
         // PUT: api/GeneralSettings/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGeneralSettings(int id, GeneralSettings generalSettings)
+        public async Task<IActionResult> PutGeneralSettings(int id, [FromForm] GeneralSettingsDto generalSettingsDto)
         {
-            if (id != generalSettings.Id)
+            if (id != generalSettingsDto.Id)
             {
                 return BadRequest();
             }
+            
+            if (generalSettingsDto.File != null)
+            {
+                var imageResult = await _imageService.AddImageAsync(generalSettingsDto.File);
 
+                if (imageResult.Error != null) return BadRequest(new ProblemDetails
+                {
+                    Title = imageResult.Error.Message
+                });
+
+                generalSettingsDto.LogoURL = imageResult.SecureUrl.ToString();
+                generalSettingsDto.PublicId = imageResult.PublicId;
+            } 
+            
+            var generalSettings = _mapper.Map<GeneralSettings>(generalSettingsDto);
             _context.Entry(generalSettings).State = EntityState.Modified;
 
             try
