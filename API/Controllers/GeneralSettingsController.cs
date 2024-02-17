@@ -1,4 +1,5 @@
 using API.Data;
+using API.DTOs;
 using API.Entities;
 using API.Services;
 using AutoMapper;
@@ -55,26 +56,27 @@ namespace API.Controllers
         // POST: api/GeneralSettings 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult<GeneralSettings>> PostGeneralSettings([FromForm] GeneralSettings generalSettings)
+        public async Task<ActionResult<GeneralSettings>> PostGeneralSettings([FromForm] GeneralSettingsDto generalSettingsDto)
         { 
-            if (generalSettings.File != null)
+            if (generalSettingsDto.File != null)
             {
-                var imageResult = await _imageService.AddImageAsync(generalSettings.File);
+                var imageResult = await _imageService.AddImageAsync(generalSettingsDto.File);
 
                 if (imageResult.Error != null) return BadRequest(new ProblemDetails
                 {
                     Title = imageResult.Error.Message
                 });
 
-                generalSettings.Logo = imageResult.SecureUrl.ToString();
-                generalSettings.PublicId = imageResult.PublicId;
+                generalSettingsDto.LogoURL = imageResult.SecureUrl.ToString();
+                generalSettingsDto.PublicId = imageResult.PublicId;
             }
 
+            var generalSettings = _mapper.Map<GeneralSettings>(generalSettingsDto);
             _context.GeneralSettings.Add(generalSettings);
 
             var result = await _context.SaveChangesAsync() > 0;
 
-            if (result) return CreatedAtAction(nameof(GetGeneralSettings), new { id = generalSettings.Id }, generalSettings);
+            if (result) return CreatedAtAction(nameof(GetGeneralSettings), new { id = generalSettingsDto.Id }, generalSettingsDto);
 
             return BadRequest(new ProblemDetails { Title = "Problem creating new product" });
         }
@@ -131,4 +133,5 @@ namespace API.Controllers
         }
         
     }
+ 
 }

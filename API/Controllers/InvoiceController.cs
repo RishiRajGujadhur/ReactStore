@@ -147,7 +147,7 @@ namespace API.Controllers
             invoice.DueDate = DateTime.UtcNow.AddDays(14);
             invoice.IssueDate = DateTime.UtcNow;
             invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id;
-            invoice.Logo = generalSettings?.Logo;
+            invoice.Logo = generalSettings?.LogoURL;
             invoice.Settings = invoiceSettings;
 
             User client = GetUserByEmail(clientEmail);

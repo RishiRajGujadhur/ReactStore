@@ -212,7 +212,10 @@ namespace API.Data.Migrations
                     b.Property<string>("DefaultLanguage")
                         .HasColumnType("text");
 
-                    b.Property<string>("Logo")
+                    b.Property<string>("LogoURL")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PublicId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -1024,13 +1027,13 @@ namespace API.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e416d4ab-5880-4244-9c51-81e57dd6d1f3",
+                            Id = "86ae077b-cb5e-4b01-8d08-ad251ab3df98",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "76834b45-5b21-4d02-964f-2536250d9e6d",
+                            Id = "9b509e4f-5447-4263-9ece-665062476124",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

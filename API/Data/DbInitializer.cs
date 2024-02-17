@@ -32,7 +32,7 @@ public static class DbInitializer
         {
             var generalSettings = new GeneralSettings
             {
-                Logo = "default.png",
+                LogoURL = "default.png",
                 AppName = "My App",
                 CompanyName = "My Company",
                 DefaultCurrency = "USD",

@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class ColumnChange2 : Migration
+    public partial class InitialCommit1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -69,6 +69,24 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GeneralSettings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    LogoURL = table.Column<string>(type: "text", nullable: true),
+                    AppName = table.Column<string>(type: "text", nullable: true),
+                    CompanyName = table.Column<string>(type: "text", nullable: true),
+                    DefaultCurrency = table.Column<string>(type: "text", nullable: true),
+                    DefaultLanguage = table.Column<string>(type: "text", nullable: true),
+                    PublicId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GeneralSettings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "IdentityRole",
                 columns: table => new
                 {
@@ -83,7 +101,7 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "InvoiceSender",
+                name: "InvoiceSenders",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -92,11 +110,12 @@ namespace API.Data.Migrations
                     Address = table.Column<string>(type: "text", nullable: true),
                     Zip = table.Column<string>(type: "text", nullable: true),
                     City = table.Column<string>(type: "text", nullable: true),
-                    Country = table.Column<string>(type: "text", nullable: true)
+                    Country = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InvoiceSender", x => x.Id);
+                    table.PrimaryKey("PK_InvoiceSenders", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -106,6 +125,7 @@ namespace API.Data.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Currency = table.Column<string>(type: "text", nullable: true),
+                    BottomNotice = table.Column<string>(type: "text", nullable: true),
                     Locale = table.Column<string>(type: "text", nullable: true),
                     TaxNotation = table.Column<string>(type: "text", nullable: true),
                     MarginTop = table.Column<double>(type: "double precision", nullable: true),
@@ -120,6 +140,32 @@ namespace API.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_InvoiceSettings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    BuyerId = table.Column<string>(type: "text", nullable: true),
+                    ShippingAddressFullName = table.Column<string>(name: "ShippingAddress_FullName", type: "text", nullable: true),
+                    ShippingAddressAddress1 = table.Column<string>(name: "ShippingAddress_Address1", type: "text", nullable: true),
+                    ShippingAddressAddress2 = table.Column<string>(name: "ShippingAddress_Address2", type: "text", nullable: true),
+                    ShippingAddressCity = table.Column<string>(name: "ShippingAddress_City", type: "text", nullable: true),
+                    ShippingAddressState = table.Column<string>(name: "ShippingAddress_State", type: "text", nullable: true),
+                    ShippingAddressZip = table.Column<string>(name: "ShippingAddress_Zip", type: "text", nullable: true),
+                    ShippingAddressCountry = table.Column<string>(name: "ShippingAddress_Country", type: "text", nullable: true),
+                    Subtotal = table.Column<long>(type: "bigint", nullable: false),
+                    DeliveryFee = table.Column<long>(type: "bigint", nullable: false),
+                    OrderStatus = table.Column<int>(type: "integer", nullable: false),
+                    PaymentIntentId = table.Column<string>(type: "text", nullable: true),
+                    PaymentMethod = table.Column<string>(type: "text", nullable: true),
+                    OrderDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -401,6 +447,103 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Invoices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IssueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Logo = table.Column<string>(type: "text", nullable: false),
+                    Number = table.Column<string>(type: "text", nullable: true),
+                    BottomNotice = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    SettingsId = table.Column<int>(type: "integer", nullable: true),
+                    SenderId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invoices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Invoices_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Invoices_InvoiceSenders_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "InvoiceSenders",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Invoices_InvoiceSettings_SettingsId",
+                        column: x => x.SettingsId,
+                        principalTable: "InvoiceSettings",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AdditionalDeliveryInfos",
+                columns: table => new
+                {
+                    AdditionalDeliveryInfoID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    OrderID = table.Column<int>(type: "integer", nullable: false),
+                    DeliveryInstructions = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdditionalDeliveryInfos", x => x.AdditionalDeliveryInfoID);
+                    table.ForeignKey(
+                        name: "FK_AdditionalDeliveryInfos_Orders_OrderID",
+                        column: x => x.OrderID,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Logistics",
+                columns: table => new
+                {
+                    LogisticsID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ShipmentStatus = table.Column<string>(type: "text", nullable: false),
+                    OrderID = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Logistics", x => x.LogisticsID);
+                    table.ForeignKey(
+                        name: "FK_Logistics_Orders_OrderID",
+                        column: x => x.OrderID,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderDiscounts",
+                columns: table => new
+                {
+                    OrderDiscountID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DiscountCode = table.Column<string>(type: "text", nullable: true),
+                    DiscountAmount = table.Column<decimal>(type: "numeric", nullable: false),
+                    OrderID = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderDiscounts", x => x.OrderDiscountID);
+                    table.ForeignKey(
+                        name: "FK_OrderDiscounts_Orders_OrderID",
+                        column: x => x.OrderID,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BasketItem",
                 columns: table => new
                 {
@@ -482,6 +625,43 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Receipts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IssueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PaymentMethod = table.Column<string>(type: "text", nullable: true),
+                    Logo = table.Column<string>(type: "text", nullable: true),
+                    Number = table.Column<string>(type: "text", nullable: true),
+                    BottomNotice = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    SettingsId = table.Column<int>(type: "integer", nullable: true),
+                    SenderId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Receipts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Receipts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Receipts_ReceiptSender_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "ReceiptSender",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Receipts_ReceiptSettings_SettingsId",
+                        column: x => x.SettingsId,
+                        principalTable: "ReceiptSettings",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Inventories",
                 columns: table => new
                 {
@@ -559,48 +739,6 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Invoices",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    IssueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Logo = table.Column<string>(type: "text", nullable: false),
-                    Number = table.Column<string>(type: "text", nullable: true),
-                    BottomNotice = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    SettingsId = table.Column<int>(type: "integer", nullable: true),
-                    CustomerID = table.Column<int>(type: "integer", nullable: true),
-                    SenderId = table.Column<int>(type: "integer", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Invoices", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Invoices_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Invoices_Customers_CustomerID",
-                        column: x => x.CustomerID,
-                        principalTable: "Customers",
-                        principalColumn: "CustomerID");
-                    table.ForeignKey(
-                        name: "FK_Invoices_InvoiceSender_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "InvoiceSender",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Invoices_InvoiceSettings_SettingsId",
-                        column: x => x.SettingsId,
-                        principalTable: "InvoiceSettings",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Notifications",
                 columns: table => new
                 {
@@ -618,172 +756,6 @@ namespace API.Data.Migrations
                         column: x => x.CustomerID,
                         principalTable: "Customers",
                         principalColumn: "CustomerID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    BuyerId = table.Column<string>(type: "text", nullable: true),
-                    ShippingAddressFullName = table.Column<string>(name: "ShippingAddress_FullName", type: "text", nullable: true),
-                    ShippingAddressAddress1 = table.Column<string>(name: "ShippingAddress_Address1", type: "text", nullable: true),
-                    ShippingAddressAddress2 = table.Column<string>(name: "ShippingAddress_Address2", type: "text", nullable: true),
-                    ShippingAddressCity = table.Column<string>(name: "ShippingAddress_City", type: "text", nullable: true),
-                    ShippingAddressState = table.Column<string>(name: "ShippingAddress_State", type: "text", nullable: true),
-                    ShippingAddressZip = table.Column<string>(name: "ShippingAddress_Zip", type: "text", nullable: true),
-                    ShippingAddressCountry = table.Column<string>(name: "ShippingAddress_Country", type: "text", nullable: true),
-                    Subtotal = table.Column<long>(type: "bigint", nullable: false),
-                    DeliveryFee = table.Column<long>(type: "bigint", nullable: false),
-                    OrderStatus = table.Column<int>(type: "integer", nullable: false),
-                    PaymentIntentId = table.Column<string>(type: "text", nullable: true),
-                    OrderDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CustomerID = table.Column<int>(type: "integer", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Orders_Customers_CustomerID",
-                        column: x => x.CustomerID,
-                        principalTable: "Customers",
-                        principalColumn: "CustomerID");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Receipts",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    IssueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PaymentMethod = table.Column<string>(type: "text", nullable: true),
-                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Logo = table.Column<string>(type: "text", nullable: true),
-                    Number = table.Column<string>(type: "text", nullable: true),
-                    Date = table.Column<string>(type: "text", nullable: true),
-                    BottomNotice = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    SettingsId = table.Column<int>(type: "integer", nullable: true),
-                    CustomerID = table.Column<int>(type: "integer", nullable: true),
-                    SenderId = table.Column<int>(type: "integer", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Receipts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Receipts_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Receipts_Customers_CustomerID",
-                        column: x => x.CustomerID,
-                        principalTable: "Customers",
-                        principalColumn: "CustomerID");
-                    table.ForeignKey(
-                        name: "FK_Receipts_ReceiptSender_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "ReceiptSender",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Receipts_ReceiptSettings_SettingsId",
-                        column: x => x.SettingsId,
-                        principalTable: "ReceiptSettings",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Reviews",
-                columns: table => new
-                {
-                    ReviewID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Rating = table.Column<int>(type: "integer", nullable: false),
-                    Comment = table.Column<string>(type: "text", nullable: true),
-                    DatePosted = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ProductID = table.Column<int>(type: "integer", nullable: false),
-                    CustomerID = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reviews", x => x.ReviewID);
-                    table.ForeignKey(
-                        name: "FK_Reviews_Customers_CustomerID",
-                        column: x => x.CustomerID,
-                        principalTable: "Customers",
-                        principalColumn: "CustomerID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Reviews_Products_ProductID",
-                        column: x => x.ProductID,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AdditionalDeliveryInfos",
-                columns: table => new
-                {
-                    AdditionalDeliveryInfoID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    OrderID = table.Column<int>(type: "integer", nullable: false),
-                    DeliveryInstructions = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AdditionalDeliveryInfos", x => x.AdditionalDeliveryInfoID);
-                    table.ForeignKey(
-                        name: "FK_AdditionalDeliveryInfos_Orders_OrderID",
-                        column: x => x.OrderID,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Logistics",
-                columns: table => new
-                {
-                    LogisticsID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ShipmentStatus = table.Column<string>(type: "text", nullable: false),
-                    OrderID = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Logistics", x => x.LogisticsID);
-                    table.ForeignKey(
-                        name: "FK_Logistics_Orders_OrderID",
-                        column: x => x.OrderID,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrderDiscounts",
-                columns: table => new
-                {
-                    OrderDiscountID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    DiscountCode = table.Column<string>(type: "text", nullable: true),
-                    DiscountAmount = table.Column<decimal>(type: "numeric", nullable: false),
-                    OrderID = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderDiscounts", x => x.OrderDiscountID);
-                    table.ForeignKey(
-                        name: "FK_OrderDiscounts_Orders_OrderID",
-                        column: x => x.OrderID,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -849,6 +821,35 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    ReviewID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Rating = table.Column<int>(type: "integer", nullable: false),
+                    Comment = table.Column<string>(type: "text", nullable: true),
+                    DatePosted = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ProductID = table.Column<int>(type: "integer", nullable: false),
+                    CustomerID = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => x.ReviewID);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Customers_CustomerID",
+                        column: x => x.CustomerID,
+                        principalTable: "Customers",
+                        principalColumn: "CustomerID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Products_ProductID",
+                        column: x => x.ProductID,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrderItems",
                 columns: table => new
                 {
@@ -898,8 +899,8 @@ namespace API.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "7c67862f-abb1-4151-8b86-533f78b22f56", null, "Admin", "ADMIN" },
-                    { "98893e86-dbba-45a8-adcc-bc8da3672dde", null, "Member", "MEMBER" }
+                    { "86ae077b-cb5e-4b01-8d08-ad251ab3df98", null, "Member", "MEMBER" },
+                    { "9b509e4f-5447-4263-9ece-665062476124", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -995,11 +996,6 @@ namespace API.Data.Migrations
                 column: "WarehouseID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Invoices_CustomerID",
-                table: "Invoices",
-                column: "CustomerID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Invoices_SenderId",
                 table: "Invoices",
                 column: "SenderId");
@@ -1055,11 +1051,6 @@ namespace API.Data.Migrations
                 column: "ReceiptId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_CustomerID",
-                table: "Orders",
-                column: "CustomerID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PromotionUsages_CustomerID",
                 table: "PromotionUsages",
                 column: "CustomerID");
@@ -1073,11 +1064,6 @@ namespace API.Data.Migrations
                 name: "IX_PromotionUsages_PromotionID",
                 table: "PromotionUsages",
                 column: "PromotionID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Receipts_CustomerID",
-                table: "Receipts",
-                column: "CustomerID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Receipts_SenderId",
@@ -1149,6 +1135,9 @@ namespace API.Data.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
+                name: "GeneralSettings");
+
+            migrationBuilder.DropTable(
                 name: "IdentityRole");
 
             migrationBuilder.DropTable(
@@ -1209,10 +1198,13 @@ namespace API.Data.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
+                name: "Customers");
+
+            migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "InvoiceSender");
+                name: "InvoiceSenders");
 
             migrationBuilder.DropTable(
                 name: "InvoiceSettings");
@@ -1222,9 +1214,6 @@ namespace API.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "ReceiptSettings");
-
-            migrationBuilder.DropTable(
-                name: "Customers");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
