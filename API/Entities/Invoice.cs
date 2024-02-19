@@ -17,7 +17,7 @@ namespace API.Entities
         public string BottomNotice { get; set; } = "Thank you for your business.";
         // Foreign Key
         public int UserId { get; set; }
-        public User User { get; set; }
+        public User User { get; set; }       
         public List<OrderItem> OrderItems { get; set; }
         public InvoiceSettings Settings { get; set; } = new InvoiceSettings();
         public InvoiceSender Sender { get; set; }

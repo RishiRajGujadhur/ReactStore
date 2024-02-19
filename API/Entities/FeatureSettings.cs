@@ -14,7 +14,8 @@ namespace API.Entities
         public string FeatureRoute { get; set; }
         public string FeatureType { get; set; }
         public string FeatureCategory { get; set; }
-        public string FeatureSubCategory { get; set; } 
+        public int ParentFeatureId { get; set; } 
+        public bool AdminFeature { get; set; }
         public List<string> EnabledForRoles { get; set; } 
     }
 }

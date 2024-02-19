@@ -8,6 +8,6 @@ namespace API.DTOs;
         public DateTime IssueDate { get; set; } = DateTime.UtcNow; 
         public DateTime PaymentDueDate { get; set; } = DateTime.UtcNow.AddDays(14);
         public string Logo { get; set; } = "https://via.placeholder.com/150"; 
-        public string Number { get; set; }   
+        public string Number { get; set; }  
         public int UserId { get; set; }  
     }

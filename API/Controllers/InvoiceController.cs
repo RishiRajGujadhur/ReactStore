@@ -136,6 +136,7 @@ namespace API.Controllers
 
 
         // POST: api/invoices
+        // For future usage, allowing an admin to create an invoice for a client without an order 
         [HttpPost]
         public async Task<ActionResult<Invoice>> CreateInvoice(Invoice invoice, string clientEmail)
         {

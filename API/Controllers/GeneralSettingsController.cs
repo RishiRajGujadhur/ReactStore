@@ -14,12 +14,12 @@ namespace API.Controllers
     public class GeneralSettingsController : ControllerBase
     {
         private readonly StoreContext _context;
-           private readonly IMapper _mapper;
+        private readonly IMapper _mapper;
         private readonly ImageService _imageService;
 
         public GeneralSettingsController(StoreContext context, IMapper mapper, ImageService imageService)
         {
-                 _imageService = imageService;
+            _imageService = imageService;
             _mapper = mapper;
             _context = context;
         }
