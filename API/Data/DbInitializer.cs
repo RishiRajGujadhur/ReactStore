@@ -43,6 +43,384 @@ public static class DbInitializer
             context.SaveChanges();
         }
 
+        if (!context.FeatureSettings.Any())
+        {
+            var featureSettings = new List<FeatureSettings>
+            {
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Summary",
+                    FeatureDescription = "Displays a list of Summaries.",
+                    DisplayOrder = 1,
+                    FeatureIcon = "Summarize",
+                    FeatureRoute = "/",
+                    FeatureType = "Summary",
+                    FeatureCategory = "Summary",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Profile",
+                    FeatureDescription = "Profile",
+                    DisplayOrder = 1,
+                    FeatureIcon = "Person",
+                    FeatureRoute = "/customer/create",
+                    FeatureType = "Profile",
+                    FeatureCategory = "Profile",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Wishlist",
+                    FeatureDescription = "Wishlist",
+                    DisplayOrder = 1,
+                    FeatureIcon = "Favorite",
+                    FeatureRoute = "/",
+                    FeatureType = "Wishlist",
+                    FeatureCategory = "Wishlist",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Purchases",
+                    FeatureDescription = "Purchases",
+                    DisplayOrder = 1,
+                    FeatureIcon = "ShoppingBasket",
+                    FeatureRoute = "/",
+                    FeatureType = "Purchases",
+                    FeatureCategory = "Purchases",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Returns",
+                    FeatureDescription = "Returns",
+                    DisplayOrder = 1,
+                    FeatureIcon = "Loop",
+                    FeatureRoute = "/",
+                    FeatureType = "Returns",
+                    FeatureCategory = "Returns",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Collections",
+                    FeatureDescription = "Collections",
+                    DisplayOrder = 1,
+                    FeatureIcon = "Collections",
+                    FeatureRoute = "/",
+                    FeatureType = "Collections",
+                    FeatureCategory = "Collections",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                  new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Likes",
+                    FeatureDescription = "Likes",
+                    DisplayOrder = 1,
+                    FeatureIcon = "ThumbUp",
+                    FeatureRoute = "/",
+                    FeatureType = "Likes",
+                    FeatureCategory = "Likes",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Reviews",
+                    FeatureDescription = "Reviews",
+                    DisplayOrder = 1,
+                    FeatureIcon = "Reviews",
+                    FeatureRoute = "/",
+                    FeatureType = "Reviews",
+                    FeatureCategory = "Reviews",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Comments",
+                    FeatureDescription = "Comments",
+                    DisplayOrder = 1,
+                    FeatureIcon = "CommentBank",
+                    FeatureRoute = "/",
+                    FeatureType = "Comments",
+                    FeatureCategory = "Comments",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Settings",
+                    FeatureDescription = "Settings",
+                    DisplayOrder = 1,
+                    FeatureIcon = "SettingsApplications",
+                    FeatureRoute = "/",
+                    FeatureType = "Settings",
+                    FeatureCategory = "Settings",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Support",
+                    FeatureDescription = "Support",
+                    DisplayOrder = 1,
+                    FeatureIcon = "SupportAgent",
+                    FeatureRoute = "/",
+                    FeatureType = "Support",
+                    FeatureCategory = "Support",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "History",
+                    FeatureDescription = "History",
+                    DisplayOrder = 1,
+                    FeatureIcon = "ManageHistory",
+                    FeatureRoute = "/",
+                    FeatureType = "History",
+                    FeatureCategory = "History",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Saved Searches",
+                    FeatureDescription = "Saved Searches",
+                    DisplayOrder = 1,
+                    FeatureIcon = "SavedSearch",
+                    FeatureRoute = "/",
+                    FeatureType = "Saved Searches",
+                    FeatureCategory = "Saved Searches",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Messages",
+                    FeatureDescription = "Messages",
+                    DisplayOrder = 1,
+                    FeatureIcon = "Chat",
+                    FeatureRoute = "/",
+                    FeatureType = "Messages",
+                    FeatureCategory = "Messages",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                 new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Watch items",
+                    FeatureDescription = "Watch items",
+                    DisplayOrder = 1,
+                    FeatureIcon = "Visibility",
+                    FeatureRoute = "/",
+                    FeatureType = "Watch items",
+                    FeatureCategory = "Watch items",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Rewards",
+                    FeatureDescription = "Rewards",
+                    DisplayOrder = 1,
+                    FeatureIcon = "Loyalty",
+                    FeatureRoute = "/",
+                    FeatureType = "Rewards",
+                    FeatureCategory = "Rewards",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Gift cards",
+                    FeatureDescription = "Gift cards",
+                    DisplayOrder = 1,
+                    FeatureIcon = "Redeem",
+                    FeatureRoute = "/",
+                    FeatureType = "Gift cards",
+                    FeatureCategory = "Gift cards",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Recommendations",
+                    FeatureDescription = "Recommendations",
+                    DisplayOrder = 1,
+                    FeatureIcon = "Assistant",
+                    FeatureRoute = "/",
+                    FeatureType = "Recommendations",
+                    FeatureCategory = "Recommendations",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Invoices",
+                    FeatureDescription = "Displays a list of invoices.",
+                    DisplayOrder = 1,
+                    FeatureIcon = "Receipt",
+                    FeatureRoute = "/my-invoices",
+                    FeatureType = "Accounting",
+                    FeatureCategory = "Accounting",
+                    ParentFeatureId = 0,
+                    AdminFeature = false,
+                    EnabledForRoles = new List<string> { "Admin", "Member" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Invoice Sender Profile",
+                    FeatureDescription = "Invoice Sender Profile",
+                    DisplayOrder = 2,
+                    FeatureIcon = "AccountBox",
+                    FeatureRoute = "/invoiceSenderProfile",
+                    FeatureType = "Settings",
+                    FeatureCategory = "Invoice Settings",
+                    ParentFeatureId = 0,
+                    AdminFeature = true,
+                    EnabledForRoles = new List<string> { "Admin" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "General Settings",
+                    FeatureDescription = "generalSettings",
+                    DisplayOrder = 3,
+                    FeatureIcon = "Settings",
+                    FeatureRoute = "/generalSettings",
+                    FeatureType = "Settings",
+                    FeatureCategory = "Settings",
+                    ParentFeatureId = 0,
+                    AdminFeature = true,
+                    EnabledForRoles = new List<string> { "Admin" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Invoice Settings",
+                    FeatureDescription = "Invoice Settings",
+                    DisplayOrder = 4,
+                    FeatureIcon = "SettingsApplications",
+                    FeatureRoute = "/invoiceSettings",
+                    FeatureType = "Invoice",
+                    FeatureCategory = "Invoice",
+                    ParentFeatureId = 0,
+                    AdminFeature = true,
+                    EnabledForRoles = new List<string> { "Admin" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Manage Users",
+                    FeatureDescription = "Manage Users",
+                    DisplayOrder = 2,
+                    FeatureIcon = "Person",
+                    FeatureRoute = "/manageUsers",
+                    FeatureType = "Users",
+                    FeatureCategory = "Users",
+                    ParentFeatureId = 0,
+                    AdminFeature = true,
+                    EnabledForRoles = new List<string> { "Admin" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Manage Orders",
+                    FeatureDescription = "Manage Orders",
+                    DisplayOrder = 5,
+                    FeatureIcon = "Redeem",
+                    FeatureRoute = "/manageOrders",
+                    FeatureType = "Orders",
+                    FeatureCategory = "Orders",
+                    ParentFeatureId = 0,
+                    AdminFeature = true,
+                    EnabledForRoles = new List<string> { "Admin" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Summary",
+                    FeatureDescription = "Summary",
+                    DisplayOrder = 5,
+                    FeatureIcon = "Summarize",
+                    FeatureRoute = "/AdminSummary",
+                    FeatureType = "Stats",
+                    FeatureCategory = "Stats",
+                    ParentFeatureId = 0,
+                    AdminFeature = true,
+                    EnabledForRoles = new List<string> { "Admin" }
+                },
+                new FeatureSettings
+                {
+                    IsFeatureEnabled = true,
+                    FeatureName = "Feature Settings", 
+                    FeatureDescription = "Feature Settings",
+                    DisplayOrder = 5,
+                    FeatureIcon = "Summarize",
+                    FeatureRoute = "/FeatureSettings",
+                    FeatureType = "Stats",
+                    FeatureCategory = "Stats",
+                    ParentFeatureId = 0,
+                    AdminFeature = true,
+                    EnabledForRoles = new List<string> { "Admin" }
+                },
+            };
+
+            foreach (var featureSetting in featureSettings)
+            {
+                context.FeatureSettings.Add(featureSetting);
+            }
+
+            context.SaveChanges();
+        }
+
         if (!context.InvoiceSettings.Any())
         {
             var invoiceSettings = new InvoiceSettings
@@ -65,7 +443,8 @@ public static class DbInitializer
             context.SaveChanges();
         }
 
-        if(!context.InvoiceSenders.Any()){
+        if (!context.InvoiceSenders.Any())
+        {
             var invoiceSender = new InvoiceSender
             {
                 Company = "My Company",

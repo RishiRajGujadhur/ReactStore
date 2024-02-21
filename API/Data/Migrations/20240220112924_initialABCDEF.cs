@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -9,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCommit1 : Migration
+    public partial class initialABCDEF : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -66,6 +67,29 @@ namespace API.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Baskets", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FeatureSettings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IsFeatureEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    FeatureName = table.Column<string>(type: "text", nullable: true),
+                    FeatureDescription = table.Column<string>(type: "text", nullable: true),
+                    DisplayOrder = table.Column<int>(type: "integer", nullable: false),
+                    FeatureIcon = table.Column<string>(type: "text", nullable: true),
+                    FeatureRoute = table.Column<string>(type: "text", nullable: true),
+                    FeatureType = table.Column<string>(type: "text", nullable: true),
+                    FeatureCategory = table.Column<string>(type: "text", nullable: true),
+                    ParentFeatureId = table.Column<int>(type: "integer", nullable: false),
+                    AdminFeature = table.Column<bool>(type: "boolean", nullable: false),
+                    EnabledForRoles = table.Column<List<string>>(type: "text[]", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FeatureSettings", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -899,8 +923,8 @@ namespace API.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "86ae077b-cb5e-4b01-8d08-ad251ab3df98", null, "Member", "MEMBER" },
-                    { "9b509e4f-5447-4263-9ece-665062476124", null, "Admin", "ADMIN" }
+                    { "b2f6c0bc-b9b9-4565-97b7-6422a5884832", null, "Member", "MEMBER" },
+                    { "e1bd13ce-b845-4f06-987e-ef4d3765ece7", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -1133,6 +1157,9 @@ namespace API.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "FeatureSettings");
 
             migrationBuilder.DropTable(
                 name: "GeneralSettings");
