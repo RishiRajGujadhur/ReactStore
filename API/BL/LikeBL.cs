@@ -47,9 +47,7 @@ namespace API.BL
             };
 
             _context.Likes.Add(like);
-            await _context.SaveChangesAsync();
-
-            //return NoContent();
+            await _context.SaveChangesAsync(); 
         }
 
         public async Task<Like> GetLike(int id)
@@ -81,8 +79,7 @@ namespace API.BL
 
         public async Task UnlikeProduct(int productId, ClaimsPrincipal User)
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-
+            var user = await _userManager.FindByNameAsync(User.Identity.Name); 
             // Check if the user has liked the specified product
             var like = await _context.Likes
                 .FirstOrDefaultAsync(l => l.ProductId == productId && l.UserId == user.Id);

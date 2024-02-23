@@ -94,6 +94,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<ImageService>();
+// Injecting the BL
+builder.Services.AddScoped<API.BL.ILikeBL, API.BL.LikeBL>();
 
 var app = builder.Build();
 
