@@ -25,7 +25,6 @@ F:\GitHub\Store\api\obj\Debug\net7.0\staticwebassets.pack.json
 F:\GitHub\Store\api\obj\Debug\net7.0\staticwebassets.build.json
 F:\GitHub\Store\api\obj\Debug\net7.0\staticwebassets.development.json
 F:\GitHub\Store\api\obj\Debug\net7.0\scopedcss\bundle\API.styles.css
-F:\GitHub\Store\api\obj\Debug\net7.0\API.csproj.CopyComplete
 F:\GitHub\Store\api\obj\Debug\net7.0\API.dll
 F:\GitHub\Store\api\obj\Debug\net7.0\refint\API.dll
 F:\GitHub\Store\api\obj\Debug\net7.0\API.pdb
@@ -80,3 +79,5 @@ F:\GitHub\Store\api\bin\Debug\net7.0\CloudinaryDotNet.dll
 F:\GitHub\Store\api\bin\Debug\net7.0\Newtonsoft.Json.dll
 F:\GitHub\Store\api\bin\Debug\net7.0\Npgsql.dll
 F:\GitHub\Store\api\bin\Debug\net7.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+F:\GitHub\Store\API\obj\Debug\net7.0\API.sourcelink.json
+F:\GitHub\Store\API\obj\Debug\net7.0\API.csproj.Up2Date

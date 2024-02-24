@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "F:\\GitHub\\Store\\api\\API.csproj": {}
+    "F:\\GitHub\\Store\\API\\API.csproj": {}
   },
   "projects": {
-    "F:\\GitHub\\Store\\api\\API.csproj": {
+    "F:\\GitHub\\Store\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\GitHub\\Store\\api\\API.csproj",
+        "projectUniqueName": "F:\\GitHub\\Store\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "F:\\GitHub\\Store\\api\\API.csproj",
+        "projectPath": "F:\\GitHub\\Store\\API\\API.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "F:\\GitHub\\Store\\api\\obj\\",
+        "outputPath": "F:\\GitHub\\Store\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -32,6 +34,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -96,7 +103,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.404\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }

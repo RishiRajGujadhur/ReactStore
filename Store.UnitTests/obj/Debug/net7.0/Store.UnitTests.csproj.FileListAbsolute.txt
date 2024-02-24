@@ -148,9 +148,12 @@ F:\GitHub\Store\Store.UnitTests\bin\Debug\net7.0\runtimes\win-x64\native\e_sqlit
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net7.0\runtimes\win-x86\native\e_sqlite3.dll
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net7.0\API.dll
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net7.0\API.pdb
-F:\GitHub\Store\Store.UnitTests\obj\Debug\net7.0\Store.UnitTests.csproj.CopyComplete
 F:\GitHub\Store\Store.UnitTests\obj\Debug\net7.0\Store.UnitTests.dll
 F:\GitHub\Store\Store.UnitTests\obj\Debug\net7.0\refint\Store.UnitTests.dll
 F:\GitHub\Store\Store.UnitTests\obj\Debug\net7.0\Store.UnitTests.pdb
 F:\GitHub\Store\Store.UnitTests\obj\Debug\net7.0\Store.UnitTests.genruntimeconfig.cache
 F:\GitHub\Store\Store.UnitTests\obj\Debug\net7.0\ref\Store.UnitTests.dll
+F:\GitHub\Store\Store.UnitTests\bin\Debug\net7.0\Castle.Core.dll
+F:\GitHub\Store\Store.UnitTests\bin\Debug\net7.0\Moq.dll
+F:\GitHub\Store\Store.UnitTests\obj\Debug\net7.0\Store.UnitTests.sourcelink.json
+F:\GitHub\Store\Store.UnitTests\obj\Debug\net7.0\Store.Un.87AD6997.Up2Date
