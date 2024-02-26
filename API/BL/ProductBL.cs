@@ -1,8 +1,10 @@
-using System.Security.Claims;
 using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
 using API.RequestHelpers;
+using API.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,51 +15,126 @@ namespace API.BL
     {
         Task<PagedList<Product>> GetProducts([FromQuery] ProductParams productParams);
         Task<Product> GetProduct(int id);
-        Task GetFilters();
-        Task<Product> CreateProduct([FromForm] CreateProductDto productDto);
-        Task<Product> UpdateProduct([FromForm] UpdateProductDto productDto);
-        Task DeleteProduct(int id);
+        Task<object> GetFilters();
+        Task<(Product, bool)> CreateProduct([FromForm] CreateProductDto productDto);
+        Task<(Product,bool)> UpdateProduct([FromForm] UpdateProductDto productDto);
+        Task<bool> DeleteProduct(int id);
     }
 
     public class ProductBL : IProductBL
     {
         private readonly StoreContext _context;
         public UserManager<User> _userManager { get; }
+        private readonly IMapper _mapper;
+            private readonly ImageService _imageService;
 
-        public ProductBL(StoreContext context, UserManager<User> userManager)
+        public ProductBL(StoreContext context, UserManager<User> userManager, IMapper mapper, ImageService imageService)
         {
             _context = context;
             _userManager = userManager;
+            _mapper = mapper;
+            _imageService = imageService;
         }
 
-        public Task<PagedList<Product>> GetProducts([FromQuery] ProductParams productParams)
+        public async Task<PagedList<Product>> GetProducts([FromQuery] ProductParams productParams)
         {
-            throw new NotImplementedException();
+            var query = _context.Products
+                .Sort(productParams.OrderBy)
+                .Search(productParams.SearchTerm)
+                .Filter(productParams.Brands, productParams.Types)
+                .AsQueryable();
+
+            var products =
+                await PagedList<Product>.ToPagedList(query, productParams.PageNumber, productParams.PageSize);
+            return products;
         }
 
-        public Task<Product> GetProduct(int id)
+        public async Task<Product> GetProduct(int id)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products.FindAsync(id) ?? throw new KeyNotFoundException("Product not found");
+            return product;
         }
 
-        public Task GetFilters()
+        public async Task<object> GetFilters()
         {
-            throw new NotImplementedException();
+            var brands = await _context.Products.Select(p => p.Brand).Distinct().ToListAsync();
+            var types = await _context.Products.Select(p => p.Type).Distinct().ToListAsync();
+            return new { brands, types };
         }
 
-        public Task<Product> CreateProduct([FromForm] CreateProductDto productDto)
+        public async Task<(Product, bool)> CreateProduct([FromForm] CreateProductDto productDto)
         {
-            throw new NotImplementedException();
+            var product = _mapper.Map<Product>(productDto);
+
+            await UploadFile(productDto, product);
+
+            _context.Products.Add(product);
+
+            var result = await _context.SaveChangesAsync() > 0; 
+
+            return (product, result);
         }
 
-        public Task<Product> UpdateProduct([FromForm] UpdateProductDto productDto)
+        public async Task<(Product,bool)> UpdateProduct([FromForm] UpdateProductDto productDto)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products.FindAsync(productDto.Id) ?? throw new KeyNotFoundException("Product not found");
+            
+            _mapper.Map(productDto, product);
+
+            await UpdateFile(productDto, product); 
+
+            var result = await _context.SaveChangesAsync() > 0;
+
+            return (product, result);
         }
 
-        public Task DeleteProduct(int id)
+        public async Task<bool> DeleteProduct(int id)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products.FindAsync(id);
+
+            if (product == null) throw new Exception("Product not found");
+
+            if (!string.IsNullOrEmpty(product.PublicId))
+                await _imageService.DeleteImageAsync(product.PublicId);
+
+            _context.Products.Remove(product);
+
+            var result = await _context.SaveChangesAsync() > 0;
+
+            return result;
         }
+
+        #region Helpers
+        private async Task UpdateFile(UpdateProductDto productDto, Product product)
+        {
+            if (productDto.File != null)
+            {
+                var imageUploadResult = await _imageService.AddImageAsync(productDto.File);
+
+                if (imageUploadResult.Error != null)
+                    throw new Exception(imageUploadResult.Error.Message);
+
+                if (!string.IsNullOrEmpty(product.PublicId))
+                    await _imageService.DeleteImageAsync(product.PublicId);
+
+                product.PictureUrl = imageUploadResult.SecureUrl.ToString();
+                product.PublicId = imageUploadResult.PublicId;
+            }
+        }
+
+        private async Task UploadFile(CreateProductDto productDto, Product product)
+        {
+            if (productDto.File != null)
+            {
+                var imageResult = await _imageService.AddImageAsync(productDto.File);
+                
+                if (imageResult.Error != null) throw new Exception(imageResult.Error.Message);
+                
+                product.PictureUrl = imageResult.SecureUrl.ToString();
+                
+                product.PublicId = imageResult.PublicId;
+            }
+        }
+        #endregion
     }
 }

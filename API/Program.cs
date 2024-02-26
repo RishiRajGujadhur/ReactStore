@@ -96,6 +96,7 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<ImageService>();
 // Injecting the BL
 builder.Services.AddScoped<API.BL.ILikeBL, API.BL.LikeBL>();
+builder.Services.AddScoped<API.BL.IProductBL, API.BL.ProductBL>();
 
 var app = builder.Build();
 
