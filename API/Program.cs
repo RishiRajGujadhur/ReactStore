@@ -98,14 +98,14 @@ builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<API.BL.ILikeBL, API.BL.LikeBL>();
 builder.Services.AddScoped<API.BL.IProductBL, API.BL.ProductBL>();
 builder.Services.AddScoped<API.BL.IFeatureSettingsBL, API.BL.FeatureSettingsBL>();
-// builder.Services.AddScoped<API.BL.IGeneralSettingsBL, API.BL.GeneralSettingsBL>();
-// builder.Services.AddScoped<API.BL.IInvoiceBL, API.BL.InvoiceBL>();
-// builder.Services.AddScoped<API.BL.ILikeBL, API.BL.LikeBL>();
-// builder.Services.AddScoped<API.BL.IOrderBL, API.BL.OrderBL>();
-// builder.Services.AddScoped<API.BL.ICustomerBL, API.BL.CustomerBL>();
-// builder.Services.AddScoped<API.BL.ICommentBL, API.BL.CommentBL>();
-// builder.Services.AddScoped<API.BL.IBasketBL, API.BL.BasketBL>();
-// builder.Services.AddScoped<API.BL.IAccountBL, API.BL.AccountBL>();
+builder.Services.AddScoped<API.BL.IGeneralSettingsBL, API.BL.GeneralSettingsBL>();
+builder.Services.AddScoped<API.BL.IInvoiceBL, API.BL.InvoiceBL>();
+builder.Services.AddScoped<API.BL.ILikeBL, API.BL.LikeBL>();
+builder.Services.AddScoped<API.BL.IOrderBL, API.BL.OrderBL>();
+builder.Services.AddScoped<API.BL.ICustomerBL, API.BL.CustomerBL>();
+builder.Services.AddScoped<API.BL.ICommentBL, API.BL.CommentBL>();
+builder.Services.AddScoped<API.BL.IBasketBL, API.BL.BasketBL>();
+builder.Services.AddScoped<API.BL.IAccountBL, API.BL.AccountBL>();
 
 var app = builder.Build();
 
