@@ -1,14 +1,9 @@
-using API.Data;
+using API.BL;
 using API.DTOs;
 using API.DTOs.Invoice;
 using API.Entities;
-using API.Extensions;
-using API.RequestHelpers;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -16,148 +11,52 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class InvoiceController : ControllerBase
     {
-        private readonly StoreContext _context;
-        private readonly ILogger<InvoiceController> _logger;
-        private readonly UserManager<User> _userManager;
-        private readonly IMapper _mapper;
-        public InvoiceController(StoreContext context, UserManager<User> userManager, IMapper mapper, ILogger<InvoiceController> logger)
+        private readonly InvoiceBL _invoiceBL;
+        public InvoiceController(InvoiceBL invoiceBL)
         {
-            _context = context;
-            _userManager = userManager;
-            _mapper = mapper;
-            _logger = logger;
+            _invoiceBL = invoiceBL;
         }
 
         // GET: api/invoices
         [HttpGet("getAllInvoiceList")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<InvoiceDto>>> GetAllInvoiceList(int pageSize, int pageNumber)
+        public async Task<IEnumerable<InvoiceDto>> GetAllInvoiceList(int pageSize, int pageNumber)
         {
-            var invoices = await _context.Invoices
-                .OrderByDescending(i => i.Id)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            var invoicesDto = _mapper.Map<List<InvoiceDto>>(invoices);
-
-            return invoicesDto;
+            return await _invoiceBL.GetAllInvoiceList(pageSize, pageNumber);
         }
 
         // GET: api/invoices/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<InvoiceDetailsDto>> GetInvoice(int id)
         {
-            var invoice = await _context.Invoices
-                .Include(s => s.Sender)
-                .Include(u => u.User)
-                .Include(u => u.User.Address)
-                .Include(s => s.Settings)
-                .Include(o => o.OrderItems)
-                .FirstOrDefaultAsync(i => i.Id == id);
-
-            if (invoice == null)
-            {
-                return NotFound();
-            }
-            var invoiceDetailsDto = _mapper.Map<InvoiceDetailsDto>(invoice);
-            invoiceDetailsDto.Customer = new CustomerDto
-            {
-                Name = invoice.User.Address?.FullName,
-                Address = invoice.User.Address?.Address1,
-                City = invoice.User.Address?.City,
-                Country = invoice.User.Address?.Country,
-                Zip = invoice.User.Address?.Zip
-            };
-
-            invoiceDetailsDto.Products = invoice.OrderItems.Select(item => new ProductItemsDto
-            {
-                Description = item.ItemOrdered.Name,
-                Price = item.Price,
-                Quantity = item.Quantity,
-                TaxRate = 15
-            }).ToList();
-
-            return invoiceDetailsDto;
+            return await _invoiceBL.GetInvoice(id);
         }
 
         [HttpGet("getMyInvoiceList")]
         public async Task<IEnumerable<InvoiceDto>> GetMyInvoiceList(int pageSize, int pageNumber)
         {
-            // pageNumber = pageNumber == 0 ? 1 : pageNumber;  
-            User user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var invoices = await _context.Invoices
-                .Where(r => r.User.Id == user.Id)
-                .OrderByDescending(i => i.Id)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            var invoicesDto = _mapper.Map<List<InvoiceDto>>(invoices);
-            await AddPaginationMetadata(pageSize, pageNumber, user);
-            return invoicesDto;
+            return await _invoiceBL.GetMyInvoiceList(HttpContext.Response, User, pageSize, pageNumber);
         }
 
         [HttpPost("createOrUpdateInvoiceSender")]
         public async Task<ActionResult<InvoiceSender>> CreateOrUpdateInvoiceSender(InvoiceSender invoiceSender)
         {
-            var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            invoiceSender.UserId = userId;
-            var existingInvoiceSenderRecord = await _context.InvoiceSenders.OrderByDescending(i => i.Id).FirstOrDefaultAsync(i => i.UserId == userId);
-            if (existingInvoiceSenderRecord != null)
-            {
-                await UpdateInvoiceSender(invoiceSender);
-            }
-            else
-            {
-                _context.InvoiceSenders.Add(invoiceSender);
-                await _context.SaveChangesAsync();
-            }
-
-            return invoiceSender;
+            return await _invoiceBL.CreateOrUpdateInvoiceSender(User, invoiceSender);
         } 
 
         // GET: api/invoices/getInvoiceSender/{userId}
         [HttpGet("getInvoiceSender")]
         public async Task<ActionResult<InvoiceSender>> GetInvoiceSender()
         {
-            var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            var invoiceSender = await _context.InvoiceSenders
-            .Where(i => i.UserId == userId)
-            .OrderByDescending(i => i.Id)
-            .FirstOrDefaultAsync();
-            
-            if (invoiceSender == null)
-            {
-                return NotFound();
-            }
-            return invoiceSender;
+            return await _invoiceBL.GetInvoiceSender(User);
         }
-
 
         // POST: api/invoices
         // For future usage, allowing an admin to create an invoice for a client without an order 
         [HttpPost]
         public async Task<ActionResult<Invoice>> CreateInvoice(Invoice invoice, string clientEmail)
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name); 
-            GeneralSettings generalSettings = await _context.GeneralSettings.FirstOrDefaultAsync();
-            invoice.Sender = _context.InvoiceSenders.Where(i => i.UserId == user.Id).FirstOrDefault();
-            var invoiceSettings = _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefault();
-            invoice.BottomNotice = invoiceSettings.BottomNotice;
-            invoice.DueDate = DateTime.UtcNow.AddDays(14);
-            invoice.IssueDate = DateTime.UtcNow;
-            invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id;
-            invoice.Logo = generalSettings?.LogoURL;
-            invoice.Settings = invoiceSettings;
-
-            User client = GetUserByEmail(clientEmail);
-            invoice.UserId = client.Id;
-
-            _context.Invoices.Add(invoice);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return await _invoiceBL.CreateInvoice(User, invoice, clientEmail);
         }
 
         // POST: api/invoices/saveInvoiceSettings
@@ -165,9 +64,7 @@ namespace API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SaveInvoiceSettings(InvoiceSettingsDto invoiceSettingsDto)
         {
-            var invoiceSettings = _mapper.Map<InvoiceSettings>(invoiceSettingsDto);
-            _context.InvoiceSettings.Add(invoiceSettings);
-            await _context.SaveChangesAsync();
+            await _invoiceBL.SaveInvoiceSettings(invoiceSettingsDto);
 
             return NoContent();
         }
@@ -176,24 +73,7 @@ namespace API.Controllers
         [HttpPut("updateInvoiceSettings")]
         public async Task<IActionResult> UpdateInvoiceSettings(InvoiceSettingsDto invoiceSettingsDto)
         {
-            try
-            {
-                var invoiceSettings = await _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefaultAsync();
-                if (invoiceSettings == null)
-                {
-                    return NotFound();
-                }
-                _mapper.Map(invoiceSettingsDto, invoiceSettings);
-                _context.Entry(invoiceSettings).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                _logger.LogError(ex, AddErrorDetails(ex, "An error occurred while updating invoice settings."));
-                // Return a 500 Internal Server Error status code
-                return StatusCode(500, "Internal server error");
-            }
+            await _invoiceBL.UpdateInvoiceSettings(invoiceSettingsDto, User);
             return NoContent();
         }
 
@@ -202,44 +82,15 @@ namespace API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<InvoiceSettings>> GetFirstInvoiceSettings()
         {
-            var firstInvoiceSettings = await _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefaultAsync();
-            if (firstInvoiceSettings == null)
-            {
-                return NotFound();
-            }
-
-            return firstInvoiceSettings;
+            return await _invoiceBL.GetFirstInvoiceSettings();
         }
-
 
         // PUT: api/invoices/{id}
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateInvoice(int id, Invoice invoice)
         {
-            if (id != invoice.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(invoice).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!InvoiceExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            await _invoiceBL.UpdateInvoice(id, invoice);
             return NoContent();
         }
 
@@ -248,74 +99,9 @@ namespace API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteInvoice(int id)
         {
-            var invoice = await _context.Invoices.FindAsync(id);
-            if (invoice == null)
-            {
-                return NotFound();
-            }
-
-            _context.Invoices.Remove(invoice);
-            await _context.SaveChangesAsync();
+            await _invoiceBL.DeleteInvoice(id);
 
             return NoContent();
         }
-
-        #region Helper Methods
-        private bool InvoiceExists(int id)
-        {
-            return _context.Invoices.Any(e => e.Id == id);
-        }
-
-        private User GetUserByEmail(string email)
-        {
-            return _context.Users.Where(u => u.Email == email).FirstOrDefault();
-        }
-
-        private async Task AddPaginationMetadata(int pageSize, int pageNumber, User user)
-        {
-            var allMyInvoices = await _context.Invoices
-                    .Where(r => r.User.Id == user.Id)
-                    .Select(x => x.Id)
-                    .ToListAsync();
-            var totalNumberOfRows = allMyInvoices.Count;
-            MetaData metaData = new MetaData()
-            {
-                CurrentPage = pageNumber,
-                PageSize = pageSize,
-                TotalPages = (int)Math.Ceiling(totalNumberOfRows / (double)pageSize),
-                TotalCount = totalNumberOfRows
-            };
-            Response.AddPaginationHeader(metaData);
-        }
-
-        private string AddErrorDetails(Exception ex, string message = "")
-        {
-            return message + " " + User.Identity.Name + " : " + DateTime.UtcNow.ToString() + " " + ex.Message + " " + ex.InnerException.Message + " " + ex.InnerException.InnerException.Message;
-        }
-
-        private async Task<ActionResult<InvoiceSender>> UpdateInvoiceSender(InvoiceSender updatedInvoiceSender)
-        {
-            var invoiceSender = await _context.InvoiceSenders
-             .OrderByDescending(i => i.Id)
-            .FirstOrDefaultAsync(i => i.UserId == updatedInvoiceSender.UserId 
-            && i.Id == updatedInvoiceSender.Id);
-            if (invoiceSender == null)
-            {
-                return NotFound();
-            }
-
-            invoiceSender.City = updatedInvoiceSender.City;
-            invoiceSender.Zip = updatedInvoiceSender.Zip;
-            invoiceSender.Country = updatedInvoiceSender.Country;   
-            invoiceSender.Address = updatedInvoiceSender.Address;
-            invoiceSender.Company = updatedInvoiceSender.Company; 
-
-            _context.Entry(invoiceSender).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return invoiceSender;
-        }
-        #endregion
     }
-
 }
