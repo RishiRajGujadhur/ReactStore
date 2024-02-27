@@ -1,11 +1,5 @@
-using API.Data;
-using API.Entities;
-using API.Extensions;
-using API.RequestHelpers;
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
+using API.BL;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -13,15 +7,10 @@ namespace API.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        private readonly StoreContext _context;
-        private readonly UserManager<User> _userManager;
-        private readonly IMapper _mapper;
-
-        public CommentController(StoreContext context, UserManager<User> userManager, IMapper mapper)
+        private readonly ICommentBL _commentBL;
+        public CommentController(ICommentBL commentBL)
         {
-            _context = context;
-            _userManager = userManager;
-            _mapper = mapper;
+            _commentBL = commentBL;
         }
 
         // POST: api/comments
@@ -30,18 +19,8 @@ namespace API.Controllers
         {
             try
             {
-                var userId = await GetUserId();
-
-                var comment = _mapper.Map<Comment>(commentDto);
-                comment.UserId = userId;
-                comment.CreatedAt = DateTime.UtcNow;
-
-                _context.Comments.Add(comment);
-                await _context.SaveChangesAsync();
-
-                var commentResponse = _mapper.Map<CommentDto>(comment);
-
-                return NoContent();
+                await _commentBL.CreateComment(commentDto, User);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -54,24 +33,16 @@ namespace API.Controllers
         [HttpGet("list")]
         public async Task<ActionResult<List<GetCommentDto>>> GetCommentsByProductPaged([FromQuery] CommentDto commentDto)
         {
-            var query = _context.Comments
-               .Include(c => c.User)
-               .Where(c => c.ProductId == commentDto.ProductId)
-               .OrderByDescending(c=>c.Id)
-               .AsQueryable();
-               
-            var commentPagedList = await PagedList<Comment>.ToPagedList(query, commentDto.PageNumber, commentDto.PageSize); 
-            var commentsWithUsername = commentPagedList.Select(c => new GetCommentDto
+            try
             {
-                Id = c.Id,
-                Text = c.Text,
-                CreatedAt = c.CreatedAt,
-                ProductId = c.ProductId,
-                Username = c.User?.UserName
-            }).ToList();
- 
-            Response.AddPaginationHeader(commentPagedList.MetaData);
-            return commentsWithUsername;
+                var comments = await _commentBL.GetCommentsByProductPaged(commentDto, Response);
+                return Ok(comments);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, ex.InnerException);
+            }
         } 
         
         // PUT: api/comments/{id}
@@ -80,22 +51,8 @@ namespace API.Controllers
         {
             try
             {
-                var userId = await GetUserId();
-
-                var comment = await _context.Comments
-                    .Where(c => c.Id == id && c.UserId == userId)
-                    .FirstOrDefaultAsync();
-
-                if (comment == null)
-                {
-                    return NotFound();
-                }
-
-                _mapper.Map(commentDto, comment);
-
-                await _context.SaveChangesAsync();
-
-                return NoContent();
+                await _commentBL.UpdateComment(id, commentDto, User);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -110,33 +67,14 @@ namespace API.Controllers
         {
             try
             {
-                var userId = await GetUserId();
-
-                var comment = await _context.Comments
-                    .Where(c => c.Id == id && c.UserId == userId)
-                    .FirstOrDefaultAsync();
-
-                if (comment == null)
-                {
-                    return NotFound();
-                }
-
-                _context.Comments.Remove(comment);
-                await _context.SaveChangesAsync();
-
-                return NoContent();
+                await _commentBL.DeleteComment(id, User);
+                return Ok();
             }
             catch (Exception ex)
             {
                 // Log the exception
                 return StatusCode(500, ex.InnerException);
             }
-        }
-
-        private async Task<int> GetUserId()
-        {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            return user.Id;
         }
     }
 }
