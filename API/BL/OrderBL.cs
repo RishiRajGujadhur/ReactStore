@@ -72,14 +72,7 @@ namespace API.BL
                 var order = await _context.Orders
                 .Where(x => x.Id == orderStatusDto.Id)
                 .FirstOrDefaultAsync() ?? throw new Exception("Order not found");
-                order.OrderStatus = orderStatusDto.OrderStatus switch
-                {
-                    "PaymentReceived" => OrderStatus.PaymentReceived,
-                    "PaymentFailed" => OrderStatus.PaymentFailed,
-                    "Pending" => OrderStatus.Pending,
-                    "Delivered" => OrderStatus.Delivered,
-                    _ => order.OrderStatus // Default case, keep the existing order status
-                };
+                SetOrderStatus(orderStatusDto, order);
 
                 _context.Entry(order).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
@@ -90,6 +83,18 @@ namespace API.BL
                 _logger.LogError(ex, LoggerExtention.AddErrorDetails(ex, User.Identity.Name, "An error occurred while updating invoice settings."));
                 // Return a 500 Internal Server Error status code
                 throw new Exception(ex.InnerException.Message);
+            }
+
+            static void SetOrderStatus(OrderStatusDto orderStatusDto, Order order)
+            {
+                order.OrderStatus = orderStatusDto.OrderStatus switch
+                {
+                    "PaymentReceived" => OrderStatus.PaymentReceived,
+                    "PaymentFailed" => OrderStatus.PaymentFailed,
+                    "Pending" => OrderStatus.Pending,
+                    "Delivered" => OrderStatus.Delivered,
+                    _ => order.OrderStatus // Default case, keep the existing order status
+                };
             }
         }
 
