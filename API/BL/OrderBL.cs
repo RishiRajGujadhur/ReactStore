@@ -105,12 +105,41 @@ namespace API.BL
         {
             var basket = await _context.Baskets
             .RetrieveBasketWithItems(User.Identity.Name)
-            .FirstOrDefaultAsync();
-
-            if (basket == null) throw new Exception("Basket not found");
+            .FirstOrDefaultAsync() ?? throw new Exception("Basket not found");
 
             var items = new List<OrderItem>();
+            await AddOrderItems(basket, items);
 
+            var subtotal = items.Sum(item => item.Price * item.Quantity);
+            var deliveryFee = subtotal > 10000 ? 0 : 500;
+            await CreateInvoice(items, User);
+
+            Order order = CreateOrderObject(orderDto, User, items, subtotal, deliveryFee);
+
+            _context.Orders.Add(order);
+            _context.Baskets.Remove(basket);
+            await SaveAddress(orderDto, User);
+            var result = await _context.SaveChangesAsync() > 0;
+
+            return (order, result);
+        }
+
+        #region Private Methods
+        private static Order CreateOrderObject(CreateOrderDto orderDto, ClaimsPrincipal User, List<OrderItem> items, long subtotal, int deliveryFee)
+        {
+            return new Order
+            {
+                OrderItems = items,
+                BuyerId = User.Identity.Name,
+                ShippingAddress = orderDto.ShippingAddress,
+                Subtotal = subtotal,
+                DeliveryFee = deliveryFee,
+                PaymentMethod = orderDto.PaymentMethod,
+            };
+        }
+
+        private async Task AddOrderItems(Basket basket, List<OrderItem> items)
+        {
             foreach (var item in basket.Items)
             {
                 var productItem = await _context.Products.FindAsync(item.ProductId);
@@ -129,23 +158,10 @@ namespace API.BL
                 items.Add(orderItem);
                 productItem.QuantityInStock -= item.Quantity;
             }
+        }
 
-            var subtotal = items.Sum(item => item.Price * item.Quantity);
-            var deliveryFee = subtotal > 10000 ? 0 : 500;
-            await CreateInvoice(items, User);
-            var order = new Order
-            {
-                OrderItems = items,
-                BuyerId = User.Identity.Name,
-                ShippingAddress = orderDto.ShippingAddress,
-                Subtotal = subtotal,
-                DeliveryFee = deliveryFee,
-                PaymentMethod = orderDto.PaymentMethod,
-            };
-
-            _context.Orders.Add(order);
-            _context.Baskets.Remove(basket);
-
+        private async Task SaveAddress(CreateOrderDto orderDto, ClaimsPrincipal User)
+        {
             if (orderDto.SaveAddress)
             {
                 var user = await _context.Users.
@@ -164,12 +180,8 @@ namespace API.BL
                 };
                 user.Address = address;
             }
-            var result = await _context.SaveChangesAsync() > 0;
-
-            return (order, result);
         }
 
-        #region Private Methods
         private async Task<int> CreateInvoice(List<OrderItem> orderItems, ClaimsPrincipal User)
         {
             Invoice invoice = new();
