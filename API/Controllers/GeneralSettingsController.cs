@@ -1,53 +1,45 @@
-using API.Data;
+using API.BL; 
 using API.DTOs;
-using API.Entities;
-using API.Services;
-using AutoMapper;
+using API.Entities; 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc; 
-using Microsoft.EntityFrameworkCore; 
+using Microsoft.AspNetCore.Mvc;  
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class GeneralSettingsController : ControllerBase
-    {
-        private readonly StoreContext _context;
-        private readonly IMapper _mapper;
-        private readonly ImageService _imageService;
-
-        public GeneralSettingsController(StoreContext context, IMapper mapper, ImageService imageService)
-        {
-            _imageService = imageService;
-            _mapper = mapper;
-            _context = context;
+    { 
+        private readonly IGeneralSettingsBL _generalSettingsBL;
+        public GeneralSettingsController(IGeneralSettingsBL generalSettingsBL)
+        { 
+            _generalSettingsBL = generalSettingsBL;
         }
 
         // GET: api/GeneralSettings
         [HttpGet]
         public async Task<ActionResult<GeneralSettings>> GetGeneralSettings()
         {
-            var generalSettings = await _context.GeneralSettings.FirstOrDefaultAsync();
+            var generalSettings = await _generalSettingsBL.GetGeneralSettings();
             return generalSettings;
         }
 
         [HttpGet("getAppName")]
         public async Task<ActionResult<string>> GetAppName()
         {
-            var generalSettings = await _context.GeneralSettings.FirstOrDefaultAsync();
-            return generalSettings.AppName;
+            var appName = await _generalSettingsBL.GetAppName();
+            return appName;
         }
 
         // GET: api/GeneralSettings/5
         [HttpGet("{id}")]
         public async Task<ActionResult<GeneralSettings>> GetGeneralSettings(int id)
         {
-            var generalSettings = await _context.GeneralSettings.FindAsync(id);
+            var generalSettings = await _generalSettingsBL.GetGeneralSettings(id);
 
             if (generalSettings == null)
             {
-                return new GeneralSettings();
+                return NotFound();
             }
 
             return generalSettings;
@@ -58,23 +50,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<GeneralSettings>> PostGeneralSettings([FromForm] GeneralSettingsDto generalSettingsDto)
         { 
-            if (generalSettingsDto.File != null)
-            {
-                var imageResult = await _imageService.AddImageAsync(generalSettingsDto.File);
-
-                if (imageResult.Error != null) return BadRequest(new ProblemDetails
-                {
-                    Title = imageResult.Error.Message
-                });
-
-                generalSettingsDto.LogoURL = imageResult.SecureUrl.ToString();
-                generalSettingsDto.PublicId = imageResult.PublicId;
-            }
-
-            var generalSettings = _mapper.Map<GeneralSettings>(generalSettingsDto);
-            _context.GeneralSettings.Add(generalSettings);
-
-            var result = await _context.SaveChangesAsync() > 0;
+            var (generalSettings, result) = await _generalSettingsBL.PostGeneralSettings(generalSettingsDto);
 
             if (result) return CreatedAtAction(nameof(GetGeneralSettings), new { id = generalSettingsDto.Id }, generalSettingsDto);
 
@@ -85,42 +61,7 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutGeneralSettings(int id, [FromForm] GeneralSettingsDto generalSettingsDto)
         {
-            if (id != generalSettingsDto.Id)
-            {
-                return BadRequest();
-            }
-            
-            if (generalSettingsDto.File != null)
-            {
-                var imageResult = await _imageService.AddImageAsync(generalSettingsDto.File);
-
-                if (imageResult.Error != null) return BadRequest(new ProblemDetails
-                {
-                    Title = imageResult.Error.Message
-                });
-
-                generalSettingsDto.LogoURL = imageResult.SecureUrl.ToString();
-                generalSettingsDto.PublicId = imageResult.PublicId;
-            } 
-            
-            var generalSettings = _mapper.Map<GeneralSettings>(generalSettingsDto);
-            _context.Entry(generalSettings).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GeneralSettingsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _generalSettingsBL.PutGeneralSettings(id, generalSettingsDto);
 
             return NoContent();
         }
@@ -129,23 +70,9 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGeneralSettings(int id)
         {
-            var generalSettings = await _context.GeneralSettings.FindAsync(id);
-            if (generalSettings == null)
-            {
-                return NotFound();
-            }
-
-            _context.GeneralSettings.Remove(generalSettings);
-            await _context.SaveChangesAsync();
+            await _generalSettingsBL.DeleteGeneralSettings(id);
 
             return NoContent();
         }
-
-        private bool GeneralSettingsExists(int id)
-        {
-            return _context.GeneralSettings.Any(e => e.Id == id);
-        }
-        
     }
- 
 }
