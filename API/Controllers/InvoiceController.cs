@@ -11,8 +11,8 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class InvoiceController : ControllerBase
     {
-        private readonly InvoiceBL _invoiceBL;
-        public InvoiceController(InvoiceBL invoiceBL)
+        private readonly IInvoiceBL _invoiceBL;
+        public InvoiceController(IInvoiceBL invoiceBL)
         {
             _invoiceBL = invoiceBL;
         }

@@ -69,8 +69,14 @@ namespace API.BL
             // If no customer exists, proceed with creating a new one
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            var customer = _mapper.Map<Customer>(customerDTO);
-            customer.User = user;
+            var customer = new Customer
+            {
+                FirstName = customerDTO.FirstName,
+                LastName = customerDTO.LastName,
+                Address = customerDTO.Address,
+                Phone = customerDTO.Phone,
+                User = user
+            };
 
             _context.Customers.Add(customer);
 

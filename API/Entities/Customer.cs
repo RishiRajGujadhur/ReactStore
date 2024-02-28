@@ -19,10 +19,10 @@ namespace API.Entities
 
         public string Phone { get; set; }
 
-        public string Company { get; set; }
-        public string Zip { get; set; }
-        public string City { get; set; }
-        public string Country { get; set; } 
+        public string Company { get; set; } = "";
+        public string Zip { get; set; } = "";
+        public string City { get; set; } = "";
+        public string Country { get; set; } = "";
 
         // Navigation property for linking Customer to User (one-to-one)
         public virtual User User { get; set; }
