@@ -2,54 +2,62 @@ using System.Security.Claims;
 using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
+using API.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.BL
 {
     public interface IAccountBL
     {
-        Task<UserDto> Login(LoginDto loginDto);
-        Task<UserAddress> GetSavedAddress();
+        Task<UserAddress> GetSavedAddress(ClaimsPrincipal User);
         Task<List<User>> GetAllUsers();
-        Task RegisterUser(RegisterDto registerDto);
-        Task<UserDto> GetCurrentUser();
+        Task<UserDto> GetCurrentUser(ClaimsPrincipal User, HttpResponse response);
     }
 
     public class AccountBL : IAccountBL
     {
         private readonly StoreContext _context;
+        
+        private readonly TokenService _tokenService;
         public UserManager<User> _userManager { get; }
 
-        public AccountBL(StoreContext context, UserManager<User> userManager)
+        public AccountBL(StoreContext context, UserManager<User> userManager, TokenService tokenService)
         {
             _context = context;
             _userManager = userManager;
+            _tokenService = tokenService;
         }
 
-        public Task<UserDto> Login(LoginDto loginDto)
+        public async Task<UserAddress> GetSavedAddress(ClaimsPrincipal User)
         {
-            throw new NotImplementedException();
+            return await _userManager.Users
+                .Where(x => x.UserName == User.Identity.Name)
+                .Select(user => user.Address)
+                .FirstOrDefaultAsync();
         }
 
-        public Task<UserAddress> GetSavedAddress()
+        public async Task<List<User>> GetAllUsers()
         {
-            throw new NotImplementedException();
+             return await _userManager.Users.Include
+                (x => x.Address)
+                .ToListAsync();
         }
 
-        public Task<List<User>> GetAllUsers()
+        public async Task<UserDto> GetCurrentUser(ClaimsPrincipal User, HttpResponse response)
         {
-            throw new NotImplementedException();
-        }
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-        public Task RegisterUser(RegisterDto registerDto)
-        {
-            throw new NotImplementedException();
-        }
+            var userBasket = await BasketExtensions.RetrieveBasket(User.Identity.Name, response, _context);
 
-        public Task<UserDto> GetCurrentUser()
-        {
-            throw new NotImplementedException();
+            return new UserDto
+            {
+                Email = user.Email,
+                Token = await _tokenService.GenerateToken(user),
+                Basket = userBasket?.MapBasketToDto()
+            };
         }
     }
 }

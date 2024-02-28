@@ -1,3 +1,4 @@
+using API.Data;
 using API.DTOs;
 using API.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -33,5 +34,19 @@ public static class BasketExtensions
             .Include(i => i.Items)
             .ThenInclude(p => p.Product)
             .Where(b => b.BuyerId == buyerId);
+    }
+
+    public static async Task<Basket> RetrieveBasket(string buyerId, HttpResponse response, StoreContext _context)
+    {
+        if (string.IsNullOrEmpty(buyerId))
+        {
+            response.Cookies.Delete("buyerId");
+            return null;
+        }
+
+        return await _context.Baskets
+            .Include(i => i.Items)
+            .ThenInclude(p => p.Product)
+            .FirstOrDefaultAsync(basket => basket.BuyerId == buyerId);
     }
 }

@@ -1,3 +1,4 @@
+using API.BL;
 using API.Data;
 using API.DTOs;
 using API.Entities;
@@ -16,12 +17,14 @@ namespace API.Controllers
         private readonly UserManager<User> _userManager;
         private readonly TokenService _tokenService;
         private readonly StoreContext _context;
+        private readonly IAccountBL _accountBL;
 
-        public AccountController(UserManager<User> userManager, TokenService tokenService, StoreContext context)
+        public AccountController(UserManager<User> userManager, TokenService tokenService, StoreContext context, IAccountBL accountBL)
         {
             _context = context;
             _tokenService = tokenService;
             _userManager = userManager;
+            _accountBL = accountBL;
         }
 
         [HttpPost("login")]
@@ -31,8 +34,8 @@ namespace API.Controllers
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
                 return Unauthorized();
 
-            var userBasket = await RetrieveBasket(loginDto.Username);
-            var anonBasket = await RetrieveBasket(Request.Cookies["buyerId"]);
+            var userBasket = await BasketExtensions.RetrieveBasket(loginDto.Username, Response, _context);
+            var anonBasket = await BasketExtensions.RetrieveBasket(Request.Cookies["buyerId"], Response, _context);
 
             if (anonBasket != null)
             {
@@ -54,19 +57,14 @@ namespace API.Controllers
         [HttpGet("savedAddress")]
         public async Task<ActionResult<UserAddress>> GetSavedAddress()
         {
-            return await _userManager.Users
-                .Where(x => x.UserName == User.Identity.Name)
-                .Select(user => user.Address)
-                .FirstOrDefaultAsync();
+            return await _accountBL.GetSavedAddress(User);
         }
 
         [Authorize]
         [HttpGet("getAllUsers")]
         public async Task<ActionResult<List<User>>> GetAllUsers()
         {
-            return await _userManager.Users.Include
-                (x => x.Address)
-                .ToListAsync();
+            return await _accountBL.GetAllUsers();
         }
 
         [HttpPost("register")]
@@ -95,30 +93,8 @@ namespace API.Controllers
         [HttpGet("currentUser")]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-
-            var userBasket = await RetrieveBasket(User.Identity.Name);
-
-            return new UserDto
-            {
-                Email = user.Email,
-                Token = await _tokenService.GenerateToken(user),
-                Basket = userBasket?.MapBasketToDto()
-            };
+            return await _accountBL.GetCurrentUser(User, Response);
         }
 
-        private async Task<Basket> RetrieveBasket(string buyerId)
-        {
-            if (string.IsNullOrEmpty(buyerId))
-            {
-                Response.Cookies.Delete("buyerId");
-                return null;
-            }
-
-            return await _context.Baskets
-                .Include(i => i.Items)
-                .ThenInclude(p => p.Product)
-                .FirstOrDefaultAsync(basket => basket.BuyerId == buyerId);
-        }
     }
 }
