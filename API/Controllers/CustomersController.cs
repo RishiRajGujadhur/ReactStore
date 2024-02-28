@@ -1,11 +1,8 @@
-using API.Data;
+using API.BL;
 using API.DTOs;
 using API.Entities;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -13,15 +10,10 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class CustomersController : ControllerBase
     {
-        private readonly StoreContext _context;
-        public UserManager<User> _userManager { get; }
-        public IMapper _mapper { get; }
-
-        public CustomersController(StoreContext context, UserManager<User> userManager, IMapper mapper)
+        private readonly ICustomerBL _customerBL;
+        public CustomersController(ICustomerBL customerBL)
         {
-            _mapper = mapper;
-            _userManager = userManager;
-            _context = context;
+            _customerBL = customerBL;
         }
 
         // GET: api/customers
@@ -29,7 +21,8 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
-            return await _context.Customers.ToListAsync();
+            var customers = await _customerBL.GetCustomers();
+            return Ok(customers);
         }
 
         // GET: api/customers/{id}
@@ -37,7 +30,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _customerBL.GetCustomer(id);
 
             if (customer == null)
             {
@@ -58,27 +51,8 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Check if a customer already exists for the current user
-            var existingCustomer = await _context.Customers
-                .Include(c => c.User)
-                .FirstOrDefaultAsync(c => c.User.UserName == User.Identity.Name);
-
-            if (existingCustomer != null)
-            {
-                // If a customer already exists, return a conflict response
-                return Conflict("Customer already exists for the current user.");
-            }
-
-            // If no customer exists, proceed with creating a new one
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-
-            var customer = _mapper.Map<Customer>(customerDTO);
-            customer.User = user;
-
-            _context.Customers.Add(customer);
-
-            await _context.SaveChangesAsync();
-
+            var customer = await _customerBL.CreateCustomer(customerDTO, User);
+           
             return CreatedAtAction(nameof(GetCustomer), new { id = customer.CustomerID }, customer);
         }
  
@@ -92,25 +66,9 @@ namespace API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(customer).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CustomerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            await _customerBL.UpdateCustomer(id, customer);
+            
+            return Ok();
         }
 
         // DELETE: api/customers/{id}
@@ -118,22 +76,9 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
+            await _customerBL.DeleteCustomer(id);
 
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok();
         }
-
-        private bool CustomerExists(int id)
-        {
-            return _context.Customers.Any(e => e.CustomerID == id);
-        }
-
     }
 }
