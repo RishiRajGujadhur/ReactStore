@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using API.Data.Migrations;
 using API.Entities.OrderAggregate;
 
 namespace API.Entities
 {
-    public class Order
+    public class Order : StoreEntry
     {
         [Key]
         public int Id { get; set; }

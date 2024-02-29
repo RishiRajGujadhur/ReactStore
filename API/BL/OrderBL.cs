@@ -72,6 +72,10 @@ namespace API.BL
                 var order = await _context.Orders
                 .Where(x => x.Id == orderStatusDto.Id)
                 .FirstOrDefaultAsync() ?? throw new Exception("Order not found");
+
+                order.LastModifiedTimestamp =  DateTime.UtcNow; 
+                order.LastModifiedUserName = User.Identity.Name;
+                
                 SetOrderStatus(orderStatusDto, order);
 
                 _context.Entry(order).State = EntityState.Modified;
@@ -134,6 +138,8 @@ namespace API.BL
         {
             return new Order
             {
+                CreatedAtTimestamp = DateTime.UtcNow, 
+                CreatedByUserName = User.Identity.Name,
                 OrderItems = items,
                 BuyerId = User.Identity.Name,
                 ShippingAddress = orderDto.ShippingAddress,
@@ -197,6 +203,9 @@ namespace API.BL
             // For multi vendors, I will associate the vendorId to the product at the time of creating the product in the inventory, each vendor will have their own inventory.
             invoice.Sender = _context.InvoiceSenders.OrderByDescending(x => x.Id).FirstOrDefault();
             var invoiceSettings = _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefault();
+            invoice.CreatedAtTimestamp = DateTime.UtcNow;
+            invoice.CreatedByUserId = user.Id;
+            invoice.CreatedByUserName = user.UserName;
             invoice.BottomNotice = invoiceSettings.BottomNotice;
             invoice.DueDate = DateTime.UtcNow.AddDays(14);
             invoice.IssueDate = DateTime.UtcNow;
