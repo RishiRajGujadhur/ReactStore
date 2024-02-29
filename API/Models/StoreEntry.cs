@@ -12,5 +12,14 @@ public class StoreEntry
         set;
     }
 
+    public DateTime CreatedAtTimestamp
+    {
+        get;
+        set;
+    }
+
+    public int? CreatedByUserId { get; set; }
+
+    public string CreatedByUserName { get; set; }
     public string LastModifiedUserName { get; set; }
 }
