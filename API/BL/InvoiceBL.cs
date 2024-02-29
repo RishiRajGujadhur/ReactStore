@@ -20,7 +20,7 @@ namespace API.BL
         Task<InvoiceSender> CreateOrUpdateInvoiceSender(ClaimsPrincipal User, InvoiceSender invoiceSender);
         Task<InvoiceSender> GetInvoiceSender(ClaimsPrincipal User);
         Task<Invoice> CreateInvoice(ClaimsPrincipal User, Invoice invoice, string clientEmail);
-        Task SaveInvoiceSettings(InvoiceSettingsDto invoiceSettingsDto);
+        Task SaveInvoiceSettings(InvoiceSettingsDto invoiceSettingsDto, ClaimsPrincipal User);
         Task UpdateInvoiceSettings(InvoiceSettingsDto invoiceSettingsDto, ClaimsPrincipal User);
         Task<InvoiceSettings> GetFirstInvoiceSettings();
         Task UpdateInvoice(int id, Invoice invoice);
@@ -110,19 +110,21 @@ namespace API.BL
 
         public async Task<InvoiceSender> CreateOrUpdateInvoiceSender(ClaimsPrincipal User, InvoiceSender invoiceSender)
         {
-            var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            invoiceSender.UserId = userId;
+            int userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
             var existingInvoiceSenderRecord = await _context.InvoiceSenders.OrderByDescending(i => i.Id).FirstOrDefaultAsync(i => i.UserId == userId);
             if (existingInvoiceSenderRecord != null)
             {
-                await UpdateInvoiceSender(invoiceSender);
+                await UpdateInvoiceSender(invoiceSender, User, userId);
             }
             else
             {
+                invoiceSender.UserId = userId;
+                invoiceSender.CreatedByUserId = userId;
+                invoiceSender.CreatedByUserName = User.Identity.Name;
+                invoiceSender.CreatedAtTimestamp = DateTime.UtcNow; 
                 _context.InvoiceSenders.Add(invoiceSender);
                 await _context.SaveChangesAsync();
             }
-
             return invoiceSender;
         }
 
@@ -147,6 +149,11 @@ namespace API.BL
             GeneralSettings generalSettings = await _context.GeneralSettings.FirstOrDefaultAsync();
             invoice.Sender = _context.InvoiceSenders.Where(i => i.UserId == user.Id).FirstOrDefault();
             var invoiceSettings = _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefault();
+            
+            invoice.CreatedAtTimestamp = DateTime.UtcNow;
+            invoice.CreatedByUserId = user.Id;
+            invoice.CreatedByUserName = user.UserName;
+
             invoice.BottomNotice = invoiceSettings.BottomNotice;
             invoice.DueDate = DateTime.UtcNow.AddDays(14);
             invoice.IssueDate = DateTime.UtcNow;
@@ -162,9 +169,14 @@ namespace API.BL
             return invoice;
         }
 
-        public async Task SaveInvoiceSettings(InvoiceSettingsDto invoiceSettingsDto)
+        public async Task SaveInvoiceSettings(InvoiceSettingsDto invoiceSettingsDto, ClaimsPrincipal User)
         {
             var invoiceSettings = _mapper.Map<InvoiceSettings>(invoiceSettingsDto);
+
+            invoiceSettings.CreatedAtTimestamp = DateTime.UtcNow;
+            invoiceSettings.CreatedByUserId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
+            invoiceSettings.CreatedByUserName = User.Identity.Name;
+
             _context.InvoiceSettings.Add(invoiceSettings);
             await _context.SaveChangesAsync();
 
@@ -174,12 +186,13 @@ namespace API.BL
         {
             try
             {
-                var invoiceSettings = await _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefaultAsync();
-                if (invoiceSettings == null)
-                {
-                    throw new Exception("Invoice settings not found");
-                }
+                var invoiceSettings = await _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefaultAsync() ?? throw new Exception("Invoice settings not found");
                 _mapper.Map(invoiceSettingsDto, invoiceSettings);
+
+                invoiceSettings.LastModifiedTimestamp = DateTime.UtcNow;
+                invoiceSettings.LastModifiedUserId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
+                invoiceSettings.LastModifiedUserName = User.Identity.Name;
+
                 _context.Entry(invoiceSettings).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
@@ -209,6 +222,10 @@ namespace API.BL
             {
                 throw new Exception("Invoice not found");
             }
+
+            invoice.LastModifiedTimestamp = DateTime.UtcNow;
+            invoice.LastModifiedUserId = invoice.UserId;
+            invoice.LastModifiedUserName = invoice.User.UserName;
 
             _context.Entry(invoice).State = EntityState.Modified;
 
@@ -269,17 +286,16 @@ namespace API.BL
             response.AddPaginationHeader(metaData);
         }
 
-        private async Task<InvoiceSender> UpdateInvoiceSender(InvoiceSender updatedInvoiceSender)
+        private async Task<InvoiceSender> UpdateInvoiceSender(InvoiceSender updatedInvoiceSender, ClaimsPrincipal User, int userId)
         {
             var invoiceSender = await _context.InvoiceSenders
              .OrderByDescending(i => i.Id)
             .FirstOrDefaultAsync(i => i.UserId == updatedInvoiceSender.UserId 
-            && i.Id == updatedInvoiceSender.Id);
-            if (invoiceSender == null)
-            {
-                throw new Exception("Invoice Sender not found");
-            }
+            && i.Id == updatedInvoiceSender.Id) ?? throw new Exception("Invoice Sender not found");
 
+            invoiceSender.LastModifiedUserId = userId;
+            invoiceSender.LastModifiedUserName = User.Identity.Name;
+            invoiceSender.LastModifiedTimestamp = DateTime.UtcNow;
             invoiceSender.City = updatedInvoiceSender.City;
             invoiceSender.Zip = updatedInvoiceSender.Zip;
             invoiceSender.Country = updatedInvoiceSender.Country;   

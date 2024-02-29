@@ -64,7 +64,7 @@ namespace API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SaveInvoiceSettings(InvoiceSettingsDto invoiceSettingsDto)
         {
-            await _invoiceBL.SaveInvoiceSettings(invoiceSettingsDto);
+            await _invoiceBL.SaveInvoiceSettings(invoiceSettingsDto, User);
 
             return NoContent();
         }

@@ -23,7 +23,7 @@ namespace API.Entities
         public InvoiceSender Sender { get; set; }
     }
 
-    public class InvoiceSender
+    public class InvoiceSender : StoreEntry
     {
         [Key]
         public int Id { get; set; }
@@ -35,7 +35,7 @@ namespace API.Entities
         public int UserId { get; set; }
     }
 
-    public class InvoiceSettings
+    public class InvoiceSettings : StoreEntry
     {
         [Key]
         public int Id { get; set; }
