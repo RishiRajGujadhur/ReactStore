@@ -15,8 +15,8 @@ namespace API.BL
         Task<GeneralSettings> GetGeneralSettings();
         Task<string> GetAppName();
         Task<GeneralSettings> GetGeneralSettings(int id);
-        Task<(GeneralSettings, bool)> PostGeneralSettings([FromForm] GeneralSettingsDto generalSettingsDto);
-        Task PutGeneralSettings(int id, [FromForm] GeneralSettingsDto generalSettingsDto);
+        Task<(GeneralSettings, bool)> PostGeneralSettings([FromForm] GeneralSettingsDto generalSettingsDto, ClaimsPrincipal user);
+        Task PutGeneralSettings(int id, [FromForm] GeneralSettingsDto generalSettingsDto, ClaimsPrincipal user);
         Task DeleteGeneralSettings(int id);
     }
 
@@ -59,7 +59,7 @@ namespace API.BL
             return generalSettings;
         }
 
-        public async Task<(GeneralSettings, bool)> PostGeneralSettings([FromForm] GeneralSettingsDto generalSettingsDto)
+        public async Task<(GeneralSettings, bool)> PostGeneralSettings([FromForm] GeneralSettingsDto generalSettingsDto, ClaimsPrincipal user)
         {
             if (generalSettingsDto.File != null)
             {
@@ -72,6 +72,8 @@ namespace API.BL
             }
 
             var generalSettings = _mapper.Map<GeneralSettings>(generalSettingsDto);
+            generalSettings.CreatedAtTimestamp = DateTime.Now;
+            generalSettings.CreatedByUserName = user.Identity.Name;
             _context.GeneralSettings.Add(generalSettings);
 
             var result = await _context.SaveChangesAsync() > 0;
@@ -79,7 +81,7 @@ namespace API.BL
 
         }
 
-        public async Task PutGeneralSettings(int id, [FromForm] GeneralSettingsDto generalSettingsDto)
+        public async Task PutGeneralSettings(int id, [FromForm] GeneralSettingsDto generalSettingsDto, ClaimsPrincipal user)
         {
             if (id != generalSettingsDto.Id)
             {
@@ -97,6 +99,8 @@ namespace API.BL
             } 
             
             var generalSettings = _mapper.Map<GeneralSettings>(generalSettingsDto);
+            generalSettings.LastModifiedTimestamp = DateTime.UtcNow;
+            generalSettings.LastModifiedUserName = user.Identity.Name;
             _context.Entry(generalSettings).State = EntityState.Modified;
 
             try

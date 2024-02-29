@@ -50,7 +50,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<GeneralSettings>> PostGeneralSettings([FromForm] GeneralSettingsDto generalSettingsDto)
         { 
-            var (generalSettings, result) = await _generalSettingsBL.PostGeneralSettings(generalSettingsDto);
+            var (generalSettings, result) = await _generalSettingsBL.PostGeneralSettings(generalSettingsDto, User);
 
             if (result) return CreatedAtAction(nameof(GetGeneralSettings), new { id = generalSettingsDto.Id }, generalSettingsDto);
 
@@ -61,7 +61,7 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutGeneralSettings(int id, [FromForm] GeneralSettingsDto generalSettingsDto)
         {
-            await _generalSettingsBL.PutGeneralSettings(id, generalSettingsDto);
+            await _generalSettingsBL.PutGeneralSettings(id, generalSettingsDto, User);
 
             return NoContent();
         }
