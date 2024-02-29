@@ -36,7 +36,8 @@ public static class DbInitializer
                 AppName = "My App",
                 CompanyName = "My Company",
                 DefaultCurrency = "USD",
-                DefaultLanguage = "en"
+                DefaultLanguage = "en",
+                CreatedAtTimestamp = DateTime.UtcNow
             };
 
             context.GeneralSettings.Add(generalSettings);
@@ -59,10 +60,12 @@ public static class DbInitializer
                     FeatureCategory = "Summary",
                     ParentFeatureId = 0,
                     AdminFeature = false,
+                CreatedAtTimestamp = DateTime.UtcNow,
                     EnabledForRoles = new List<string> { "Admin", "Member" }
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Profile",
                     FeatureDescription = "Profile",
@@ -77,6 +80,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Wishlist",
                     FeatureDescription = "Wishlist",
@@ -91,6 +95,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Purchases",
                     FeatureDescription = "Purchases",
@@ -105,6 +110,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Returns",
                     FeatureDescription = "Returns",
@@ -119,6 +125,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Collections",
                     FeatureDescription = "Collections",
@@ -133,6 +140,7 @@ public static class DbInitializer
                 },
                   new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Likes",
                     FeatureDescription = "Likes",
@@ -147,6 +155,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Reviews",
                     FeatureDescription = "Reviews",
@@ -161,6 +170,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Comments",
                     FeatureDescription = "Comments",
@@ -175,6 +185,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Settings",
                     FeatureDescription = "Settings",
@@ -189,6 +200,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Support",
                     FeatureDescription = "Support",
@@ -203,6 +215,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "History",
                     FeatureDescription = "History",
@@ -217,6 +230,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Saved Searches",
                     FeatureDescription = "Saved Searches",
@@ -231,6 +245,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Messages",
                     FeatureDescription = "Messages",
@@ -245,6 +260,7 @@ public static class DbInitializer
                 },
                  new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Watch items",
                     FeatureDescription = "Watch items",
@@ -259,6 +275,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Rewards",
                     FeatureDescription = "Rewards",
@@ -273,6 +290,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Gift cards",
                     FeatureDescription = "Gift cards",
@@ -287,6 +305,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Recommendations",
                     FeatureDescription = "Recommendations",
@@ -301,6 +320,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Invoices",
                     FeatureDescription = "Displays a list of invoices.",
@@ -315,6 +335,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Invoice Sender Profile",
                     FeatureDescription = "Invoice Sender Profile",
@@ -329,6 +350,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "General Settings",
                     FeatureDescription = "generalSettings",
@@ -343,6 +365,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Invoice Settings",
                     FeatureDescription = "Invoice Settings",
@@ -357,6 +380,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Manage Users",
                     FeatureDescription = "Manage Users",
@@ -371,6 +395,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Manage Orders",
                     FeatureDescription = "Manage Orders",
@@ -385,6 +410,7 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
                     FeatureName = "Summary",
                     FeatureDescription = "Summary",
@@ -399,8 +425,9 @@ public static class DbInitializer
                 },
                 new FeatureSettings
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     IsFeatureEnabled = true,
-                    FeatureName = "Feature Settings", 
+                    FeatureName = "Feature Settings",
                     FeatureDescription = "Feature Settings",
                     DisplayOrder = 5,
                     FeatureIcon = "Summarize",
@@ -425,6 +452,7 @@ public static class DbInitializer
         {
             var invoiceSettings = new InvoiceSettings
             {
+                CreatedAtTimestamp = DateTime.UtcNow,
                 Currency = "MUR",
                 BottomNotice = "Bottom Notice",
                 Locale = "en-US",
@@ -447,6 +475,7 @@ public static class DbInitializer
         {
             var invoiceSender = new InvoiceSender
             {
+                CreatedAtTimestamp = DateTime.UtcNow,
                 Company = "My Company",
                 Address = "My Address",
                 Zip = "12345",
@@ -465,6 +494,7 @@ public static class DbInitializer
             {
                 new Product
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     Name = "Angular Speedster Board 2000",
                     Description =
                         "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.",
@@ -476,6 +506,7 @@ public static class DbInitializer
                 },
                 new Product
                 {
+                    CreatedAtTimestamp = DateTime.UtcNow,
                     Name = "Green Angular Board 3000",
                     Description = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.",
                     Price = 15000,
