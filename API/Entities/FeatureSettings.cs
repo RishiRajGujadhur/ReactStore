@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Entities
 {
-    public class FeatureSettings
+    public class FeatureSettings : StoreEntry
     {
         [Key]
         public int Id { get; set; }

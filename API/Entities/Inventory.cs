@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Entities
 {
-    public class Inventory
+    public class Inventory : StoreEntry
     {
         [Key]
         public int InventoryID { get; set; }

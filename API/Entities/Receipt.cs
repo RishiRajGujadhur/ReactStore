@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Entities
 {
-    public class Receipt
+    public class Receipt : StoreEntry
     {
         [Key]
         public int Id { get; set; }

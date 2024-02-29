@@ -2,7 +2,7 @@
 
 namespace API.Entities
 {
-    public class CustomerAddress
+    public class CustomerAddress : StoreEntry
     {
         public int CustomerAddressID { get; set; }
         public int CustomerID { get; set; }

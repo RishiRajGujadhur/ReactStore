@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Entities
 {
-    public class Review
+    public class Review : StoreEntry
     {
 
         [Key]

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Entities
 {
-    public class ReturnRequest
+    public class ReturnRequest : StoreEntry
     {
         [Key]
         public int ReturnRequestID { get; set; }

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Entities
 {
-    public class Comment
+    public class Comment : StoreEntry
     {
         [Key]
         public int Id { get; set; }
