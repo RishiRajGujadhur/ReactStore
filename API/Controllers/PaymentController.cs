@@ -1,8 +1,6 @@
 using API.Data;
 using API.DTOs;
-using API.Entities.OrderAggregate;
 using API.Extensions;
-using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore; 
