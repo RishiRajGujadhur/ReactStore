@@ -39,6 +39,9 @@ namespace API.BL
                 var comment = _mapper.Map<Comment>(commentDto);
                 comment.UserId = userId;
                 comment.CreatedAt = DateTime.UtcNow;
+                comment.CreatedAtTimestamp = DateTime.UtcNow;
+                comment.CreatedByUserName = user.Identity.Name;
+                comment.CreatedByUserId = userId;
 
                 _context.Comments.Add(comment);
                 await _context.SaveChangesAsync();
@@ -84,6 +87,9 @@ namespace API.BL
                     .Where(c => c.Id == id && c.UserId == userId)
                     .FirstOrDefaultAsync() ?? throw new Exception("Comment not found");
                 _mapper.Map(commentDto, comment);
+                comment.LastModifiedTimestamp = DateTime.UtcNow;
+                comment.LastModifiedUserId = userId;
+                comment.LastModifiedUserName = user.Identity.Name;
 
                 await _context.SaveChangesAsync(); 
             }
@@ -115,7 +121,8 @@ namespace API.BL
         }
 
         #region Private Methods
-          private async Task<int> GetUserId(ClaimsPrincipal User)
+        // Todo: Move to static method, extentions: User.GetUserId()
+        private async Task<int> GetUserId(ClaimsPrincipal User)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             return user.Id;
