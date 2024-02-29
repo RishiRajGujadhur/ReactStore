@@ -44,7 +44,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> CreateProduct([FromForm] CreateProductDto productDto)
         {
-            var (product, result) = await _productBL.CreateProduct(productDto);
+            var (product, result) = await _productBL.CreateProduct(productDto, User);
             
             if (result) return CreatedAtRoute("GetProduct", new { Id = product.Id }, product);
            
@@ -55,7 +55,7 @@ namespace API.Controllers
         [HttpPut]
         public async Task<ActionResult<Product>> UpdateProduct([FromForm] UpdateProductDto productDto)
         {
-            var (product, result) = await _productBL.UpdateProduct(productDto);
+            var (product, result) = await _productBL.UpdateProduct(productDto, User);
 
             if (result) return Ok(product);
 

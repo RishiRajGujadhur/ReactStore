@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using API.Data;
 using API.DTOs;
 using API.Entities;
@@ -16,8 +17,8 @@ namespace API.BL
         Task<PagedList<Product>> GetProducts([FromQuery] ProductParams productParams);
         Task<Product> GetProduct(int id);
         Task<object> GetFilters();
-        Task<(Product, bool)> CreateProduct([FromForm] CreateProductDto productDto);
-        Task<(Product,bool)> UpdateProduct([FromForm] UpdateProductDto productDto);
+        Task<(Product, bool)> CreateProduct([FromForm] CreateProductDto productDto, ClaimsPrincipal user);
+        Task<(Product,bool)> UpdateProduct([FromForm] UpdateProductDto productDto, ClaimsPrincipal user);
         Task<bool> DeleteProduct(int id);
     }
 
@@ -62,25 +63,30 @@ namespace API.BL
             return new { brands, types };
         }
 
-        public async Task<(Product, bool)> CreateProduct([FromForm] CreateProductDto productDto)
+        public async Task<(Product, bool)> CreateProduct([FromForm] CreateProductDto productDto, ClaimsPrincipal User)
         {
             var product = _mapper.Map<Product>(productDto);
-
+            
+            product.CreatedAtTimestamp = DateTime.UtcNow;
+            product.CreatedByUserName = User.Identity.Name;
+            
             await UploadFile(productDto, product);
 
             _context.Products.Add(product);
 
-            var result = await _context.SaveChangesAsync() > 0; 
+            var result = await _context.SaveChangesAsync() > 0;
 
             return (product, result);
         }
 
-        public async Task<(Product,bool)> UpdateProduct([FromForm] UpdateProductDto productDto)
+        public async Task<(Product,bool)> UpdateProduct([FromForm] UpdateProductDto productDto, ClaimsPrincipal User)
         {
             var product = await _context.Products.FindAsync(productDto.Id) ?? throw new KeyNotFoundException("Product not found");
             
             _mapper.Map(productDto, product);
-
+            product.LastModifiedTimestamp = DateTime.UtcNow;
+            product.LastModifiedUserName = User.Identity.Name;
+            
             await UpdateFile(productDto, product); 
 
             var result = await _context.SaveChangesAsync() > 0;
