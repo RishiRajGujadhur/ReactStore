@@ -3,7 +3,6 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Extentions;
-using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +14,6 @@ namespace API.BL
         Task<FeatureSettings> Get(int id);
         Task<FeatureSettings> Post(FeatureSettings featureSetting, ClaimsPrincipal user);
         Task SetFeatureStatus(int id, FeatureStatusDto status, ClaimsPrincipal user);
-        Task Delete(int id);
     }
 
     public class FeatureSettingsBL : IFeatureSettingsBL
@@ -78,11 +76,6 @@ namespace API.BL
                 //Return a 500 Internal Server Error status code
                 throw new Exception("500: An error occurred while updating feature settings");
             }  
-        }
-
-        public Task Delete(int id)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -4,7 +4,7 @@ namespace API.Extentions
     {
         public static string AddErrorDetails(Exception ex, string username, string message = "")
         {
-            return message + " " + username + " : " + DateTime.UtcNow.ToString() + " " + ex.Message + " " + ex.InnerException.Message + " " + ex.InnerException.InnerException.Message;
+            return $"{message} - {username} : {DateTime.UtcNow} - {ex.InnerException.Message}, {ex.InnerException.InnerException.Message}, {ex.Message}";
         }
     }
 }
