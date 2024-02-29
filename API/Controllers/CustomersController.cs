@@ -66,7 +66,7 @@ namespace API.Controllers
                 return BadRequest();
             }
 
-            await _customerBL.UpdateCustomer(id, customer);
+            await _customerBL.UpdateCustomer(id, customer, User);
             
             return Ok();
         }

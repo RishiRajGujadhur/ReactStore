@@ -15,7 +15,7 @@ namespace API.BL
         Task<IEnumerable<Customer>> GetCustomers();
         Task<Customer> GetCustomer(int id);
         Task<Customer> CreateCustomer(CreateCustomerDto customerDTO, ClaimsPrincipal User);
-        Task UpdateCustomer(int id, Customer customer);
+        Task UpdateCustomer(int id, Customer customer, ClaimsPrincipal User);
         Task DeleteCustomer(int id);
     }
 
@@ -71,6 +71,8 @@ namespace API.BL
 
             var customer = new Customer
             {
+                CreatedAtTimestamp = DateTime.UtcNow,
+                LastModifiedUserName = User.Identity.Name,
                 FirstName = customerDTO.FirstName,
                 LastName = customerDTO.LastName,
                 Address = customerDTO.Address,
@@ -84,8 +86,10 @@ namespace API.BL
             return customer;
         }
 
-        public async Task UpdateCustomer(int id, Customer customer)
+        public async Task UpdateCustomer(int id, Customer customer, ClaimsPrincipal User)
         {
+            customer.LastModifiedTimestamp = DateTime.UtcNow;
+            customer.LastModifiedUserName = User.Identity.Name;
             _context.Entry(customer).State = EntityState.Modified;
 
             try
