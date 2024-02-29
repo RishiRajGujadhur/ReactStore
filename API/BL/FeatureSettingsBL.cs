@@ -13,7 +13,7 @@ namespace API.BL
     {
         Task<IEnumerable<FeatureSettings>> Get();
         Task<FeatureSettings> Get(int id);
-        Task<FeatureSettings> Post(FeatureSettings featureSetting);
+        Task<FeatureSettings> Post(FeatureSettings featureSetting, ClaimsPrincipal user);
         Task SetFeatureStatus(int id, FeatureStatusDto status, ClaimsPrincipal user);
         Task Delete(int id);
     }
@@ -23,13 +23,10 @@ namespace API.BL
         private readonly StoreContext _context;
         public UserManager<User> _userManager { get; }
         private readonly ILogger<FeatureSettingsBL> _logger;
-        private readonly IMapper _mapper;
-        public FeatureSettingsBL(StoreContext context, UserManager<User> userManager,
-         IMapper mapper, ILogger<FeatureSettingsBL> logger)
+        public FeatureSettingsBL(StoreContext context, UserManager<User> userManager, ILogger<FeatureSettingsBL> logger)
         {
             _context = context;
             _userManager = userManager;
-            _mapper = mapper;
             _logger = logger;
         }
 
@@ -49,8 +46,10 @@ namespace API.BL
             return featureSetting;
         }
 
-        public async Task<FeatureSettings> Post(FeatureSettings featureSetting)
+        public async Task<FeatureSettings> Post(FeatureSettings featureSetting, ClaimsPrincipal User)
         {
+            featureSetting.CreatedAtTimestamp = DateTime.UtcNow;
+            featureSetting.CreatedByUserName = User.Identity.Name;
             _context.FeatureSettings.Add(featureSetting);
             await _context.SaveChangesAsync();
             return featureSetting;
@@ -62,14 +61,12 @@ namespace API.BL
             {
                 var feature = await _context.FeatureSettings
                 .Where(x => x.Id == id)
-                .FirstOrDefaultAsync();
-
-                if (feature == null)
-                {
-                    throw new Exception("Feature setting not found");
-                }
+                .FirstOrDefaultAsync() ?? throw new Exception("Feature setting not found");
 
                 feature.IsFeatureEnabled = status.IsFeatureEnabled;
+
+                feature.LastModifiedTimestamp = DateTime.UtcNow;
+                feature.LastModifiedUserName = user.Identity.Name;
 
                 _context.Entry(feature).State = EntityState.Modified;
                 await _context.SaveChangesAsync();

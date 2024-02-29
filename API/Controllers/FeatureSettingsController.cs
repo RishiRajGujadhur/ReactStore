@@ -36,7 +36,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<FeatureSettings>> Post(FeatureSettings featureSetting)
         {
-            var newFeatureSetting = await _featureSettingsBL.Post(featureSetting);
+            var newFeatureSetting = await _featureSettingsBL.Post(featureSetting, User);
             return CreatedAtAction(nameof(Get), new { id = newFeatureSetting.Id }, newFeatureSetting);
         }
 
