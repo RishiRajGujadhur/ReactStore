@@ -1,13 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "TXvpkz1pr9PxXjKIBXqw1kEjIl4shZc7WNtCjogZVvQ7CPJguVR8tXX+qaopYIJx/rhk0rI29DyMKAtVT6fHdw==",
+  "dgSpecHash": "wS5bF2HSQTS9R72Pe7O907HoEuYTe90FBNNyy4cylhcYf65lyj4m1ZGdbCmsMEF28qxEvFgFvDSKlk/7ySIrxw==",
   "success": true,
   "projectFilePath": "F:\\GitHub\\Store\\api\\API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\cloudinarydotnet\\1.22.0\\cloudinarydotnet.1.22.0.nupkg.sha512",
+    "C:\\Users\\user\\.nuget\\packages\\confluent.kafka\\2.3.0\\confluent.kafka.2.3.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\user\\.nuget\\packages\\librdkafka.redist\\2.3.0\\librdkafka.redist.2.3.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\5.0.9\\microsoft.aspnetcore.authentication.jwtbearer.5.0.9.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\5.0.9\\microsoft.aspnetcore.cryptography.internal.5.0.9.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\5.0.9\\microsoft.aspnetcore.cryptography.keyderivation.5.0.9.nupkg.sha512",

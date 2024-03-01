@@ -53,6 +53,10 @@
               "target": "Package",
               "version": "[1.22.0, )"
             },
+            "Confluent.Kafka": {
+              "target": "Package",
+              "version": "[2.3.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[5.0.9, )"

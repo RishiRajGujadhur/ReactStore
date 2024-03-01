@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "fwHQV6s1bGaN4ENQ06WgALynTJE8LvFDuXHKp+I6Qu83/kTKwGS1mtogQaPWWgUYF0rARBFaomTPYoWrUwC1PQ==",
+  "dgSpecHash": "/fEzV58mr6atD5L9LliBJ77opzXir44Zwskr6pA5iST3FGBsoG5rPMVn1qEEEdgARNTgdSvJTR0ZLl9dDFJgxg==",
   "success": true,
   "projectFilePath": "F:\\GitHub\\Store\\Store.UnitTests\\Store.UnitTests.csproj",
   "expectedPackageFiles": [
@@ -8,7 +8,9 @@
     "C:\\Users\\user\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\cloudinarydotnet\\1.22.0\\cloudinarydotnet.1.22.0.nupkg.sha512",
+    "C:\\Users\\user\\.nuget\\packages\\confluent.kafka\\2.3.0\\confluent.kafka.2.3.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\coverlet.collector\\3.2.0\\coverlet.collector.3.2.0.nupkg.sha512",
+    "C:\\Users\\user\\.nuget\\packages\\librdkafka.redist\\2.3.0\\librdkafka.redist.2.3.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\5.0.9\\microsoft.aspnetcore.authentication.jwtbearer.5.0.9.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\5.0.9\\microsoft.aspnetcore.cryptography.internal.5.0.9.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\5.0.9\\microsoft.aspnetcore.cryptography.keyderivation.5.0.9.nupkg.sha512",

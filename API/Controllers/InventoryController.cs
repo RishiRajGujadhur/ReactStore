@@ -1,5 +1,6 @@
 using API.Data;
 using API.Entities;
+using InventoryProducer.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +11,13 @@ namespace API.Controllers
     public class InventoryController : ControllerBase
     {
         private readonly StoreContext _context;
-
-        public InventoryController(StoreContext context)
+        private readonly IConfiguration _configuration;
+        private readonly ProducerService _producerService;
+        public InventoryController(StoreContext context, IConfiguration configuration, ProducerService producerService)
         {
             _context = context;
+            _configuration = configuration;
+            _producerService = producerService;
         }
 
         // GET: api/inventory
@@ -36,17 +40,7 @@ namespace API.Controllers
 
             return inventoryItem;
         }
-
-        // POST: api/inventory
-        [HttpPost]
-        public async Task<ActionResult<Inventory>> CreateInventoryItem(Inventory inventoryItem)
-        {
-            _context.Inventories.Add(inventoryItem);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetInventoryItem), new { id = inventoryItem.InventoryID }, inventoryItem);
-        }
-
+   
         // PUT: api/inventory/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateInventoryItem(int id, Inventory inventoryItem)

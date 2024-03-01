@@ -1,8 +1,10 @@
 using System.Text;
 using API.Data;
 using API.Entities;
+using API.Integrations.Services.Kafka;
 using API.RequestHelpers;
 using API.Services;
+using InventoryProducer.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -91,6 +93,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
         };
     });
+builder.Services.AddSingleton<ProducerService>(); // producer project should always start before consumer project so that topic is created
+//builder.Services.AddHostedService<ConsumerService>();
+ 
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<ImageService>();
