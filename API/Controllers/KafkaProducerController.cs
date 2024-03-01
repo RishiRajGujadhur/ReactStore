@@ -13,7 +13,7 @@ namespace API.Controllers
         private readonly StoreContext _context;
         private readonly ProducerService _producerService;
 
-        public KafkaProducerController(StoreContext Context, IConfiguration configuration, ProducerService producerService)
+        public KafkaProducerController(StoreContext Context, ProducerService producerService)
         {
             _context = Context;
             _producerService = producerService;

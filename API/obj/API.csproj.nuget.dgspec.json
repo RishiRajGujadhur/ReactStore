@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\GitHub\\Store\\api\\API.csproj": {}
+    "F:\\GitHub\\Store\\API\\API.csproj": {}
   },
   "projects": {
-    "F:\\GitHub\\Store\\api\\API.csproj": {
+    "F:\\GitHub\\Store\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\GitHub\\Store\\api\\API.csproj",
+        "projectUniqueName": "F:\\GitHub\\Store\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "F:\\GitHub\\Store\\api\\API.csproj",
+        "projectPath": "F:\\GitHub\\Store\\API\\API.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "F:\\GitHub\\Store\\api\\obj\\",
+        "outputPath": "F:\\GitHub\\Store\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
