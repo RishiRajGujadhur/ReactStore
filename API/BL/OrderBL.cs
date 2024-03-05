@@ -1,10 +1,12 @@
 using System.Security.Claims;
+using System.Text.Json;
 using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Entities.OrderAggregate;
 using API.Extensions;
 using API.Extentions;
+using API.Integrations.Services.Kafka;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,14 +25,16 @@ namespace API.BL
     public class OrderBL : IOrderBL
     {
         private readonly StoreContext _context;
-        private readonly ILogger<OrderBL> _logger;
+        private readonly ILogger<OrderBL> _logger; 
+        private readonly ProducerService _producerService;
         public UserManager<User> _userManager { get; }
 
-        public OrderBL(StoreContext context, UserManager<User> userManager, ILogger<OrderBL> logger)
+        public OrderBL(StoreContext context, UserManager<User> userManager, ILogger<OrderBL> logger, ProducerService producerService)
         {
             _context = context;
             _userManager = userManager;
-            _logger = logger;
+            _logger = logger; 
+            _producerService = producerService;
         }
 
         public async Task<List<OrderDto>> GetOrders(ClaimsPrincipal User)
@@ -129,7 +133,7 @@ namespace API.BL
             _context.Baskets.Remove(basket);
             await SaveAddress(orderDto, User);
             var result = await _context.SaveChangesAsync() > 0;
-
+            await _producerService.ProduceAsync("OrderNotificationTopic", "Order received");
             return (order, result);
         }
 
@@ -195,29 +199,41 @@ namespace API.BL
 
         private async Task<int> CreateInvoice(List<OrderItem> orderItems, ClaimsPrincipal User)
         {
-            Invoice invoice = new();
+
             GeneralSettings generalSettings = await _context.GeneralSettings.FirstOrDefaultAsync();
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             // INVOICE sender cannot be the same as the user who purchases the product thus I have changed the sender to the last sender in the database
             // This is a temporary solution until I have a proper way to handle this in the future when there are multiple sellers 
             // For multi vendors, I will associate the vendorId to the product at the time of creating the product in the inventory, each vendor will have their own inventory.
-            invoice.Sender = _context.InvoiceSenders.OrderByDescending(x => x.Id).FirstOrDefault();
-            var invoiceSettings = _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefault();
-            invoice.CreatedAtTimestamp = DateTime.UtcNow;
-            invoice.CreatedByUserId = user.Id;
-            invoice.CreatedByUserName = user.UserName;
-            invoice.BottomNotice = invoiceSettings.BottomNotice;
-            invoice.DueDate = DateTime.UtcNow.AddDays(14);
-            invoice.IssueDate = DateTime.UtcNow;
-            invoice.Number = "INV-000" + invoice.IssueDate.Date.ToString("yyyy-MM-dd") + "-" + invoice.Id;
-            invoice.Logo = generalSettings?.LogoURL;
-            invoice.OrderItems = orderItems;
-            invoice.Settings = invoiceSettings;
             User client = user;
-            invoice.UserId = client.Id;
+            var invoiceSettings = _context.InvoiceSettings.OrderBy(i => i.Id).FirstOrDefault();
+
+            Invoice invoice = new Invoice
+            {
+                CreatedByUserId = user.Id,
+                CreatedByUserName = user.UserName,
+                BottomNotice = invoiceSettings.BottomNotice,
+                DueDate = DateTime.UtcNow.AddDays(14),
+                IssueDate = DateTime.UtcNow,
+                CreatedAtTimestamp = DateTime.UtcNow,
+                Logo = generalSettings?.LogoURL,
+                OrderItems = orderItems,
+                Settings = invoiceSettings,
+                UserId = client.Id,
+                Sender = _context.InvoiceSenders.OrderByDescending(x => x.Id).FirstOrDefault()
+            };
+            invoice.Number = "INV-000" + DateTime.UtcNow.ToString("yyyy-MM-dd") + "-" + invoice.Id;
             _context.Invoices.Add(invoice);
             return invoice.Id;
         }
+
+        
+
+        // private async Task MethodNameProduceKafkaEvent(Object objectName, string topic)
+        // {
+        //     var message = JsonSerializer.Serialize(objectName);
+        //     await _producerService.ProduceAsync("topic", message);
+        // }
         #endregion
     }
 }

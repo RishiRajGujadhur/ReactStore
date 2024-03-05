@@ -1,6 +1,6 @@
 using API.Data;
 using API.Entities;
-using InventoryProducer.Services;
+using API.Integrations.Services.Kafka;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

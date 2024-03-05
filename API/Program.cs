@@ -1,9 +1,9 @@
 using System.Text;
 using API.Data;
 using API.Entities;
+using API.Integrations.Services.Kafka;
 using API.RequestHelpers;
 using API.Services;
-using InventoryProducer.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

@@ -4,7 +4,7 @@ using API.Entities;
 using API.Data;
 using Microsoft.AspNetCore.Identity;
 
-namespace Store.UnitTests.BL
+namespace Store.Store.UnitTests.BL
 {
     [TestFixture]
     public class LikeBLTests

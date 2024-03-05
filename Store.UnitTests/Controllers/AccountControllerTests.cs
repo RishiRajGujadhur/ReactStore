@@ -6,7 +6,7 @@ using NUnit.Framework;
 using API.Controllers;
 using API.Entities;
 
-namespace Store.UnitTests.Controllers
+namespace Store.Store.UnitTests.Controllers
 {
     [TestFixture]
     public class AccountControllerTests

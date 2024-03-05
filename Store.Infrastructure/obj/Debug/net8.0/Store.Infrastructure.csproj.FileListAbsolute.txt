@@ -1,0 +1,15 @@
+F:\GitHub\Store\Store.Infrastructure\obj\Debug\net8.0\Store.Infrastructure.csproj.AssemblyReference.cache
+F:\GitHub\Store\Store.Infrastructure\obj\Debug\net8.0\Store.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+F:\GitHub\Store\Store.Infrastructure\obj\Debug\net8.0\Store.Infrastructure.AssemblyInfoInputs.cache
+F:\GitHub\Store\Store.Infrastructure\obj\Debug\net8.0\Store.Infrastructure.AssemblyInfo.cs
+F:\GitHub\Store\Store.Infrastructure\obj\Debug\net8.0\Store.Infrastructure.csproj.CoreCompileInputs.cache
+F:\GitHub\Store\Store.Infrastructure\obj\Debug\net8.0\Store.Infrastructure.sourcelink.json
+F:\GitHub\Store\Store.Infrastructure\bin\Debug\net8.0\appsettings.Development.json
+F:\GitHub\Store\Store.Infrastructure\bin\Debug\net8.0\appsettings.json
+F:\GitHub\Store\Store.Infrastructure\bin\Debug\net8.0\Store.Infrastructure.deps.json
+F:\GitHub\Store\Store.Infrastructure\bin\Debug\net8.0\Store.Infrastructure.dll
+F:\GitHub\Store\Store.Infrastructure\bin\Debug\net8.0\Store.Infrastructure.pdb
+F:\GitHub\Store\Store.Infrastructure\obj\Debug\net8.0\Store.Infrastructure.dll
+F:\GitHub\Store\Store.Infrastructure\obj\Debug\net8.0\refint\Store.Infrastructure.dll
+F:\GitHub\Store\Store.Infrastructure\obj\Debug\net8.0\Store.Infrastructure.pdb
+F:\GitHub\Store\Store.Infrastructure\obj\Debug\net8.0\ref\Store.Infrastructure.dll

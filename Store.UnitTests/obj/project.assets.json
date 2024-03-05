@@ -6536,9 +6536,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\GitHub\\Store\\Store.UnitTests\\Store.UnitTests.csproj",
-      "projectName": "Store.UnitTests",
-      "projectPath": "F:\\GitHub\\Store\\Store.UnitTests\\Store.UnitTests.csproj",
+      "projectUniqueName": "F:\\GitHub\\Store\\Store.UnitTests\\Store.Store.UnitTests.csproj",
+      "projectName": "Store.Store.UnitTests",
+      "projectPath": "F:\\GitHub\\Store\\Store.UnitTests\\Store.Store.UnitTests.csproj",
       "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
       "outputPath": "F:\\GitHub\\Store\\Store.UnitTests\\obj\\",
       "projectStyle": "PackageReference",

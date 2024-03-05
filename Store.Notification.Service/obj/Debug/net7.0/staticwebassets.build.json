@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "w1vCcMFAWqwLPIy/tiS9ZDrMlvLYXJdTba6fW8bwC9E=",
+  "Source": "Store.Notification.Service",
+  "BasePath": "_content/Store.Notification.Service",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
