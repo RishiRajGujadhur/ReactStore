@@ -3,7 +3,9 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Hubs;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.BL
@@ -11,19 +13,21 @@ namespace API.BL
     public interface IBasketBL
     {
         Task<BasketDto> GetBasket(ClaimsPrincipal User, HttpResponse response);
-        Task<(bool,Basket)> AddItemToBasket(int productId, ClaimsPrincipal User, HttpResponse response, int quantity = 1);
+        Task<(bool, Basket)> AddItemToBasket(int productId, ClaimsPrincipal User, HttpResponse response, int quantity = 1);
         Task<bool> RemoveBasketItem(int productId, ClaimsPrincipal User, HttpResponse response, int quantity = 1);
     }
 
     public class BasketBL : IBasketBL
     {
+        private readonly IHubContext<NotificationHub> _hubContext;
         private readonly StoreContext _context;
         public UserManager<User> _userManager { get; }
 
-        public BasketBL(StoreContext context, UserManager<User> userManager)
+        public BasketBL(StoreContext context, UserManager<User> userManager, IHubContext<NotificationHub> hubContext)
         {
             _context = context;
             _userManager = userManager;
+            _hubContext = hubContext;
         }
 
         public async Task<BasketDto> GetBasket(ClaimsPrincipal User, HttpResponse Response)
@@ -32,7 +36,7 @@ namespace API.BL
             return basket.MapBasketToDto();
         }
 
-        public async Task<(bool,Basket)> AddItemToBasket(int productId, ClaimsPrincipal User, HttpResponse response, int quantity = 1)
+        public async Task<(bool, Basket)> AddItemToBasket(int productId, ClaimsPrincipal User, HttpResponse response, int quantity = 1)
         {
             var basket = await RetrieveBasket(GetBuyerId(User), response);
 
@@ -45,7 +49,14 @@ namespace API.BL
             basket.AddItem(product, quantity);
 
             var result = await _context.SaveChangesAsync() > 0;
-            return (result, basket);
+            await SendNotification();
+
+            return (result, basket); 
+
+            async Task SendNotification()
+            {
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", "Added to basket");
+            }
         }
 
         public async Task<bool> RemoveBasketItem(int productId, ClaimsPrincipal User, HttpResponse Response, int quantity = 1)

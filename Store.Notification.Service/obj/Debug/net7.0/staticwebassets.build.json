@@ -1,11 +1,23 @@
 {
   "Version": 1,
-  "Hash": "w1vCcMFAWqwLPIy/tiS9ZDrMlvLYXJdTba6fW8bwC9E=",
+  "Hash": "SDvOu6aLfxWxtmLElw93Bi/Jode3lvB2Kiwjahp4SDI=",
   "Source": "Store.Notification.Service",
   "BasePath": "_content/Store.Notification.Service",
   "Mode": "Default",
   "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "F:\\GitHub\\Store\\API\\API.csproj",
+      "Version": 2,
+      "Source": "API",
+      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
+    }
+  ],
   "DiscoveryPatterns": [],
   "Assets": []
 }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\GitHub\\Store\\Store.Infrastructure\\Store.Infrastructure.csproj": {}
+    "f:\\GitHub\\Store\\Store.Infrastructure\\Store.Infrastructure.csproj": {}
   },
   "projects": {
-    "F:\\GitHub\\Store\\Store.Infrastructure\\Store.Infrastructure.csproj": {
+    "f:\\GitHub\\Store\\Store.Infrastructure\\Store.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\GitHub\\Store\\Store.Infrastructure\\Store.Infrastructure.csproj",
+        "projectUniqueName": "f:\\GitHub\\Store\\Store.Infrastructure\\Store.Infrastructure.csproj",
         "projectName": "Store.Infrastructure",
-        "projectPath": "F:\\GitHub\\Store\\Store.Infrastructure\\Store.Infrastructure.csproj",
+        "projectPath": "f:\\GitHub\\Store\\Store.Infrastructure\\Store.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "F:\\GitHub\\Store\\Store.Infrastructure\\obj\\",
+        "outputPath": "f:\\GitHub\\Store\\Store.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",

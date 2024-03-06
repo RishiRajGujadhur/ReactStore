@@ -6,8 +6,10 @@ using API.Entities;
 using API.Entities.OrderAggregate;
 using API.Extensions;
 using API.Extentions;
+using API.Hubs;
 using API.Integrations.Services.Kafka;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.BL
@@ -24,17 +26,19 @@ namespace API.BL
 
     public class OrderBL : IOrderBL
     {
+        private readonly IHubContext<NotificationHub> _hubContext;
         private readonly StoreContext _context;
         private readonly ILogger<OrderBL> _logger; 
         private readonly ProducerService _producerService;
         public UserManager<User> _userManager { get; }
 
-        public OrderBL(StoreContext context, UserManager<User> userManager, ILogger<OrderBL> logger, ProducerService producerService)
+        public OrderBL(StoreContext context, UserManager<User> userManager, ILogger<OrderBL> logger, ProducerService producerService, IHubContext<NotificationHub> hubContext)
         {
             _context = context;
             _userManager = userManager;
-            _logger = logger; 
+            _logger = logger;
             _producerService = producerService;
+            _hubContext = hubContext;
         }
 
         public async Task<List<OrderDto>> GetOrders(ClaimsPrincipal User)
@@ -133,8 +137,15 @@ namespace API.BL
             _context.Baskets.Remove(basket);
             await SaveAddress(orderDto, User);
             var result = await _context.SaveChangesAsync() > 0;
+
+            await SendNotification();
             await _producerService.ProduceAsync("OrderNotificationTopic", "Order received");
             return (order, result);
+
+            async Task SendNotification()
+            {
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", "Order created");
+            }
         }
 
         #region Private Methods

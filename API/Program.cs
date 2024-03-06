@@ -1,6 +1,7 @@
 using System.Text;
 using API.Data;
 using API.Entities;
+using API.Hubs;
 using API.Integrations.Services.Kafka;
 using API.RequestHelpers;
 using API.Services;
@@ -109,7 +110,7 @@ builder.Services.AddScoped<API.BL.ICustomerBL, API.BL.CustomerBL>();
 builder.Services.AddScoped<API.BL.ICommentBL, API.BL.CommentBL>();
 builder.Services.AddScoped<API.BL.IBasketBL, API.BL.BasketBL>();
 builder.Services.AddScoped<API.BL.IAccountBL, API.BL.AccountBL>();
-
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -151,4 +152,5 @@ catch (Exception ex)
     logger.LogError(ex, "A problem occurred during migration");
 }
 
+app.MapHub<NotificationHub>("/notifications");
 app.Run();
