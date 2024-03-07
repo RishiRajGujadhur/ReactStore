@@ -23,11 +23,14 @@ namespace API.Integrations.Services.Kafka
 
         public async Task ProduceAsync(string topic, string message)
         {
+            
             var kafkaMessage = new Message<Null, string> { Value = message, };
 
             await _producer.ProduceAsync(topic, kafkaMessage);
-
-            _producer.Dispose();
+            
         }
+
+        public void Flush(TimeSpan timeout) => this._producer.Flush(timeout);
+
     }
 }

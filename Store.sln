@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.Store.UnitTests", "St
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.Infrastructure", "Store.Infrastructure\Store.Infrastructure.csproj", "{8E8178E0-4FD7-4D69-AA58-AA88D9686F9B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.Notification.Service", "Store.Notification.Service\Store.Notification.Service.csproj", "{A1080314-B990-4E58-9780-C678FA7DB89A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.Ordering.Service", "Store.Notification.Service\Store.Ordering.Service.csproj", "{A1080314-B990-4E58-9780-C678FA7DB89A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,12 +3,20 @@
   "WorkspaceRootPath": "F:\\GitHub\\Store\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A1080314-B990-4E58-9780-C678FA7DB89A}|Store.Notification.Service\\Store.Notification.Service.csproj|f:\\github\\store\\store.notification.service\\consumers\\worker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A1080314-B990-4E58-9780-C678FA7DB89A}|Store.Notification.Service\\Store.Notification.Service.csproj|solutionrelative:store.notification.service\\consumers\\worker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A1080314-B990-4E58-9780-C678FA7DB89A}|Store.Notification.Service\\Store.Notification.Service.csproj|f:\\github\\store\\store.notification.service\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A1080314-B990-4E58-9780-C678FA7DB89A}|Store.Notification.Service\\Store.Notification.Service.csproj|solutionrelative:store.notification.service\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2DCD39C7-4DEF-4CB4-86C2-402C747D6484}|API\\API.csproj|f:\\github\\store\\api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2DCD39C7-4DEF-4CB4-86C2-402C747D6484}|API\\API.csproj|solutionrelative:api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A1080314-B990-4E58-9780-C678FA7DB89A}|Store.Notification.Service\\Store.Notification.Service.csproj|f:\\github\\store\\store.notification.service\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A1080314-B990-4E58-9780-C678FA7DB89A}|Store.Notification.Service\\Store.Notification.Service.csproj|solutionrelative:store.notification.service\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2DCD39C7-4DEF-4CB4-86C2-402C747D6484}|API\\API.csproj|f:\\github\\store\\api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{2DCD39C7-4DEF-4CB4-86C2-402C747D6484}|API\\API.csproj|solutionrelative:api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,31 +26,58 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "Program.cs",
-              "DocumentMoniker": "F:\\GitHub\\Store\\API\\Program.cs",
-              "RelativeDocumentMoniker": "API\\Program.cs",
-              "ToolTip": "F:\\GitHub\\Store\\API\\Program.cs",
-              "RelativeToolTip": "API\\Program.cs",
-              "ViewState": "AQIAACMAAAAAAAAAAAAAAC8AAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-06T09:59:19.888Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
               "DocumentMoniker": "F:\\GitHub\\Store\\Store.Notification.Service\\Program.cs",
               "RelativeDocumentMoniker": "Store.Notification.Service\\Program.cs",
               "ToolTip": "F:\\GitHub\\Store\\Store.Notification.Service\\Program.cs",
               "RelativeToolTip": "Store.Notification.Service\\Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAFAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAEUAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-06T09:58:22.319Z",
+              "WhenOpened": "2024-03-07T04:29:38.971Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "F:\\GitHub\\Store\\API\\appsettings.json",
+              "RelativeDocumentMoniker": "API\\appsettings.json",
+              "ToolTip": "F:\\GitHub\\Store\\API\\appsettings.json",
+              "RelativeToolTip": "API\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-03-07T04:27:16.09Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "F:\\GitHub\\Store\\Store.Notification.Service\\appsettings.json",
+              "RelativeDocumentMoniker": "Store.Notification.Service\\appsettings.json",
+              "ToolTip": "F:\\GitHub\\Store\\Store.Notification.Service\\appsettings.json",
+              "RelativeToolTip": "Store.Notification.Service\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-03-07T04:27:10.786Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Worker.cs",
+              "DocumentMoniker": "F:\\GitHub\\Store\\Store.Notification.Service\\Consumers\\Worker.cs",
+              "RelativeDocumentMoniker": "Store.Notification.Service\\Consumers\\Worker.cs",
+              "ToolTip": "F:\\GitHub\\Store\\Store.Notification.Service\\Consumers\\Worker.cs",
+              "RelativeToolTip": "Store.Notification.Service\\Consumers\\Worker.cs",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAQwCEAAAA3AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-07T04:24:33.625Z",
               "EditorCaption": ""
             }
           ]

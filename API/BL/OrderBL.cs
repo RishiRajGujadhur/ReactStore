@@ -85,14 +85,13 @@ namespace API.BL
                 order.LastModifiedUserName = User.Identity.Name;
                 
                 SetOrderStatus(orderStatusDto, order);
-
-                _context.Entry(order).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
+                string orderJson = JsonSerializer.Serialize(order);
+                await _producerService.ProduceAsync("OrderStatusChangedTopic", orderJson);
             }
             catch (Exception ex)
             {
                 // Log the exception
-                _logger.LogError(ex, LoggerExtention.AddErrorDetails(ex, User.Identity.Name, "An error occurred while updating invoice settings."));
+                _logger.LogError(ex.Message);
                 // Return a 500 Internal Server Error status code
                 throw new Exception(ex.InnerException.Message);
             }
@@ -138,8 +137,8 @@ namespace API.BL
             await SaveAddress(orderDto, User);
             var result = await _context.SaveChangesAsync() > 0;
 
-            await SendNotification();
-            await _producerService.ProduceAsync("OrderNotificationTopic", "Order received");
+            await SendNotification(); 
+       
             return (order, result);
 
             async Task SendNotification()
@@ -238,13 +237,6 @@ namespace API.BL
             return invoice.Id;
         }
 
-        
-
-        // private async Task MethodNameProduceKafkaEvent(Object objectName, string topic)
-        // {
-        //     var message = JsonSerializer.Serialize(objectName);
-        //     await _producerService.ProduceAsync("topic", message);
-        // }
         #endregion
     }
 }

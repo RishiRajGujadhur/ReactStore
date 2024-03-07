@@ -1,16 +1,23 @@
-using Confluent.Kafka; 
+using Confluent.Kafka;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Store.Infrastructure.Data;
+using Store.Infrastructure.Entities.OrderAgrgregate;
 
-namespace Store.Notification.Service.Consumers
+namespace Store.Ordering.Service.Consumers
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly IConfiguration _configuration; 
+        private readonly IConfiguration _configuration;
 
-        public Worker(ILogger<Worker> logger, IConfiguration configuration)
+        private readonly StoreContext _context;
+
+        public Worker(ILogger<Worker> logger, IConfiguration configuration, StoreContext context)
         {
             _logger = logger;
-            _configuration = configuration; 
+            _configuration = configuration;
+            _context = context;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -18,13 +25,13 @@ namespace Store.Notification.Service.Consumers
             var consumerConfig = new ConsumerConfig
             {
                 BootstrapServers = _configuration["Kafka:BootstrapServers"],
-                GroupId = "invoiceConsumerGroup",
+                GroupId = "orderStatusConsumerGroup",
                 ClientId = Guid.NewGuid().ToString(),
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
             using var consumer = new ConsumerBuilder<string, string>(consumerConfig).Build();
-            consumer.Subscribe("OrderNotificationTopic");
+            consumer.Subscribe("OrderStatusChangedTopic");
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -34,8 +41,11 @@ namespace Store.Notification.Service.Consumers
                 {
                     try
                     {
-                        var notification = consumedData.Message.Value;
-                        _logger.LogInformation($"Consuming {notification}");
+                        var orderJson = consumedData.Message.Value;
+                        Order order = JsonConvert.DeserializeObject<Order>(orderJson);
+                        _context.Entry(order).State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
+                        _logger.LogInformation($"Consuming {order}");
                     }
                     catch (Exception ex)
                     {

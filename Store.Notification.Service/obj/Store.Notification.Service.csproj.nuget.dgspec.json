@@ -1,32 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "f:\\GitHub\\Store\\Store.Notification.Service\\Store.Notification.Service.csproj": {}
+    "F:\\GitHub\\Store\\Store.Notification.Service\\Store.Notification.Service.csproj": {}
   },
   "projects": {
-    "f:\\GitHub\\Store\\API\\API.csproj": {
+    "F:\\GitHub\\Store\\Store.Infrastructure\\Store.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "f:\\GitHub\\Store\\API\\API.csproj",
-        "projectName": "API",
-        "projectPath": "f:\\GitHub\\Store\\API\\API.csproj",
+        "projectUniqueName": "F:\\GitHub\\Store\\Store.Infrastructure\\Store.Infrastructure.csproj",
+        "projectName": "Store.Infrastructure",
+        "projectPath": "F:\\GitHub\\Store\\Store.Infrastructure\\Store.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "f:\\GitHub\\Store\\API\\obj\\",
+        "outputPath": "F:\\GitHub\\Store\\Store.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net8.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {}
           }
         },
@@ -42,50 +42,20 @@
         }
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "dependencies": {
-            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+            "Microsoft.AspNetCore.Http.Features": {
               "target": "Package",
-              "version": "[12.0.1, )"
-            },
-            "CloudinaryDotNet": {
-              "target": "Package",
-              "version": "[1.22.0, )"
-            },
-            "Confluent.Kafka": {
-              "target": "Package",
-              "version": "[2.3.0, )"
-            },
-            "Microsoft.AspNetCore.Authentication.JwtBearer": {
-              "target": "Package",
-              "version": "[5.0.9, )"
+              "version": "[2.2.0, )"
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[5.0.9, )"
-            },
-            "Microsoft.AspNetCore.OpenApi": {
-              "target": "Package",
-              "version": "[7.0.14, )"
-            },
-            "Microsoft.EntityFrameworkCore.Design": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[7.0.2, )"
-            },
-            "Microsoft.EntityFrameworkCore.Sqlite": {
-              "target": "Package",
-              "version": "[7.0.2, )"
+              "version": "[8.0.2, )"
             },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
-              "version": "[7.0.1, )"
-            },
-            "Swashbuckle.AspNetCore": {
-              "target": "Package",
-              "version": "[6.5.0, )"
+              "version": "[8.0.2, )"
             }
           },
           "imports": [
@@ -100,43 +70,40 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "f:\\GitHub\\Store\\Store.Notification.Service\\Store.Notification.Service.csproj": {
+    "F:\\GitHub\\Store\\Store.Notification.Service\\Store.Notification.Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "f:\\GitHub\\Store\\Store.Notification.Service\\Store.Notification.Service.csproj",
+        "projectUniqueName": "F:\\GitHub\\Store\\Store.Notification.Service\\Store.Notification.Service.csproj",
         "projectName": "Store.Notification.Service",
-        "projectPath": "f:\\GitHub\\Store\\Store.Notification.Service\\Store.Notification.Service.csproj",
+        "projectPath": "F:\\GitHub\\Store\\Store.Notification.Service\\Store.Notification.Service.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "f:\\GitHub\\Store\\Store.Notification.Service\\obj\\",
+        "outputPath": "F:\\GitHub\\Store\\Store.Notification.Service\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net8.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {
-              "f:\\GitHub\\Store\\API\\API.csproj": {
-                "projectPath": "f:\\GitHub\\Store\\API\\API.csproj"
+              "F:\\GitHub\\Store\\Store.Infrastructure\\Store.Infrastructure.csproj": {
+                "projectPath": "F:\\GitHub\\Store\\Store.Infrastructure\\Store.Infrastructure.csproj"
               }
             }
           }
@@ -153,12 +120,20 @@
         }
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "dependencies": {
             "Confluent.Kafka": {
               "target": "Package",
               "version": "[2.3.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[5.0.9, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
             }
           },
           "imports": [
@@ -180,7 +155,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

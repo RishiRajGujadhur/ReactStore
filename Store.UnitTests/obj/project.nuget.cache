@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2Jr276RrK1qq3Db0n+NqbHBwE1ctS+qJ2SgNYaZ5qCj12Z+FDCOPUtWuJkQVTHzJz8ttJ116o+YNvZ+RX+90iA==",
+  "dgSpecHash": "XfMmdvwU1dw7+6KDnJEm5o94+XSSpbImsLDliMutSk1J36dqxtr9WTZRyW6rRdqWysR9aGeZVg3SilKXxvsHig==",
   "success": true,
-  "projectFilePath": "f:\\GitHub\\Store\\Store.UnitTests\\Store.Store.UnitTests.csproj",
+  "projectFilePath": "F:\\GitHub\\Store\\Store.UnitTests\\Store.Store.UnitTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "sN04siyRmExRcX9to3JXqRaIhDhjfqkHv15N5GFc1AU=",
+  "Source": "Store.Ordering.Service",
+  "BasePath": "_content/Store.Ordering.Service",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

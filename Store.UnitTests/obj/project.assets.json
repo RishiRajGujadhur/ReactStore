@@ -6536,11 +6536,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "f:\\GitHub\\Store\\Store.UnitTests\\Store.Store.UnitTests.csproj",
+      "projectUniqueName": "F:\\GitHub\\Store\\Store.UnitTests\\Store.Store.UnitTests.csproj",
       "projectName": "Store.Store.UnitTests",
-      "projectPath": "f:\\GitHub\\Store\\Store.UnitTests\\Store.Store.UnitTests.csproj",
+      "projectPath": "F:\\GitHub\\Store\\Store.UnitTests\\Store.Store.UnitTests.csproj",
       "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-      "outputPath": "f:\\GitHub\\Store\\Store.UnitTests\\obj\\",
+      "outputPath": "F:\\GitHub\\Store\\Store.UnitTests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -6557,8 +6557,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "f:\\GitHub\\Store\\API\\API.csproj": {
-              "projectPath": "f:\\GitHub\\Store\\API\\API.csproj"
+            "F:\\GitHub\\Store\\API\\API.csproj": {
+              "projectPath": "F:\\GitHub\\Store\\API\\API.csproj"
             }
           }
         }
