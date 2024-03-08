@@ -1,10 +1,10 @@
-using API.BL;
-using API.DTOs;
-using API.Entities;
+using API.BL; 
 using API.Extensions;
 using API.RequestHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Store.Infrastructure.Data.DTOs.Product;
+using Store.Infrastructure.Entities;
 
 namespace API.Controllers
 {

@@ -1,6 +1,4 @@
-using System.Text;
-using API.Data;
-using API.Entities;
+using System.Text; 
 using API.Hubs;
 using API.Integrations.Services.Kafka;
 using API.RequestHelpers;
@@ -10,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Store.Infrastructure.Data;
+using Store.Infrastructure.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,12 +1,13 @@
 using API.BL;
-using API.Data;
-using API.DTOs;
-using API.Entities;
+using API.Data; 
 using API.Extensions;
 using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc; 
+using Microsoft.AspNetCore.Mvc;
+using Store.Infrastructure.Data;
+using Store.Infrastructure.Data.DTOs.Account;
+using Store.Infrastructure.Entities;
 namespace API.Controllers
 {
     [ApiController] 

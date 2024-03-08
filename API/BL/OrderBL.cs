@@ -1,16 +1,16 @@
 using System.Security.Claims;
-using System.Text.Json;
-using API.Data;
-using API.DTOs;
-using API.Entities;
-using API.Entities.OrderAggregate;
-using API.Extensions;
-using API.Extentions;
+using System.Text.Json;  
+using Store.Infrastructure.Entities;
+using Store.Infrastructure.Entities.OrderAgrgregate;
+using API.Extensions; 
 using API.Hubs;
 using API.Integrations.Services.Kafka;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Store.Infrastructure.Data.DTOs.Order;
+using Store.Infrastructure.Data.DTOs.Account;
+using Store.Infrastructure.Data;
 
 namespace API.BL
 {

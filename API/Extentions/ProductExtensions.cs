@@ -1,4 +1,5 @@
-using API.Entities;
+
+using Store.Infrastructure.Entities;
 
 namespace API.Extensions;
 

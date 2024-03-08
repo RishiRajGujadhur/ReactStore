@@ -1,7 +1,8 @@
-using API.Data;
-using API.DTOs;
-using API.Entities;
+ 
 using Microsoft.EntityFrameworkCore;
+using Store.Infrastructure.Data;
+using Store.Infrastructure.Data.DTOs.Basket;
+using Store.Infrastructure.Entities;
 
 namespace API.Extensions;
 

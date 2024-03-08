@@ -1,7 +1,7 @@
-using API.DTOs;
-using API.Entities;
-using API.Entities.OrderAggregate;
+ 
 using Microsoft.EntityFrameworkCore;
+using Store.Infrastructure.Data.DTOs.Order;
+using Store.Infrastructure.Entities.OrderAgrgregate;
 
 namespace API.Extensions;
 

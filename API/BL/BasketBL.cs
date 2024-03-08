@@ -1,12 +1,12 @@
 using System.Security.Claims;
-using API.Data;
-using API.DTOs;
-using API.Entities;
 using API.Extensions;
 using API.Hubs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Store.Infrastructure.Data; 
+using Store.Infrastructure.Data.DTOs.Basket;
+using Store.Infrastructure.Entities;
 
 namespace API.BL
 {

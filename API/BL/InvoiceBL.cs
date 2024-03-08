@@ -1,14 +1,14 @@
 using System.Security.Claims;
-using API.Data;
-using API.DTOs;
-using API.DTOs.Invoice;
-using API.Entities;
+using API.Data; 
 using API.Extensions;
 using API.Extentions;
 using API.RequestHelpers;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Store.Infrastructure.Data;
+using Store.Infrastructure.Data.DTOs.Invoice;
+using Store.Infrastructure.Entities;
 
 namespace API.BL
 {

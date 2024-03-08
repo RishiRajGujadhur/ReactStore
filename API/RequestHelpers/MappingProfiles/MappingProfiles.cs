@@ -1,7 +1,10 @@
-using API.DTOs;
-using API.DTOs.Invoice;
-using API.Entities;
+  
 using AutoMapper;
+using Store.Infrastructure.Data.DTOs.Invoice;
+using Store.Infrastructure.Data.DTOs.Product;
+using Store.Infrastructure.Data.DTOs.Receipt;
+using Store.Infrastructure.Data.DTOs.Settings;
+using Store.Infrastructure.Entities;
 
 namespace API.RequestHelpers;
 

@@ -1,10 +1,11 @@
-using System.Security.Claims;
-using API.Data;
-using API.DTOs;
-using API.Entities;
+ 
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Store.Infrastructure.Data;
+using Store.Infrastructure.Data.DTOs;
+using Store.Infrastructure.Entities;
+using System.Security.Claims;
 
 namespace API.BL
 {

@@ -1,8 +1,9 @@
 using System.Security.Claims;
-using API.Data;
-using API.Entities;
+using API.Data; 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Store.Infrastructure.Data;
+using Store.Infrastructure.Entities;
 
 namespace API.BL
 {

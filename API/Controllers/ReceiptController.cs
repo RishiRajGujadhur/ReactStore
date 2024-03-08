@@ -1,11 +1,12 @@
-using API.Data;
-using API.DTOs;
-using API.Entities;
+using API.Data; 
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Store.Infrastructure.Data;
+using Store.Infrastructure.Data.DTOs.Receipt;
+using Store.Infrastructure.Entities;
 
 namespace API.Controllers
 {

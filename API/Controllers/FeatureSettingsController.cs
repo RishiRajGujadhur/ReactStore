@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using API.Entities;
-using API.DTOs;
+using Microsoft.AspNetCore.Mvc; 
 using API.BL;
+using Store.Infrastructure.Entities;
+using Store.Infrastructure.Data.DTOs.Settings;
 
 namespace API.Controllers
 {

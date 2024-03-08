@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using API.Controllers;
-using API.Entities;
+using API.Controllers; 
 
 namespace Store.Store.UnitTests.Controllers
 {
