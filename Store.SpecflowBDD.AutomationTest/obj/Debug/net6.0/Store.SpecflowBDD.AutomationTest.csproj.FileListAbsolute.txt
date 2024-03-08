@@ -112,3 +112,7 @@ F:\GitHub\Store\Store.SpecflowBDD.AutomationTest\obj\Debug\net6.0\refint\Store.S
 F:\GitHub\Store\Store.SpecflowBDD.AutomationTest\obj\Debug\net6.0\Store.SpecflowBDD.AutomationTest.pdb
 F:\GitHub\Store\Store.SpecflowBDD.AutomationTest\obj\Debug\net6.0\Store.SpecflowBDD.AutomationTest.genruntimeconfig.cache
 F:\GitHub\Store\Store.SpecflowBDD.AutomationTest\obj\Debug\net6.0\ref\Store.SpecflowBDD.AutomationTest.dll
+F:\GitHub\Store\Store.SpecflowBDD.AutomationTest\bin\Debug\net6.0\selenium-manager\linux\selenium-manager
+F:\GitHub\Store\Store.SpecflowBDD.AutomationTest\bin\Debug\net6.0\selenium-manager\macos\selenium-manager
+F:\GitHub\Store\Store.SpecflowBDD.AutomationTest\bin\Debug\net6.0\selenium-manager\windows\selenium-manager.exe
+F:\GitHub\Store\Store.SpecflowBDD.AutomationTest\bin\Debug\net6.0\WebDriver.dll

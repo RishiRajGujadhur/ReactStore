@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Store.SpecflowBDD.AutomationTest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+39e8b62a9daf039866d4de5641861c4f7edbd05b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fee33e591f2d413e431879b2740ddbfe3d611f8d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Store.SpecflowBDD.AutomationTest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Store.SpecflowBDD.AutomationTest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

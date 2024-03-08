@@ -1,12 +1,54 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "F:\\GitHub\\Store\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{83F9E5E5-C89F-433C-B934-D788F766E1BB}|Store.SpecflowBDD.AutomationTest\\Store.SpecflowBDD.AutomationTest.csproj|f:\\github\\store\\store.specflowbdd.automationtest\\stepdefinitions\\homepagestepdefinition.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{83F9E5E5-C89F-433C-B934-D788F766E1BB}|Store.SpecflowBDD.AutomationTest\\Store.SpecflowBDD.AutomationTest.csproj|solutionrelative:store.specflowbdd.automationtest\\stepdefinitions\\homepagestepdefinition.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{83F9E5E5-C89F-433C-B934-D788F766E1BB}|Store.SpecflowBDD.AutomationTest\\Store.SpecflowBDD.AutomationTest.csproj|f:\\github\\store\\store.specflowbdd.automationtest\\features\\homepage.feature||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{83F9E5E5-C89F-433C-B934-D788F766E1BB}|Store.SpecflowBDD.AutomationTest\\Store.SpecflowBDD.AutomationTest.csproj|solutionrelative:store.specflowbdd.automationtest\\features\\homepage.feature||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Homepage.feature",
+              "DocumentMoniker": "F:\\GitHub\\Store\\Store.SpecflowBDD.AutomationTest\\Features\\Homepage.feature",
+              "RelativeDocumentMoniker": "Store.SpecflowBDD.AutomationTest\\Features\\Homepage.feature",
+              "ToolTip": "F:\\GitHub\\Store\\Store.SpecflowBDD.AutomationTest\\Features\\Homepage.feature",
+              "RelativeToolTip": "Store.SpecflowBDD.AutomationTest\\Features\\Homepage.feature",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-03-08T05:38:29.175Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "HomepageStepDefinition.cs",
+              "DocumentMoniker": "F:\\GitHub\\Store\\Store.SpecflowBDD.AutomationTest\\StepDefinitions\\HomepageStepDefinition.cs",
+              "RelativeDocumentMoniker": "Store.SpecflowBDD.AutomationTest\\StepDefinitions\\HomepageStepDefinition.cs",
+              "ToolTip": "F:\\GitHub\\Store\\Store.SpecflowBDD.AutomationTest\\StepDefinitions\\HomepageStepDefinition.cs",
+              "RelativeToolTip": "Store.SpecflowBDD.AutomationTest\\StepDefinitions\\HomepageStepDefinition.cs",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAuwA8AAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-08T05:22:36.457Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
