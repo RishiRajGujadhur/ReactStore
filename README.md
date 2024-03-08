@@ -1,10 +1,10 @@
-React Store
+# React Store
 
-About
+#### About
 
-This is a full-stack e-commerce application built using React, TypeScript, Node.js, .net, SignalR, Kafka, Docker, and PostgreSQL.
+This is a full-stack e-commerce application built using React, TypeScript, Node.js, .net, SignalR, Kafka, Docker, PostgreSQL, EntityFramework Core, NUnit, Specflow and Selenium.
 
-Features
+## Features
 
 ⦁  User authentication and authorization
 
@@ -30,7 +30,7 @@ Features
 
 ⦁  Order prediction 
 
-Getting Started
+# Getting Started
 
 To get started, clone the repository and install the dependencies:
 
@@ -44,7 +44,7 @@ Use code with caution.
 
 Running the Application
 
-To run the application, start the server and the client:
+### To run the application, start the server and the client:
 
 ⦁  cd API: dotnet run
 
@@ -52,7 +52,7 @@ To run the application, start the server and the client:
 
 Use code with caution.
 
-API Endpoints
+### API Endpoints
 
 The following API endpoints are available:
 
@@ -72,11 +72,11 @@ Admin Dashboard
 
 The admin dashboard is accessible at /admin. It provides a UI for managing products, orders, and users.
 
-Deployment
+### Deployment
 
 To deploy the application to a production environment, you can use a platform such as Heroku, Azure or AWS.
 
-Contributing
+## Contributing
 
 Contributions are welcome! Please create a pull request with your changes.
 
