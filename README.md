@@ -2,7 +2,21 @@
 
 #### About
 
-This is a full-stack e-commerce application built using React, TypeScript, Node.js, .net, SignalR, Kafka, Docker, PostgreSQL, EntityFramework Core, NUnit, Specflow and Selenium.
+This is a full-stack e-commerce application built using: 
++ React
++ TypeScript 
++ Tensorflow.js 
++ Regression.js 
++ Node.js 
++ DotNet 8
++ SignalR 
++ Kafka 
++ Docker
++ PostgreSQL 
++ EntityFramework Core 
++ NUnit 
++ Specflow 
++ Selenium.
 
 ## Features
 
