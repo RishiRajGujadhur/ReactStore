@@ -9,14 +9,16 @@ This is a full-stack e-commerce application built using:
 + Axios
 + MUI
 + TypeScript
-+ Recharts
 + Dropzone
 + Toastify
 + Moments
 + Yup
-+ Tensorflow.js 
-+ Regression.js 
 + Node.js
+
+### Data Analytics
++ Tensorflow.js 
++ Regression.js
++ Recharts
 
   
 ### Backend:  
