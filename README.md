@@ -3,21 +3,41 @@
 #### About
 
 This is a full-stack e-commerce application built using: 
+### Frontend
 + React
-+ TypeScript 
++ Redux
++ Axios
++ MUI
++ TypeScript
++ Recharts
++ Dropzone
++ Toastify
++ Moments
++ Yup
 + Tensorflow.js 
 + Regression.js 
-+ Node.js 
++ Node.js
+
+  
+### Backend:  
++ C#
 + DotNet 8
++ JWT bearer tokens
++ Automapper
++ OpenAPI/Swashbuckle swagger
 + SignalR 
-+ Kafka 
++ Confluent Kafka 
 + Docker
 + PostgreSQL 
-+ EntityFramework Core 
++ EntityFramework Core
+
+### Test automation:
 + NUnit 
 + Specflow 
-+ Selenium.
-
++ Selenium
++ FluentAssertions
++ Jest
++ Postman
 ## Features
 
 + User authentication and authorization
