@@ -6,51 +6,54 @@ This is a full-stack e-commerce application built using React, TypeScript, Node.
 
 ## Features
 
-⦁  User authentication and authorization
++ User authentication and authorization
 
-⦁  Product browsing and filtering
++  Product browsing and filtering
 
-⦁  Comments
++  Comments
 
-⦁  Likes
++  Likes
 
-⦁  Shopping cart and checkout
++  Shopping cart and checkout
 
-⦁  Order tracking
++  Order tracking
 
-⦁  Invoice generation
++  Invoice generation
 
-⦁  Admin dashboard
++  Admin dashboard
 
-⦁  Feature Settings
++  Feature Settings
 
-⦁  Order Statistics
++  Order Statistics
 
-⦁  Product recommendations
++  Product recommendations
 
-⦁  Order prediction 
++  Order prediction
+  
++  Test automation
+ 
 
 # Getting Started
 
 To get started, clone the repository and install the dependencies:
 
-git clone https://github.com/RishiRajGujadhur/ReactStore.git
+```git clone https://github.com/RishiRajGujadhur/ReactStore.git```
 
-cd ReactStore
+```cd ReactStore\Store\Client```
 
-npm install
+```npm install```
 
-Use code with caution.
+>Use code with caution.
 
-Running the Application
+## Running the Application
 
-### To run the application, start the server and the client:
+To run the application, start the server and the client:
 
-⦁  cd API: dotnet run
+```cd API: dotnet run```
 
-⦁  cd Client: npm start
+```cd Client: npm start```
 
-Use code with caution.
+>Use code with caution.
 
 ### API Endpoints
 
@@ -68,7 +71,7 @@ The following API endpoints are available:
 
 /api/users/:id: Get a single user by ID (admin only)
 
-Admin Dashboard
+### Admin Dashboard
 
 The admin dashboard is accessible at /admin. It provides a UI for managing products, orders, and users.
 
@@ -80,6 +83,6 @@ To deploy the application to a production environment, you can use a platform su
 
 Contributions are welcome! Please create a pull request with your changes.
 
-License
+## License
 
 This project is licensed under the MIT License.
