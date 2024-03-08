@@ -6,11 +6,8 @@ F:\GitHub\Store\Store.UnitTests\obj\Debug\net8.0\Store.Store.UnitTests.AssemblyI
 F:\GitHub\Store\Store.UnitTests\obj\Debug\net8.0\Store.Store.UnitTests.csproj.CoreCompileInputs.cache
 F:\GitHub\Store\Store.UnitTests\obj\Debug\net8.0\Store.Store.UnitTests.sourcelink.json
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\testhost.dll
-F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\API.deps.json
-F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\API.runtimeconfig.json
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\appsettings.Development.json
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\appsettings.json
-F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\API.exe
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\testhost.exe
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\NUnit3.TestAdapter.dll
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\NUnit3.TestAdapter.pdb
@@ -179,9 +176,7 @@ F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\runtimes\win-arm\native\e_sqlit
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\runtimes\win-arm64\native\e_sqlite3.dll
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\runtimes\win-x64\native\e_sqlite3.dll
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\runtimes\win-x86\native\e_sqlite3.dll
-F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\API.dll
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\Store.Infrastructure.dll
-F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\API.pdb
 F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\Store.Infrastructure.pdb
 F:\GitHub\Store\Store.UnitTests\obj\Debug\net8.0\Store.St.E60279F1.Up2Date
 F:\GitHub\Store\Store.UnitTests\obj\Debug\net8.0\Store.Store.UnitTests.dll
@@ -189,3 +184,8 @@ F:\GitHub\Store\Store.UnitTests\obj\Debug\net8.0\refint\Store.Store.UnitTests.dl
 F:\GitHub\Store\Store.UnitTests\obj\Debug\net8.0\Store.Store.UnitTests.pdb
 F:\GitHub\Store\Store.UnitTests\obj\Debug\net8.0\Store.Store.UnitTests.genruntimeconfig.cache
 F:\GitHub\Store\Store.UnitTests\obj\Debug\net8.0\ref\Store.Store.UnitTests.dll
+F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\Store.API.deps.json
+F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\Store.API.runtimeconfig.json
+F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\Store.API.exe
+F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\Store.API.dll
+F:\GitHub\Store\Store.UnitTests\bin\Debug\net8.0\Store.API.pdb

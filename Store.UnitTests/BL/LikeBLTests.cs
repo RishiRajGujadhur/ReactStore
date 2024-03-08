@@ -1,8 +1,8 @@
 using Moq;
-using API.BL; 
 using Microsoft.AspNetCore.Identity;
 using Store.Infrastructure.Data;
 using Store.Infrastructure.Entities;
+using Store.API.BL;
 
 namespace Store.Store.UnitTests.BL
 {
