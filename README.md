@@ -3,45 +3,22 @@
 #### About
 
 This is a full-stack e-commerce application built using: 
-### Frontend
-+ React
-+ Redux
-+ Axios
-+ MUI
-+ TypeScript
-+ Dropzone
-+ Toastify
-+ Moments
-+ Yup
-+ Node.js
-
-### Data Analytics
-+ Tensorflow.js 
-+ Regression.js
-+ Recharts
-
+| Frontend   | Backend                     | Test automation  | Data Analytics |   |
+|------------|-----------------------------|------------------|----------------|---|
+| React      | C#                          | NUnit            | Tensorflow.js  |   |
+| Redux      | DotNet 8                    | Specflow         | Regression.js  |   |
+| Axios      | JWT bearer tokens           | Selenium         | Recharts       |   |
+| MUI        | Automapper                  | FluentAssertions |                |   |
+| TypeScript | OpenAPI/Swashbuckle swagger | Jest             |                |   |
+| Dropzone   | SignalR                     | Postman          |                |   |
+| Toastify   | Confluent Kafka             |                  |                |   |
+| Moments    | Docker                      |                  |                |   |
+| Yup        | PostgreSQL                  |                  |                |   |
+|            | EntityFramework Core        |                  |                |   |
   
-### Backend:  
-+ C#
-+ DotNet 8
-+ JWT bearer tokens
-+ Automapper
-+ OpenAPI/Swashbuckle swagger
-+ SignalR 
-+ Confluent Kafka 
-+ Docker
-+ PostgreSQL 
-+ EntityFramework Core
-
-### Test automation:
-+ NUnit 
-+ Specflow 
-+ Selenium
-+ FluentAssertions
-+ Jest
-+ Postman
 ## Features
-https://github.com/RishiRajGujadhur/ReactStore/assets/17295261/71c2684f-5fef-44f3-86ad-f3d126c6a16f
+https://github.com/RishiRajGujadhur/ReactStore/assets/17295261/f0be49df-f1fa-4dfd-856c-87438ac61431
+
 
 # Getting Started
 
