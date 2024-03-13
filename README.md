@@ -17,7 +17,7 @@ This is a full-stack e-commerce application built using:
 ## Features
 https://github.com/RishiRajGujadhur/ReactStore/assets/17295261/f0be49df-f1fa-4dfd-856c-87438ac61431
 
-# Getting Started
+## Getting Started
 
 Clone the repository and install the dependencies:
 + Run your PostgresQL server or update the configurations in Store.API, program.cs and app.config to use a different db server
@@ -31,7 +31,7 @@ Clone the repository and install the dependencies:
 ```npm install```
 
 
-## Running the Application
+### Running the Application
 
 ```cd Store.API: dotnet run```
 
@@ -39,7 +39,7 @@ Clone the repository and install the dependencies:
 
 ```cd Client: npm start```
 
-### API Endpoints
+#### API Endpoints
 https://github.com/RishiRajGujadhur/ReactStore/blob/main/Store.API.postman_collection.json
 
 ## Contributing
