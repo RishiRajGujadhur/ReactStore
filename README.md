@@ -120,20 +120,7 @@ To run the application, start the server and the client:
 >Use code with caution.
 
 ### API Endpoints
-
-The following API endpoints are available:
-
-/api/products: Get all products
-
-/api/products/:id: Get a single product by ID
-
-/api/orders: Get all orders for the current user
-
-/api/orders/:id: Get a single order by ID
-
-/api/users: Get all users (admin only)
-
-/api/users/:id: Get a single user by ID (admin only)
+Store.API.postman_collection.json
 
 ### Admin Dashboard
 
