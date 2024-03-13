@@ -2,15 +2,19 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
 EXPOSE 8080
 
-# copy csproj and restore as distinct layers
+# Assuming Store.Infrastructure is in a sibling directory to where the Dockerfile is.
+COPY ["./Store.Infrastructure/*.csproj", "./Store.Infrastructure/"]
+# Copy the main project's csproj file
 COPY *.csproj ./
+
+# Restore dependencies for both projects
 RUN dotnet restore
 
-# copy everything else and build
+# Copy everything else and build
 COPY . ./
 RUN dotnet publish -c Release -o out
 
-# build runtime image
+# Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build-env /app/out .
