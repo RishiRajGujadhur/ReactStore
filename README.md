@@ -1,4 +1,4 @@
-#### About React Store
+#### About
 
 This is a full-stack e-commerce application built using: 
 | Frontend   | Backend                     | Test automation  | Data Analytics |   
@@ -19,7 +19,9 @@ https://github.com/RishiRajGujadhur/ReactStore/assets/17295261/f0be49df-f1fa-4df
 
 # Getting Started
 
-To get started, clone the repository and install the dependencies:
+Clone the repository and install the dependencies:
++ Run your PostgresQL server or update the configurations in API, program.cs and app.config to use a different db server
++ Run your Kafka server, docker script for kafka setup included: https://github.com/RishiRajGujadhur/ReactStore/blob/main/docker-compose.yml
 
 ```git clone https://github.com/RishiRajGujadhur/ReactStore.git```
 ```git clone https://github.com/RishiRajGujadhur/client.git```
@@ -30,10 +32,6 @@ To get started, clone the repository and install the dependencies:
 
 
 ## Running the Application
-
-To run the application, start the server and the client:
-+ Run your PostgresQL server or update the configurations in API, program.cs and app.config to use a different db server
-+ Run your Kafka server, docker script for kafka setup included: https://github.com/RishiRajGujadhur/ReactStore/blob/main/docker-compose.yml
 
 ```cd Store.API: dotnet run```
 
