@@ -1,24 +1,21 @@
-# React Store
-
-#### About
+#### About React Store
 
 This is a full-stack e-commerce application built using: 
-| Frontend   | Backend                     | Test automation  | Data Analytics |   |
-|------------|-----------------------------|------------------|----------------|---|
-| React      | C#                          | NUnit            | Tensorflow.js  |   |
-| Redux      | DotNet 8                    | Specflow         | Regression.js  |   |
-| Axios      | JWT bearer tokens           | Selenium         | Recharts       |   |
-| MUI        | Automapper                  | FluentAssertions |                |   |
-| TypeScript | OpenAPI/Swashbuckle swagger | Jest             |                |   |
-| Dropzone   | SignalR                     | Postman          |                |   |
-| Toastify   | Confluent Kafka             |                  |                |   |
-| Moments    | Docker                      |                  |                |   |
-| Yup        | PostgreSQL                  |                  |                |   |
-|            | EntityFramework Core        |                  |                |   |
+| Frontend   | Backend                     | Test automation  | Data Analytics |   
+|------------|-----------------------------|------------------|----------------|
+| React      | C#                          | NUnit            | Tensorflow.js  |   
+| Redux      | DotNet 8                    | Specflow         | Regression.js  |   
+| Axios      | JWT bearer tokens           | Selenium         | Recharts       |   
+| MUI        | Automapper                  | FluentAssertions |                |  
+| TypeScript | OpenAPI/Swashbuckle swagger | Jest             |                |   
+| Dropzone   | SignalR                     | Postman          |                |   
+| Toastify   | Confluent Kafka             |                  |                |   
+| Moments    | Docker                      |                  |                |   
+| Yup        | PostgreSQL                  |                  |                |   
+|            | EntityFramework Core        |                  |                |   
   
 ## Features
 https://github.com/RishiRajGujadhur/ReactStore/assets/17295261/f0be49df-f1fa-4dfd-856c-87438ac61431
-
 
 # Getting Started
 
