@@ -20,7 +20,7 @@ https://github.com/RishiRajGujadhur/ReactStore/assets/17295261/f0be49df-f1fa-4df
 # Getting Started
 
 Clone the repository and install the dependencies:
-+ Run your PostgresQL server or update the configurations in API, program.cs and app.config to use a different db server
++ Run your PostgresQL server or update the configurations in Store.API, program.cs and app.config to use a different db server
 + Run your Kafka server, docker script for kafka setup included: https://github.com/RishiRajGujadhur/ReactStore/blob/main/docker-compose.yml
 
 ```git clone https://github.com/RishiRajGujadhur/ReactStore.git```
